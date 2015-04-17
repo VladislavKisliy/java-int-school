@@ -27,7 +27,7 @@ public class Referee {
 				}
 			}				 
 		}
-		return count>1 ? true : false;
+		return count>1;
 	}
 	
 	public List<CellState> nextPlayerStep(List<CellState> gameField){
@@ -48,7 +48,10 @@ public class Referee {
 		if (win!=CellState.TOE)
 			return playerTurn;	
 		//if draw 
-		return players.get(playerTurn-1).hasNextStep(gameField) ? 0 : -1;
+		if (players.get(playerTurn-1).hasNextStep(gameField)) 
+			return 0;
+		else 
+			return -1;
 	}
 	
 }
