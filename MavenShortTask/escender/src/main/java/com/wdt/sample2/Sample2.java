@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.wdt.sample_2;
+package com.wdt.sample2;
 
 import java.io.InputStream;
 import java.lang.reflect.Array;
@@ -18,7 +18,7 @@ import java.util.TreeSet;
  *
  * @author Dreamesc
  */
-public class Sample_2 {
+public class Sample2 {
 
     /**
      * @param args the command line arguments

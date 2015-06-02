@@ -1,4 +1,4 @@
-package com.wdt.sample_2;
+package com.wdt.sample2;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

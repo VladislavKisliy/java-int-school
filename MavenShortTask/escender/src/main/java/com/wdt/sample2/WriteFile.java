@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.wdt.sample_2;
+package com.wdt.sample2;
 
 import java.io.BufferedWriter;
 import java.io.File;
