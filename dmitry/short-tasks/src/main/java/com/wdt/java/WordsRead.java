@@ -5,7 +5,7 @@ import java.util.*;
 
 public class WordsRead {
 	
-	private static String readFile(String filename) throws IOException {
+	public static String readFile(String filename) throws IOException {
 	    BufferedReader reader = new BufferedReader(new FileReader (filename));
 	    String line = null;
 	    StringBuilder sb = new StringBuilder();

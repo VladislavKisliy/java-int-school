@@ -7,6 +7,7 @@
     <groupId>MavenShortTask</groupId>
     <artifactId>MavenShortTask</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>School: Ilya short task</name>
 
 
 </project>
