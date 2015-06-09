@@ -13,6 +13,8 @@
     <properties>
         <software.junit.version>4.12</software.junit.version>
         <software.commons-io.version>2.4</software.commons-io.version>
+        <software.surefire.plugin>2.18.1</software.surefire.plugin>
+        <skipTests>true</skipTests>
     </properties>
 
     <modules>
@@ -78,6 +80,14 @@
                     <version>2.7</version>
                     <configuration>
                         <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${software.surefire.plugin}</version>
+                    <configuration>
+                        <skipTests>${skipTests}</skipTests>
                     </configuration>
                 </plugin>
                 <plugin>
