@@ -17,6 +17,7 @@
 
     <modules>
       <!-- <module>short-tasks</module> -->
+        <module>SmallTasks</module>
     </modules>
     
 </project>

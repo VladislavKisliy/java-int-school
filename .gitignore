@@ -5,3 +5,4 @@
 **/.settings/*
 **/target/*
 .DS_Store
+/Git_Projects/nbproject/private/
