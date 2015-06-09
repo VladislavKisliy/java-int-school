@@ -8,6 +8,8 @@ package com.wdt.learn.java;
 import java.util.HashSet;
 import java.util.Set;
 import junit.framework.TestCase;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  *
@@ -32,6 +34,7 @@ public class SearhDuplicatesTest extends TestCase {
     /**
      * Test of duplicatesOrUniq method, of class SearhDuplicates.
      */
+    @Ignore
     public void testDuplicatesOrUniq() {
         System.out.println("duplicatesOrUniq");
         String inStr = "123 123";

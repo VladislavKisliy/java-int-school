@@ -6,6 +6,8 @@
 package com.wdt.learn.java;
 
 import junit.framework.TestCase;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  *
@@ -30,6 +32,8 @@ public class SmallTasksTest extends TestCase {
     /**
      * Test of main method, of class SmallTasks.
      */
+    @Ignore
+    @Test
     public void testMain() {
         System.out.println("main");
         String[] args = null;

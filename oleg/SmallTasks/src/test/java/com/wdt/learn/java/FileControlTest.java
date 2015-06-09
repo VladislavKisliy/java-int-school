@@ -6,6 +6,8 @@
 package com.wdt.learn.java;
 
 import junit.framework.TestCase;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  *
@@ -30,6 +32,8 @@ public class FileControlTest extends TestCase {
     /**
      * Test of write method, of class FileControl.
      */
+    @Ignore
+    @Test
     public void testWrite() {
         System.out.println("write");
         String fileName = "C:\\test\\SmallTasks\\pom.xml";
