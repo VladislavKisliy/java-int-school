@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.wdt.learn.java;
+package com.wdt.java;
 
 import com.wdt.java.SearhDuplicates;
 import java.util.HashSet;
 import java.util.Set;
 import junit.framework.TestCase;
-import org.junit.Ignore;
-import org.junit.Test;
+//import org.junit.Ignore;
+//import org.junit.Test;
 
 /**
  *
@@ -35,7 +35,7 @@ public class SearhDuplicatesTest extends TestCase {
     /**
      * Test of duplicatesOrUniq method, of class SearhDuplicates.
      */
-    @Ignore
+//    @Ignore
     public void testDuplicatesOrUniq() {
         System.out.println("duplicatesOrUniq");
         String inStr = "123 123";

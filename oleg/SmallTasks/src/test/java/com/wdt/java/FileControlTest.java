@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.wdt.learn.java;
+package com.wdt.java;
 
 import com.wdt.java.FileControl;
 import junit.framework.TestCase;
-import org.junit.Ignore;
-import org.junit.Test;
+//import org.junit.Ignore;
+//import org.junit.Test;
 
 /**
  *
@@ -33,8 +33,8 @@ public class FileControlTest extends TestCase {
     /**
      * Test of write method, of class FileControl.
      */
-    @Ignore
-    @Test
+//    @Ignore
+//    @Test
     public void testWrite() {
         System.out.println("write");
         String fileName = "C:\\test\\SmallTasks\\pom.xml";
