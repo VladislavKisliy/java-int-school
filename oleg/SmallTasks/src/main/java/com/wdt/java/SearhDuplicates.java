@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.wdt.learn.java;
+package com.wdt.java;
 
 import java.util.Arrays;
 import java.util.HashSet;

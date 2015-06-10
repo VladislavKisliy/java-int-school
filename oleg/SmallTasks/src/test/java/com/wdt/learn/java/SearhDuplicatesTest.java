@@ -5,6 +5,7 @@
  */
 package com.wdt.learn.java;
 
+import com.wdt.java.SearhDuplicates;
 import java.util.HashSet;
 import java.util.Set;
 import junit.framework.TestCase;

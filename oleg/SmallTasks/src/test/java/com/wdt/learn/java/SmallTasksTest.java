@@ -5,6 +5,7 @@
  */
 package com.wdt.learn.java;
 
+import com.wdt.java.SmallTasks;
 import junit.framework.TestCase;
 
 /**
