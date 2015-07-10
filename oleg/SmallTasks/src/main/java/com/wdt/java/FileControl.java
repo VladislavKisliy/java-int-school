@@ -15,7 +15,7 @@ import java.nio.file.FileSystems;
  *
  * @author Oleg
  */
-public class FileControl implements FileMaintanence{
+public class FileControl implements IFileControl{
     public void    write(String fileName, String textToWrite){
         
     }
