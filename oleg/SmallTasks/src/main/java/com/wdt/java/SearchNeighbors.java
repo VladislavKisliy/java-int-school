@@ -20,10 +20,10 @@ public class SearchNeighbors {
      * @param inInt
      * @return
      */
-    public static double[] getNeghbors(int inInt,TreeSet inList){
-        double[] outResult = new double[2];
-        outResult[0]=(double) inList.floor(inInt);
-        outResult[1]=(double) inList.higher(inInt);
+    public static String[] getNeghbors(double inInt,TreeSet inList){
+        String[] outResult = new String[2];
+        outResult[0]=String.valueOf(inList.floor(inInt));
+        outResult[1]=String.valueOf(inList.higher(inInt));
         return outResult;
     }
 }

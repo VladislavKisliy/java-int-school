@@ -18,7 +18,7 @@ public class SmallTasks {
         String file="C:\\Users\\Rustem\\Desktop\\Oleg\\KONZUM\\дежурства\\correction_scripts_execution_procedure.txt";
         checkDuplicates(file);
         String doubleFile="D:\\doubles.xml";
-        checkNeighbors(10,doubleFile);
+        checkNeighbors(1000,doubleFile);
     }
     public static void checkDuplicates(String pathToFile){
         FileControl controlFile=new FileControl();
@@ -27,12 +27,20 @@ public class SmallTasks {
         System.out.println("Duplicates:"+SearhDuplicates.duplicatesOrUniq(inStr,'D').toString());
         System.out.println("Unique:"+SearhDuplicates.duplicatesOrUniq(inStr,'U').toString());
     }
-    public static void checkNeighbors(int inInt, String pathToFile){
+    public static void checkNeighbors(double inInt, String pathToFile){
         FileControl controlFile=new FileControl();
         String inStr=controlFile.read(pathToFile);
         TreeSet sequence=new TreeSet();
-        sequence.addAll(Arrays.asList( inStr.split("\\s+")));
-        System.out.println(SearchNeighbors.getNeghbors(inInt,sequence));
+        String[] tempSplitted=(inStr.split("\\s+"));
+        for (int i=0;i<tempSplitted.length;i++){
+            sequence.add(Double.parseDouble(tempSplitted[i]));    
+        }
+        
+        System.out.println("Here are neighbors: lower: " +SearchNeighbors.getNeghbors(inInt,sequence)[0]+" Higher: "+SearchNeighbors.getNeghbors(inInt,sequence)[1]);
+    }
+    public static String removeBadCharacters(String inString){
+        String outString=inString.replaceAll("^A-Za-z0-9.", "");
+        return outString;
     }
 }
 
