@@ -12,13 +12,4 @@
         <artifactId>vlad</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${software.junit.version}</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
 </project>

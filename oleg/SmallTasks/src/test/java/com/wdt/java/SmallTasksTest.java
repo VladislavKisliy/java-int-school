@@ -5,8 +5,9 @@
  */
 package com.wdt.java;
 
-import com.wdt.java.SmallTasks;
 import junit.framework.TestCase;
+import org.junit.Ignore;
+import org.junit.Test;
 //import org.junit.Ignore;
 //import org.junit.Test;
 
@@ -33,12 +34,12 @@ public class SmallTasksTest extends TestCase {
     /**
      * Test of main method, of class SmallTasks.
      */
-//    @Ignore
-//    @Test
+    @Ignore("Not ready yet")
+    @Test
     public void testMain() {
         System.out.println("main");
         String[] args = null;
-        SmallTasks.main(args);
+//        SmallTasks.main(args);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
