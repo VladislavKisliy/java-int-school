@@ -22,6 +22,7 @@
         <module>ilya</module>
         <module>escender</module>
         <module>dmitry</module>
+        <module>vlad</module>
     </modules>
 
     <dependencies>
