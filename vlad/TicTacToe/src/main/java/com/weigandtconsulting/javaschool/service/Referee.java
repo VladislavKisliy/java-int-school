@@ -14,40 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.weigandtconsulting.javaschool.beans;
+package com.weigandtconsulting.javaschool.service;
 
 /**
  *
  * @author vlad
  */
-public enum CellState {
-
-    TIC("X"),
-    TAC("O"),
-    TOE("-");
-
-    private String label;
-
-    private CellState(String label) {
-        this.label = label;
-    }
-
-    public static CellState getOpposite(CellState cellSate) {
-        CellState result = TOE;
-        switch (cellSate) {
-            case TIC:
-                result = TAC;
-                break;
-            case TAC:
-                result = TIC;
-                break;
-        }
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return label;
-    }
-
+public class Referee {
+    
+    
+    
 }
