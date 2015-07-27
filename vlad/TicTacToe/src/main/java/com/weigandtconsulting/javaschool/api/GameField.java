@@ -26,7 +26,12 @@ import java.util.List;
 public interface GameField {
 
     Boolean isWinner(List<CellState> gameField, CellState player);
+
     Boolean isGameOver(List<CellState> gameField);
+
     List<CellState> getNewField();
+
     List<Integer> getAvailableMoves(List<CellState> gameField);
+
+    List<CellState> doStep(List<CellState> gameField, CellState playerSign, Integer position);
 }

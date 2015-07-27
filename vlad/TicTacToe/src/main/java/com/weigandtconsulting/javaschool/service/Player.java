@@ -20,6 +20,7 @@ import com.weigandtconsulting.javaschool.api.GameField;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,11 +30,11 @@ import java.util.List;
 public class Player implements TicTacToe {
 
     private static final int WIN_SCORE = 10;
-    private final CellState mySymbol;
+    private final CellState playerSymbol;
     private final GameField innerGameField = new GameFieldImpl();
-    
+
     public Player(CellState mySymbol) {
-        this.mySymbol = mySymbol;
+        this.playerSymbol = mySymbol;
     }
 
     @Override
@@ -49,31 +50,55 @@ public class Player implements TicTacToe {
 
     @Override
     public String getPlayerName() {
-        return "Megamind (V.K) "+mySymbol;
+        return "Megamind (V.K) " + playerSymbol;
     }
 
-    int score(List<CellState> gameField, int depth) {
+    int score(List<CellState> gameField, int depth, CellState playerSign) {
         int result = 0;
-        if (innerGameField.isWinner(gameField, mySymbol)) {
+        if (innerGameField.isWinner(gameField, playerSign)) {
             result = WIN_SCORE - depth;
-        } else if (innerGameField.isWinner(gameField, CellState.getOpposite(mySymbol))) {
+        } else if (innerGameField.isWinner(gameField, CellState.getOpposite(playerSign))) {
             result = depth - WIN_SCORE;
         }
         return result;
     }
-    
-    List<CellState> miniMax(List<CellState> gameField, int depth) {
-        List<CellState> result = null;
+
+    Integer miniMax(List<CellState> gameField, int depth) {
+        Integer result = null;
         if (innerGameField.isGameOver(gameField)) {
-            result = gameField;
+            System.out.println("game over =" + gameField);
+            result = score(gameField, depth, playerSymbol);
         } else {
             List<Integer> scores = new ArrayList<>();
             List<Integer> moves = new ArrayList<>();
             depth++;
+            CellState activeSign = getSign(playerSymbol, depth);
+
             List<Integer> availableMoves = innerGameField.getAvailableMoves(gameField);
-            for (Integer availableMove : availableMoves) {
-                
+            for (Integer newMove : availableMoves) {
+                List<CellState> newGameField = innerGameField.doStep(gameField, activeSign, newMove);
+                scores.add(miniMax(newGameField, depth));
+                moves.add(newMove);
             }
+            int scoreIndex = 0;
+            if (activeSign == playerSymbol) {
+                scoreIndex = scores.indexOf(Collections.max(scores));
+            } else {
+                scoreIndex = scores.indexOf(Collections.min(scores));
+            }
+            if (depth == 1) {
+                result = moves.get(scoreIndex);
+            } else {
+                result = scores.get(scoreIndex);
+            }
+        }
+        return result;
+    }
+
+    CellState getSign(CellState playerSign, int depth) {
+        CellState result = playerSign;
+        if (depth % 2 == 0) {
+            result = CellState.getOpposite(playerSign);
         }
         return result;
     }

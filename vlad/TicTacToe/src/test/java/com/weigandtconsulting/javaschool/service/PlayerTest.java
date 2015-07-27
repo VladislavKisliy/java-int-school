@@ -56,6 +56,11 @@ public class PlayerTest {
             TAC, TIC, TIC,
             TAC, TOE, TOE};
     
+    private final CellState[] threeEmptySpace = {
+            TIC, TOE, TIC,
+            TAC, TOE, TAC,
+            TAC, TOE, TAC};
+    
     private final CellState[] fullField = {
             TIC, TAC, TAC,
             TAC, TIC, TIC,
@@ -85,14 +90,11 @@ public class PlayerTest {
      */
     @Test
     public void testNextStep() {
-        System.out.println("nextStep");
         List<CellState> gameField = null;
         Player instance = new Player(TAC);
         List<CellState> expResult = null;
         List<CellState> result = instance.nextStep(gameField);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -124,42 +126,58 @@ public class PlayerTest {
     @Test
     public void testScore() {
         int depth = 0;
-        assertEquals("Winner", 10, new Player(TAC).score(Arrays.asList(variant1), depth));
-        assertEquals("Loser", -10, new Player(TIC).score(Arrays.asList(variant1), depth));
-        assertEquals("Nothing happened TIC", 0, new Player(TIC).score(Arrays.asList(variant2), depth));
-        assertEquals("Nothing happened TAC", 0, new Player(TAC).score(Arrays.asList(variant2), depth));
-        assertEquals("Nothing happened full", 0, new Player(TIC).score(Arrays.asList(fullField), depth));
+        Player instance = new Player(TAC);
+        assertEquals("Winner", 10, instance.score(Arrays.asList(variant1), depth, TAC));
+        assertEquals("Loser", -10, instance.score(Arrays.asList(variant1), depth, TIC));
+        assertEquals("Nothing happened TIC", 0, instance.score(Arrays.asList(variant2), depth, TIC));
+        assertEquals("Nothing happened TAC", 0, instance.score(Arrays.asList(variant2), depth, TAC));
+        assertEquals("Nothing happened full", 0, instance.score(Arrays.asList(fullField), depth, TIC));
     }
 
     /**
      * Test of miniMax method, of class Player.
      */
     @Test
-    public void testMiniMax() {
+    public void testMiniMaxSimple() {
         int depth = 0;
         
         Player instance = new Player(TIC);
-        List<CellState> expResult = Arrays.asList(fullField);
-        List<CellState> result = instance.miniMax(Arrays.asList(fullField), depth);
-        assertEquals(expResult, result);
+        int result = instance.miniMax(Arrays.asList(fullField), depth);
+        assertEquals(0, result);
         
         result = instance.miniMax(Arrays.asList(oneEmptySpace), depth);
-        assertEquals("One empty space TIC", Arrays.asList(fullField), result);
+        assertEquals("One empty space TIC", 7, result);
+    }
+    
+    @Test
+    public void testMiniMax() {
+        int depth = 0;
         
-        CellState[] twoEmptyResultOffense = {
-            TIC, TAC, TAC,
-            TAC, TIC, TIC,
-            TAC, TOE, TIC};
-        result = instance.miniMax(Arrays.asList(oneEmptySpace), depth);
-        assertEquals("Two empty space Offense TIC", Arrays.asList(twoEmptyResultOffense), result);
+        Player playerTic = new Player(TIC);
+        int result = playerTic.miniMax(Arrays.asList(twoEmptySpace), depth);
+        assertEquals("Two empty space offense TIC", 8, result);
+        result = playerTic.miniMax(Arrays.asList(threeEmptySpace), depth);
+        assertEquals("Three empty space offense TAC", 1, result);
         
+        Player playerTac = new Player(TAC);
+        result = playerTac.miniMax(Arrays.asList(twoEmptySpace), depth);
+        assertEquals("Two empty space defense TAC", 8, result);
+        result = playerTac.miniMax(Arrays.asList(threeEmptySpace), depth);
+        assertEquals("Three empty space defense TAC", 4, result);
         
-        CellState[] twoEmptyResultDefense = {
-            TIC, TAC, TAC,
-            TAC, TIC, TIC,
-            TAC, TOE, TAC};
-        result = new Player(TAC).miniMax(Arrays.asList(oneEmptySpace), depth);
-        assertEquals("Two empty space Defense TAC", Arrays.asList(twoEmptyResultDefense), result);
+    }
+
+    /**
+     * Test of getSign method, of class Player.
+     */
+    @Test
+    public void testGetSign() {
+        CellState playerSign = TIC;
+        Player instance = new Player(TAC);
+        assertEquals(TIC, instance.getSign(playerSign, 1));
+        assertEquals(TAC, instance.getSign(playerSign, 2));
+        assertEquals(TIC, instance.getSign(playerSign, 3));
+        assertEquals(TAC, instance.getSign(playerSign, 4));
     }
     
 }

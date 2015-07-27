@@ -19,6 +19,7 @@ package com.weigandtconsulting.javaschool.service;
 import com.weigandtconsulting.javaschool.api.GameField;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -101,7 +102,18 @@ public class GameFieldImpl implements GameField {
         }
         return result;
     }
-    
+
+    public List<CellState> doStep(List<CellState> gameField, CellState playerSign, Integer position) {
+        CellState[] result = gameField.toArray(new CellState[CELL_AMOUNT]);
+        if (result[position] == CellState.TOE) {
+            result[position] = playerSign;
+        } else {
+            throw new IllegalArgumentException("We can insert only in empty cells");
+        }
+
+        return Arrays.asList(result);
+    }
+
     private boolean isFieldFull(List<CellState> gameField) {
         boolean result = true;
         for (CellState cell : gameField) {

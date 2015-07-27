@@ -56,6 +56,11 @@ public class GameFieldImplTest {
             TAC, TIC, TAC,
             TIC, TAC, TAC};
     
+    private final CellState[] variant5 = {
+            TOE, TIC, TAC,
+            TOE, TIC, TAC,
+            TIC, TAC, TOE};
+    
     private final CellState[] fullField = {
             TIC, TAC, TAC,
             TAC, TIC, TIC,
@@ -124,7 +129,9 @@ public class GameFieldImplTest {
     @Test
     public void testIsGameOver() {
         GameFieldImpl instance = new GameFieldImpl();
-        Assert.assertTrue("Winner situation", instance.isGameOver(Arrays.asList(variant1)));
+        Assert.assertTrue("Winner situation 1", instance.isGameOver(Arrays.asList(variant1)));
+        Assert.assertTrue("Winner situation 2", instance.isGameOver(Arrays.asList(variant2)));
+        Assert.assertFalse("Nothing", instance.isGameOver(Arrays.asList(variant5)));
         Assert.assertTrue("Fullfield situation", instance.isGameOver(Arrays.asList(fullField)));
     }
 
@@ -156,5 +163,27 @@ public class GameFieldImplTest {
         result = instance.getAvailableMoves(Arrays.asList(variant4));
         assertEquals("Variant4 length", expectedVariant4.length, result.size());
         assertEquals("Variant4 list", Arrays.asList(expectedVariant4), result);
+    }
+
+    /**
+     * Test of doStep method, of class GameFieldImpl.
+     */
+    @Test
+    public void testDoStep() {
+        
+        CellState[] expResult = {
+            TAC, TAC, TAC,
+            TOE, TIC, TOE,
+            TOE, TOE, TOE};
+        
+        GameFieldImpl instance = new GameFieldImpl();
+        List<CellState> result = instance.doStep(Arrays.asList(variant1), CellState.TIC, 4);
+        assertEquals("Insertion error", Arrays.asList(expResult), result);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testDoStepException() {
+        GameFieldImpl instance = new GameFieldImpl();
+        instance.doStep(Arrays.asList(fullField), CellState.TIC, 6);
     }
 }
