@@ -90,13 +90,43 @@ public class PlayerTest {
      */
     @Test
     public void testNextStep() {
-        List<CellState> gameField = null;
-        Player instance = new Player(TAC);
-        List<CellState> expResult = null;
-        List<CellState> result = instance.nextStep(gameField);
+        Player playerTic = new Player(TIC);
+        List<CellState> gameField = Arrays.asList(oneEmptySpace);
+        List<CellState> expResult = Arrays.asList(fullField);
+        List<CellState> result = playerTic.nextStep(gameField);
         assertEquals(expResult, result);
+        
+        // Only for manual testing (random generator)
+//        gameField = new GameFieldImpl().getNewField();
+//        result = instance.nextStep(gameField);
+//        assertEquals(expResult, result);
+        
+        CellState[] expTwoEmptyTic = {
+            TIC, TAC, TAC,
+            TAC, TIC, TIC,
+            TAC, TOE, TIC};
+        
+        gameField = Arrays.asList(twoEmptySpace);
+        result = playerTic.nextStep(gameField);
+        assertEquals("Two empty space offense TIC", Arrays.asList(expTwoEmptyTic), result);
+        
+        CellState[] expTwoEmptyTac = {
+            TIC, TAC, TAC,
+            TAC, TIC, TIC,
+            TAC, TOE, TAC};
+        
+        gameField = Arrays.asList(twoEmptySpace);
+        result = new Player(TAC).nextStep(gameField);
+        assertEquals("Two empty space defense TAC", Arrays.asList(expTwoEmptyTac), result);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testNextStepException() {
+        List<CellState> gameField = null;
+        Player instance = new Player(TAC);
+        List<CellState> result = instance.nextStep(gameField);
+    }
+    
     /**
      * Test of hasNextStep method, of class Player.
      */

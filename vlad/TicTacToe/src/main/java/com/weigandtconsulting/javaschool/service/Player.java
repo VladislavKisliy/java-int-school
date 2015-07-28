@@ -22,6 +22,7 @@ import com.weigandtconsulting.javaschool.beans.CellState;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -32,6 +33,8 @@ public class Player implements TicTacToe {
     private static final int WIN_SCORE = 10;
     private final CellState playerSymbol;
     private final GameField innerGameField = new GameFieldImpl();
+    private final int[] bestStartSolutions = {0,2,6,8,4};
+    private final Random random = new Random();
 
     public Player(CellState mySymbol) {
         this.playerSymbol = mySymbol;
@@ -39,8 +42,17 @@ public class Player implements TicTacToe {
 
     @Override
     public List<CellState> nextStep(List<CellState> gameField) {
-        List<CellState> result = null;
-        return result;
+        if (gameField == null) {
+            throw new IllegalArgumentException("Incompatible input parameter");
+        }
+        Integer bestStep;
+        if (innerGameField.isFieldEmpty(gameField)) {
+           bestStep = randomStep();
+        } else {
+            bestStep = miniMax(gameField, 0);
+        }
+        
+        return innerGameField.doStep(gameField, playerSymbol, bestStep);
     }
 
     @Override
@@ -66,7 +78,6 @@ public class Player implements TicTacToe {
     Integer miniMax(List<CellState> gameField, int depth) {
         Integer result = null;
         if (innerGameField.isGameOver(gameField)) {
-            System.out.println("game over =" + gameField);
             result = score(gameField, depth, playerSymbol);
         } else {
             List<Integer> scores = new ArrayList<>();
@@ -101,5 +112,10 @@ public class Player implements TicTacToe {
             result = CellState.getOpposite(playerSign);
         }
         return result;
+    }
+
+    private Integer randomStep() {
+        int randomNum = random.nextInt(bestStartSolutions.length);
+        return bestStartSolutions[randomNum];
     }
 }

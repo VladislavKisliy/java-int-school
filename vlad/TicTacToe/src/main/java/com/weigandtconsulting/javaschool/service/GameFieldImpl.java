@@ -86,6 +86,16 @@ public class GameFieldImpl implements GameField {
     }
 
     @Override
+    public Boolean isFieldEmpty(List<CellState> gameField) {
+        boolean result = false;
+        List<Integer> availableMoves = getAvailableMoves(gameField);
+        if (availableMoves.size() == CELL_AMOUNT) {
+            result = true;
+        }
+        return result;
+    }
+    
+    @Override
     public List<CellState> getNewField() {
         return EMPTY_GAME_FIELD;
     }
@@ -103,6 +113,7 @@ public class GameFieldImpl implements GameField {
         return result;
     }
 
+    @Override
     public List<CellState> doStep(List<CellState> gameField, CellState playerSign, Integer position) {
         CellState[] result = gameField.toArray(new CellState[CELL_AMOUNT]);
         if (result[position] == CellState.TOE) {

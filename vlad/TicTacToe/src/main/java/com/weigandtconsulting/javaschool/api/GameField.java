@@ -34,4 +34,6 @@ public interface GameField {
     List<Integer> getAvailableMoves(List<CellState> gameField);
 
     List<CellState> doStep(List<CellState> gameField, CellState playerSign, Integer position);
+    
+    Boolean isFieldEmpty(List<CellState> gameField);
 }
