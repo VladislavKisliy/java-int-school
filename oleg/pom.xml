@@ -18,6 +18,7 @@
     <modules>
       <!-- <module>short-tasks</module> -->
         <module>SmallTasks</module>
+        <module>WinOrDie</module>
     </modules>
     
 </project>
