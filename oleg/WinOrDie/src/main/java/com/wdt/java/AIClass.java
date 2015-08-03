@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package winordie;
+package com.wdt.java;
 
 import static java.lang.Math.pow;
 import java.util.ArrayList;
