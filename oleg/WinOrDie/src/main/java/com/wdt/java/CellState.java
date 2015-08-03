@@ -1,7 +1,7 @@
-package winordie;
+package com.wdt.java;
 
 
-import winordie.Constants;
+import com.wdt.java.Constants;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
