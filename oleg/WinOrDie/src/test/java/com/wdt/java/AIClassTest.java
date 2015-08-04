@@ -6,6 +6,7 @@
 package com.wdt.java;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import junit.framework.TestCase;
 
@@ -34,13 +35,13 @@ public class AIClassTest extends TestCase {
      */
     public void testNextStepAI() {
         System.out.println("nextStepAI");
-        List<CellState> gameField = null;
+        List<CellState> gameField = new ArrayList<CellState>();
         AIClass instance = new AIClass();
-        List<CellState> expResult = null;
+        List<CellState> expResult = new ArrayList<CellState>();
+        expResult.add(CellState.ZERO);
         List<CellState> result = instance.nextStepAI(gameField);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -49,23 +50,14 @@ public class AIClassTest extends TestCase {
     public void testGetVariantsToCheck() {
         System.out.println("getVariantsToCheck");
         int dimention = 2;
-        List<Integer> expResult = new ArrayList <Integer> ();
-        expResult.add(1);
-        expResult.add(2); //.addAll(1,2,3,4,1,3,2,4,1,4,2,3);
-        expResult.add(3);
-        expResult.add(4);
-        expResult.add(1);
-        expResult.add(3);
-        expResult.add(2);
-        expResult.add(4);
-        expResult.add(1);
-        expResult.add(4);
-        expResult.add(2);
-        expResult.add(3);
+        List<Integer> expResult = new ArrayList<Integer>();
+        expResult=Arrays.asList(1,2,3,4,1,3,2,4,1,4,2,3);
+//        List<Integer> expResult = ["1"];
         List<Integer> result = AIClass.getVariantsToCheck(dimention);
+        System.out.println(result);
+        System.out.println(expResult);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }
