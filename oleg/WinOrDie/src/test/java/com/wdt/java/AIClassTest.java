@@ -51,8 +51,12 @@ public class AIClassTest extends TestCase {
         int dimention = 2;
         List<Integer> expResult = new ArrayList <Integer> ();
         expResult.add(1);
-        expResult.add(2); //.addAll(1,2,3,4,1,4,2,3);
+        expResult.add(2); //.addAll(1,2,3,4,1,3,2,4,1,4,2,3);
         expResult.add(3);
+        expResult.add(4);
+        expResult.add(1);
+        expResult.add(3);
+        expResult.add(2);
         expResult.add(4);
         expResult.add(1);
         expResult.add(4);
