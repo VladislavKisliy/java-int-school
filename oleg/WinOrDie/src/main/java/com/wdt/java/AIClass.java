@@ -23,7 +23,7 @@ public class AIClass implements AI {
     //which should be filled to win the game
     //depending on dimenton of GameField
     public static List<Integer> getVariantsToCheck(int dimention){
-        List<Integer> listOfPositions=new ArrayList<Integer>();
+        List listOfPositions=new ArrayList<Integer>();
         //horizontal set of values
         //like [{1,2,3},{4,5,6},{7,8,9}] for dimention=3
         for(int i=0;i<pow(dimention,2);i+=dimention){
