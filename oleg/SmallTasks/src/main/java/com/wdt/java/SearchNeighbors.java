@@ -18,12 +18,14 @@ public class SearchNeighbors {
     /**
      *
      * @param inInt
+     * @param inList
      * @return
      */
-    public static String[] getNeghbors(double inInt,TreeSet inList){
+    public static String[] getNeghbors(int inInt,TreeSet inList){
         String[] outResult = new String[2];
-        outResult[0]=String.valueOf(inList.floor(inInt));
-        outResult[1]=String.valueOf(inList.higher(inInt));
+        double inConv=inInt*1.0;
+        outResult[0]=String.valueOf(inList.floor(inConv));
+        outResult[1]=String.valueOf(inList.higher(inConv));
         return outResult;
     }
 }

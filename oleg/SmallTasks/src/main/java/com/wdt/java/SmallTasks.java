@@ -27,7 +27,7 @@ public class SmallTasks {
         System.out.println("Duplicates:"+SearhDuplicates.duplicatesOrUniq(inStr,'D').toString());
         System.out.println("Unique:"+SearhDuplicates.duplicatesOrUniq(inStr,'U').toString());
     }
-    public static void checkNeighbors(double inInt, String pathToFile){
+    public static void checkNeighbors(int inInt, String pathToFile){
         FileControl controlFile=new FileControl();
         String inStr=controlFile.read(pathToFile);
         TreeSet sequence=new TreeSet();
