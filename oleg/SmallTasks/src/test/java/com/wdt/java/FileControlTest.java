@@ -11,7 +11,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Rustem
+ * @author Oleg
  */
 public class FileControlTest extends TestCase {
     

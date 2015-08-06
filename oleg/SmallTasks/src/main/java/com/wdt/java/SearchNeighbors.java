@@ -24,7 +24,7 @@ public class SearchNeighbors {
     public static String[] getNeghbors(int inInt,TreeSet inList){
         String[] outResult = new String[2];
         double inConv=inInt*1.0;
-        outResult[0]=String.valueOf(inList.floor(inConv));
+        outResult[0]=String.valueOf(inList.lower(inConv));
         outResult[1]=String.valueOf(inList.higher(inConv));
         return outResult;
     }
