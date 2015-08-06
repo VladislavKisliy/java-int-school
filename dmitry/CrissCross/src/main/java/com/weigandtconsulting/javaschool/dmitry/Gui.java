@@ -20,10 +20,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
+
 import java.awt.Font;
+
 import javax.swing.SwingUtilities;
 
 
+@SuppressWarnings("serial")
 public class Gui extends JFrame {
 
 	private JPanel contentPane;
