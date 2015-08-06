@@ -22,7 +22,7 @@ public class GameUser implements IGameUser{
     }
     public String getName(){return this.name;}
     public CellState getSignToGo(){return this.signToGo;}
-    public List<CellState> nextStep(List<CellState> battleField){
-        return battleField;
-    }
+//    public List<CellState> nextStep(List<CellState> battleField){
+//        return battleField;
+//    }
 }

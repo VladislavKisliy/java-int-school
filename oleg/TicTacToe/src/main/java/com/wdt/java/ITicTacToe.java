@@ -11,8 +11,8 @@ import java.util.List;
  *
  * @author Oleg
  */
-public interface IGameUser {
-    String getName();
-    CellState getSignToGo();
-    //List<CellState> nextStep(List<CellState> battleField);
+public interface ITicTacToe {
+    List<CellState> nextStep(List<CellState> gameField);
+    boolean hasNextStep(List<CellState> gameField);
+    String getPlayerName();
 }
