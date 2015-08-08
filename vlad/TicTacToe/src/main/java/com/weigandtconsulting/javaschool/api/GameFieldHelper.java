@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author vlad
  */
-public interface GameField {
+public interface GameFieldHelper {
 
     Boolean isWinner(List<CellState> gameField, CellState player);
 

@@ -16,7 +16,7 @@
  */
 package com.weigandtconsulting.javaschool.service;
 
-import com.weigandtconsulting.javaschool.api.GameField;
+import com.weigandtconsulting.javaschool.api.GameFieldHelper;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author vlad
  */
-public class GameFieldImpl implements GameField {
+public class GameFieldHelperImpl implements GameFieldHelper {
 
     private static final int LINE_SIZE = 3;
     public static final int CELL_AMOUNT = LINE_SIZE * LINE_SIZE;
