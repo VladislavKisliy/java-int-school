@@ -32,9 +32,11 @@ public class GuiApplication extends Application {
         
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
-        
+
         stage.setTitle("TicTacToe GUI(JavaFX)");
         stage.setScene(scene);
+        stage.setResizable(false);
+
         stage.show();
     }
 
