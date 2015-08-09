@@ -16,6 +16,7 @@
  */
 package com.weigandtconsulting.javaschool;
 
+import com.weigandtconsulting.javaschool.controllers.FXMLController;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -28,8 +29,11 @@ public class GuiApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
         
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/Scene.fxml"));
+        fxmlLoader.setController(new FXMLController());
+        
+        Parent root = (Parent) fxmlLoader.load();
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
 
