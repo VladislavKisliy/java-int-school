@@ -16,7 +16,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>com.weigandtconsulting.javaschool.GuiApplication</mainClass>
     </properties>
-    
+    <dependencies>
+        <dependency>
+            <groupId>com.weigandtconsulting.javaschool</groupId>
+            <artifactId>TicTacToeApi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
