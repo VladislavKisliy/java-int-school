@@ -18,6 +18,7 @@ package com.weigandtconsulting.javaschool.service;
 
 import com.weigandtconsulting.javaschool.beans.CellState;
 import static com.weigandtconsulting.javaschool.beans.CellState.*;
+import com.weigandtconsulting.javaschool.beans.Game;
 import static com.weigandtconsulting.javaschool.service.GameFieldHelperImpl.CELL_AMOUNT;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -185,5 +186,49 @@ public class GameFieldHelperImplTest {
     public void testDoStepException() {
         GameFieldHelperImpl instance = new GameFieldHelperImpl();
         instance.doStep(Arrays.asList(fullField), CellState.TIC, 6);
+    }
+
+    /**
+     * Test of isFieldEmpty method, of class GameFieldHelperImpl.
+     */
+    @Test
+    public void testIsFieldEmpty() {
+        GameFieldHelperImpl instance = new GameFieldHelperImpl();
+        assertFalse("Full field", instance.isFieldEmpty(Arrays.asList(fullField)));
+        assertFalse("Variant1", instance.isFieldEmpty(Arrays.asList(variant1)));
+        
+        assertTrue("Empty field", instance.isFieldEmpty(instance.getNewField()));
+    }
+
+    /**
+     * Test of analyzeGame method, of class GameFieldHelperImpl.
+     */
+    @Test
+    public void testAnalyzeGame() {
+        GameFieldHelperImpl instance = new GameFieldHelperImpl();
+        Game result = instance.analyzeGame(Arrays.asList(fullField));
+        assertEquals("FullField. game over", Game.State.OVER, result.getState());
+        assertEquals("FullField. draw", Game.Result.DRAW, result.getResult());
+        assertEquals("FullField. winner", CellState.TOE, result.getWinnerSign());
+        
+        result = instance.analyzeGame(Arrays.asList(variant1));
+        assertEquals("variant1. game over", Game.State.OVER, result.getState());
+        assertEquals("variant1. win", Game.Result.WIN, result.getResult());
+        assertEquals("variant1. winner", CellState.TAC, result.getWinnerSign());
+        
+        result = instance.analyzeGame(Arrays.asList(variant2));
+        assertEquals("variant2. game over", Game.State.OVER, result.getState());
+        assertEquals("variant2. win", Game.Result.WIN, result.getResult());
+        assertEquals("variant2. winner", CellState.TAC, result.getWinnerSign());
+        
+        result = instance.analyzeGame(instance.getNewField());
+        assertEquals("NewField. game over", Game.State.START, result.getState());
+        assertEquals("NewField. win", Game.Result.UKNOWN, result.getResult());
+        assertEquals("NewField. winner", CellState.TOE, result.getWinnerSign());
+        
+        result = instance.analyzeGame(Arrays.asList(variant5));
+        assertEquals("variant5. game over", Game.State.CONTINUE, result.getState());
+        assertEquals("variant5. win", Game.Result.UKNOWN, result.getResult());
+        assertEquals("variant5. winner", CellState.TOE, result.getWinnerSign());
     }
 }
