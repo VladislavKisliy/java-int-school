@@ -17,6 +17,7 @@
 package com.weigandtconsulting.javaschool.api;
 
 import com.weigandtconsulting.javaschool.beans.CellState;
+import com.weigandtconsulting.javaschool.beans.Game;
 import java.util.List;
 
 /**
@@ -29,6 +30,8 @@ public interface GameFieldHelper {
 
     Boolean isGameOver(List<CellState> gameField);
 
+    Game analyzeGame(List<CellState> gameField);
+    
     List<CellState> getNewField();
 
     List<Integer> getAvailableMoves(List<CellState> gameField);

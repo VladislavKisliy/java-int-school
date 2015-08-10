@@ -18,6 +18,7 @@ package com.weigandtconsulting.javaschool.service;
 
 import com.weigandtconsulting.javaschool.api.GameFieldHelper;
 import com.weigandtconsulting.javaschool.beans.CellState;
+import com.weigandtconsulting.javaschool.beans.Game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,15 +73,9 @@ public class GameFieldHelperImpl implements GameFieldHelper {
 
     @Override
     public Boolean isGameOver(List<CellState> gameField) {
-        boolean result = false;
-        if (isFieldFull(gameField)) {
-            result = true;
-        } else {
-            if (isWinner(gameField, CellState.TIC)) {
-                result = true;
-            } else if (isWinner(gameField, CellState.TAC)) {
-                result = true;
-            }
+        Boolean result = Boolean.FALSE;
+        if (analyzeGame(gameField).getState() == Game.State.OVER) {
+            result = Boolean.TRUE;
         }
         return result;
     }
@@ -94,7 +89,7 @@ public class GameFieldHelperImpl implements GameFieldHelper {
         }
         return result;
     }
-    
+
     @Override
     public List<CellState> getNewField() {
         return EMPTY_GAME_FIELD;
@@ -123,6 +118,28 @@ public class GameFieldHelperImpl implements GameFieldHelper {
         }
 
         return Arrays.asList(result);
+    }
+
+    @Override
+    public Game analyzeGame(List<CellState> gameField) {
+        Game game = new Game();
+        if (isWinner(gameField, CellState.TIC)) {
+            game.setState(Game.State.OVER);
+            game.setResult(Game.Result.WIN);
+            game.setWinnerSign(CellState.TIC);
+        } else if (isWinner(gameField, CellState.TAC)) {
+            game.setState(Game.State.OVER);
+            game.setResult(Game.Result.WIN);
+            game.setWinnerSign(CellState.TAC);
+        } else if (isFieldFull(gameField)) {
+            game.setState(Game.State.OVER);
+            game.setResult(Game.Result.DRAW);
+        } else if (gameField == getNewField()) {
+            game.setState(Game.State.START);
+        } else {
+            game.setState(Game.State.CONTINUE);
+        }
+        return game;
     }
 
     private boolean isFieldFull(List<CellState> gameField) {

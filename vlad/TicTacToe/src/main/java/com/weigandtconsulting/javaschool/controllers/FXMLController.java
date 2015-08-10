@@ -59,6 +59,7 @@ public class FXMLController implements Initializable, Showable {
 
     @Override
     public void refreshBattleField(List<CellState> battleField) {
+        System.out.println("Turn ="+battleField);
         int counterCell = 0;
         for (CellState cellState : battleField) {
             switch (counterCell) {

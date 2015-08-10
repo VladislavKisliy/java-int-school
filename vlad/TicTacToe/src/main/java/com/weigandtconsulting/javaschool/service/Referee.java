@@ -16,15 +16,20 @@
  */
 package com.weigandtconsulting.javaschool.service;
 
+import com.weigandtconsulting.javaschool.api.Showable;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
+import com.weigandtconsulting.javaschool.beans.Game;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author vlad
  */
 public class Referee {
-    
+
+    private final GameFieldHelperImpl gameHelper = new GameFieldHelperImpl();
     private final TicTacToe playerTic;
     private final TicTacToe playerTac;
 
@@ -32,11 +37,46 @@ public class Referee {
         this.playerTic = playerTic;
         this.playerTac = playerTac;
     }
-    
-    public void startGame(CellState startSign) {
-        
+
+    public void startGame(Showable view, CellState startSign) {
+        List<TicTacToe> generateTurns = generateTurns(startSign);
+        List<CellState> gameField = gameHelper.getNewField();
+        Game game;
+        List<CellState> newStep;
+        for (TicTacToe currentPlayer : generateTurns) {
+            newStep = currentPlayer.nextStep(gameField);
+            if (isCorrectTurn(gameField, newStep)) {
+                gameField = newStep;
+                view.refreshBattleField(gameField);
+                game = gameHelper.analyzeGame(gameField);
+                if (game.getState() == Game.State.OVER) {
+                    System.out.println("Game is OVER ="+game);
+                    break;
+                }
+            }
+        }
+
     }
-    
-    
-    
+
+    boolean isCorrectTurn(List<CellState> gameFieldBefore, List<CellState> gameFieldAfter) {
+        return true;
+    }
+
+    private List<TicTacToe> generateTurns(CellState startSign) {
+        if (startSign == CellState.TOE) {
+            throw new IllegalArgumentException("You should use correct signs");
+        }
+        List<TicTacToe> result = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            if (startSign == CellState.TIC) {
+                result.add(playerTic);
+                result.add(playerTac);
+            } else {
+                result.add(playerTac);
+                result.add(playerTic);
+            }
+        }
+        return result;
+    }
+
 }

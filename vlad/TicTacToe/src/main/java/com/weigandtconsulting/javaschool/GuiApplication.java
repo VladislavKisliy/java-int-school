@@ -16,7 +16,11 @@
  */
 package com.weigandtconsulting.javaschool;
 
+import com.weigandtconsulting.javaschool.api.TicTacToe;
+import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.controllers.FXMLController;
+import com.weigandtconsulting.javaschool.service.Player;
+import com.weigandtconsulting.javaschool.service.Referee;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -31,7 +35,8 @@ public class GuiApplication extends Application {
     public void start(Stage stage) throws Exception {
         
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/Scene.fxml"));
-        fxmlLoader.setController(new FXMLController());
+        FXMLController fxmlController = new FXMLController();
+        fxmlLoader.setController(fxmlController);
         
         Parent root = (Parent) fxmlLoader.load();
         Scene scene = new Scene(root);
@@ -42,6 +47,11 @@ public class GuiApplication extends Application {
         stage.setResizable(false);
 
         stage.show();
+        
+        TicTacToe playerTic = new Player(CellState.TIC);
+        TicTacToe playerTac = new Player(CellState.TAC);
+        Referee referee = new Referee(playerTic, playerTac);
+        referee.startGame(fxmlController, CellState.TIC);
     }
 
     /**

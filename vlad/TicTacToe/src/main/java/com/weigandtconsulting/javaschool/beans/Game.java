@@ -35,6 +35,7 @@ public class Game {
     
     private State state = State.START;
     private Result result = Result.UKNOWN;
+    private CellState winnerSign = CellState.TOE;
 
     public State getState() {
         return state;
@@ -51,6 +52,17 @@ public class Game {
     public void setResult(Result result) {
         this.result = result;
     }
-    
-    
+
+    public CellState getWinnerSign() {
+        return winnerSign;
+    }
+
+    public void setWinnerSign(CellState winnerSign) {
+        this.winnerSign = winnerSign;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" + "state=" + state + ", result=" + result + ", winnerSign=" + winnerSign + '}';
+    }
 }
