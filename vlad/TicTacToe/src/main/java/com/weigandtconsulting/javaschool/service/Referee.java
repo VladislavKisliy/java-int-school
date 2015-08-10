@@ -59,7 +59,18 @@ public class Referee {
     }
 
     boolean isCorrectTurn(List<CellState> gameFieldBefore, List<CellState> gameFieldAfter) {
-        return true;
+        int changeCounter = 0;
+        boolean result = false;
+        List<Integer> availableMoves = gameHelper.getAvailableMoves(gameFieldBefore);
+        for (Integer index : availableMoves) {
+            if (gameFieldAfter.get(index) != CellState.TOE) {
+                changeCounter++;
+            }
+        }
+        if (changeCounter == 1) {
+            result = true;
+        }
+        return result;
     }
 
     private List<TicTacToe> generateTurns(CellState startSign) {
