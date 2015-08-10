@@ -18,7 +18,7 @@ package com.weigandtconsulting.javaschool.service;
 
 import com.weigandtconsulting.javaschool.beans.CellState;
 import static com.weigandtconsulting.javaschool.beans.CellState.*;
-import static com.weigandtconsulting.javaschool.service.GameFieldImpl.CELL_AMOUNT;
+import static com.weigandtconsulting.javaschool.service.GameFieldHelperImpl.CELL_AMOUNT;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
  *
  * @author vlad
  */
-public class GameFieldImplTest {
+public class GameFieldHelperImplTest {
 
     private final CellState[] variant1 = {
             TAC, TAC, TAC,
@@ -66,7 +66,7 @@ public class GameFieldImplTest {
             TAC, TIC, TIC,
             TAC, TIC, TAC};
     
-    public GameFieldImplTest() {
+    public GameFieldHelperImplTest() {
     }
 
     @BeforeClass
@@ -92,7 +92,7 @@ public class GameFieldImplTest {
     public void testIsWinner() {
         CellState playerTAC = CellState.TAC;
 
-        GameFieldImpl instance = new GameFieldImpl();
+        GameFieldHelperImpl instance = new GameFieldHelperImpl();
         Boolean result = instance.isWinner(instance.getNewField(), playerTAC);
         Assert.assertFalse("Empty field", result);
         // Winner section
@@ -114,7 +114,7 @@ public class GameFieldImplTest {
      */
     @Test
     public void testGetNewField() {
-        GameFieldImpl instance = new GameFieldImpl();
+        GameFieldHelperImpl instance = new GameFieldHelperImpl();
         List<CellState> expResult = new ArrayList<>(CELL_AMOUNT);
         for (int i = 0; i < CELL_AMOUNT; i++) {
             expResult.add(CellState.TOE);
@@ -128,7 +128,7 @@ public class GameFieldImplTest {
      */
     @Test
     public void testIsGameOver() {
-        GameFieldImpl instance = new GameFieldImpl();
+        GameFieldHelperImpl instance = new GameFieldHelperImpl();
         Assert.assertTrue("Winner situation 1", instance.isGameOver(Arrays.asList(variant1)));
         Assert.assertTrue("Winner situation 2", instance.isGameOver(Arrays.asList(variant2)));
         Assert.assertFalse("Nothing", instance.isGameOver(Arrays.asList(variant5)));
@@ -140,7 +140,7 @@ public class GameFieldImplTest {
      */
     @Test
     public void testGetAvailableMoves() {
-        GameFieldImpl instance = new GameFieldImpl();
+        GameFieldHelperImpl instance = new GameFieldHelperImpl();
         List<Integer> result = instance.getAvailableMoves(Arrays.asList(fullField));
         assertEquals("Full length", 0, result.size());
         
@@ -176,14 +176,14 @@ public class GameFieldImplTest {
             TOE, TIC, TOE,
             TOE, TOE, TOE};
         
-        GameFieldImpl instance = new GameFieldImpl();
+        GameFieldHelperImpl instance = new GameFieldHelperImpl();
         List<CellState> result = instance.doStep(Arrays.asList(variant1), CellState.TIC, 4);
         assertEquals("Insertion error", Arrays.asList(expResult), result);
     }
     
     @Test(expected = IllegalArgumentException.class)
     public void testDoStepException() {
-        GameFieldImpl instance = new GameFieldImpl();
+        GameFieldHelperImpl instance = new GameFieldHelperImpl();
         instance.doStep(Arrays.asList(fullField), CellState.TIC, 6);
     }
 }

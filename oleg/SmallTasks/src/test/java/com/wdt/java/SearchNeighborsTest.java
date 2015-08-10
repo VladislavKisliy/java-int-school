@@ -7,6 +7,7 @@ package com.wdt.java;
 
 import java.util.TreeSet;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -31,15 +32,20 @@ public class SearchNeighborsTest extends TestCase {
     /**
      * Test of getNeghbors method, of class SearchNeighbors.
      */
+    @Test
     public void testGetNeghbors() {
         System.out.println("getNeghbors");
-        double inInt = 0.0;
-        TreeSet inList = null;
-        String[] expResult = null;
+        int inInt = 11;
+        TreeSet inList =new TreeSet();
+        for (double i=-100.0;i<=100.0;i+=0.1){
+            inList.add(Math.round(i * 10.0)/10.0);
+        }
+        String[] expResult=new String[2];
+        expResult[0]="10.9";
+        expResult[1]="11.1";
         String[] result = SearchNeighbors.getNeghbors(inInt, inList);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(expResult[0], result[0]);
+        assertEquals(expResult[1], result[1]);
     }
     
 }

@@ -16,7 +16,7 @@
  */
 package com.weigandtconsulting.javaschool.service;
 
-import com.weigandtconsulting.javaschool.api.GameField;
+import com.weigandtconsulting.javaschool.api.GameFieldHelper;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class Player implements TicTacToe {
 
     private static final int WIN_SCORE = 10;
     private final CellState playerSymbol;
-    private final GameField innerGameField = new GameFieldImpl();
+    private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
     private final int[] bestStartSolutions = {0,2,6,8,4};
     private final Random random = new Random();
 

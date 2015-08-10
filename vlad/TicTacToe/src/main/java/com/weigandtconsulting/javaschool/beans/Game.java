@@ -14,29 +14,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.weigandtconsulting.javaschool.service;
-
-import com.weigandtconsulting.javaschool.api.TicTacToe;
-import com.weigandtconsulting.javaschool.beans.CellState;
+package com.weigandtconsulting.javaschool.beans;
 
 /**
  *
  * @author vlad
  */
-public class Referee {
-    
-    private final TicTacToe playerTic;
-    private final TicTacToe playerTac;
+public class Game {
 
-    public Referee(TicTacToe playerTic, TicTacToe playerTac) {
-        this.playerTic = playerTic;
-        this.playerTac = playerTac;
+    public enum State {
+
+        START, CONTINUE, OVER
+    }
+
+    public enum Result {
+
+        UKNOWN, WIN, DRAW
     }
     
-    public void startGame(CellState startSign) {
-        
-    }
     
+    private State state = State.START;
+    private Result result = Result.UKNOWN;
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
+    }
     
     
 }

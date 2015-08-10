@@ -14,29 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.weigandtconsulting.javaschool.service;
+package com.weigandtconsulting.javaschool.api;
 
-import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
+import java.util.List;
 
 /**
  *
  * @author vlad
  */
-public class Referee {
-    
-    private final TicTacToe playerTic;
-    private final TicTacToe playerTac;
+public interface GameFieldHelper {
 
-    public Referee(TicTacToe playerTic, TicTacToe playerTac) {
-        this.playerTic = playerTic;
-        this.playerTac = playerTac;
-    }
+    Boolean isWinner(List<CellState> gameField, CellState player);
+
+    Boolean isGameOver(List<CellState> gameField);
+
+    List<CellState> getNewField();
+
+    List<Integer> getAvailableMoves(List<CellState> gameField);
+
+    List<CellState> doStep(List<CellState> gameField, CellState playerSign, Integer position);
     
-    public void startGame(CellState startSign) {
-        
-    }
-    
-    
-    
+    Boolean isFieldEmpty(List<CellState> gameField);
 }
