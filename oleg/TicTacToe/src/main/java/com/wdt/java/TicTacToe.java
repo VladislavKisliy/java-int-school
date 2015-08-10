@@ -14,19 +14,21 @@ import java.util.Random;
  * @author Oleg
  */
 public  class TicTacToe implements ITicTacToe{
-
+    String playerName;
+    CellState signToGo;
     /**
      * @param args the command line arguments
      */
-    public TicTacToe(){
+    public TicTacToe(String inPName, CellState inSignToGo){
         List<CellState> gameField = new ArrayList<CellState>((int)(Math.pow(Constants.DIMENSION,2)));
+        this.playerName=inPName;
+        this.signToGo=inSignToGo;
     }
     public static void main(String[] args) {
         List<CellState> battleField =new ArrayList<CellState>();
         //temp part to fill battlefield with random values
         GUIMainForm MyForm=new GUIMainForm();
-        MyForm.setVisible(true);
-        
+        MyForm.setVisible(true);        
 //        int dim=Constants.DIMENSION;
 //        Random rand=new Random();
 //        for (int i=0;i<dim*dim;i++){
@@ -45,21 +47,14 @@ public  class TicTacToe implements ITicTacToe{
         
     }
     public List<CellState> nextStep(List<CellState> gameField){
-        int step = gameField.indexOf(CellState.ZERO);
-        gameField.add(step, CellState.ZERO);
-//        How to know who need to walk now?
-//        where to define which user and with which sign is going?
+        int step = gameField.indexOf(CellState.NONE);
+        gameField.add(step, this.signToGo);
         return gameField;
     }
     public boolean hasNextStep(List<CellState> gameField){
         return gameField.contains(CellState.NONE);
     }
     public String getPlayerName(){
-        return "dummy";
-//  Where does it expected to take user name?
-//  Should we refer here to created instance of some USER class?
-//          
-    }
- 
-    
+        return this.playerName;
+    }    
 }

@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -47,22 +48,23 @@ public class TicTacToeTest {
         String[] args = null;
         TicTacToe.main(args);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
 
     /**
      * Test of nextStep method, of class TicTacToe.
      */
     @Test
+    @Ignore 
     public void testNextStep() {
         System.out.println("nextStep");
         List<CellState> gameField = null;
-        TicTacToe instance = new TicTacToe();
+        TicTacToe instance = new TicTacToe("Oleg",CellState.ZERO);
         List<CellState> expResult = null;
         List<CellState> result = instance.nextStep(gameField);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
 
     /**
@@ -71,12 +73,12 @@ public class TicTacToeTest {
     @Test
     public void testGetPlayerName() {
         System.out.println("getPlayerName");
-        TicTacToe instance = new TicTacToe();
-        String expResult = "";
+        TicTacToe instance = new TicTacToe("Oleg",CellState.CROSS);
+        String expResult = "Oleg";
         String result = instance.getPlayerName();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
     
 }
