@@ -1,4 +1,4 @@
-package com.weigandtconsulting.javaschool.dmitry;
+package com.wdt.java;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 public class Multic extends Thread{
 	private static int var = 0;
 	
+        @Override
 	public void run(){
 		System.out.println("Thread has been started");
 		this.incVar();
