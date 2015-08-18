@@ -16,7 +16,9 @@
     </parent>
 
     <modules>
-        <module>short-tasks</module>
+	<module>short-tasks</module>
+	<module>wtc</module>
+	<module>CrissCross</module>
     </modules>
     
 </project>
