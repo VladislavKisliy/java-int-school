@@ -43,8 +43,11 @@ public class ServerSideChat{
 				// listen for messages
 				String input;
 				while ((input = in.readLine()) != null) {
-					if (input.equals("quit"))
+					if (input.equals("quit")){
+						out.println("Go away");
+						System.out.println("Client " + name + " is disconnected."); 
 						return;
+					}						
                     for (PrintWriter writer : writerList) {
                     	if (writer != out)
                     		writer.println(name + ": " + input);

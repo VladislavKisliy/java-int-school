@@ -13,12 +13,17 @@ public class ClientSideChat extends Thread{
 	private static BufferedReader in;
     private static PrintWriter out;
     private static String name;
+    private static boolean working = true;
     
 	public void run(){
 		String fromServer;
     	try {
-			while ((fromServer = in.readLine()) != null) {
+			while ((fromServer = in.readLine()) != null) {				
 				System.out.println(fromServer);
+				if (fromServer.equals("Go away")){
+					working = false;
+					return;
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -47,7 +52,7 @@ public class ClientSideChat extends Thread{
         new ClientSideChat().start();
         
         try{
-        	while((fromUser = userInput.nextLine()) != null){        		
+        	while(working && (fromUser = userInput.nextLine()) != null){        		
         		out.println(fromUser);
         	}
         } finally{
