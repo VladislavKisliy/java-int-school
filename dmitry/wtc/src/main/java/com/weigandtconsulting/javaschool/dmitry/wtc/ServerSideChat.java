@@ -18,10 +18,10 @@ public class ServerSideChat{
 	private static Set<String> names = new HashSet<String>();
 	
 	private static class ClientHandler extends Thread{
-		Socket clientSocket;
+		private Socket clientSocket;
 		private BufferedReader in;
         private PrintWriter out;
-        String name;
+        private String name;
 
 		public ClientHandler(Socket clientSocket){
 			this.clientSocket = clientSocket;
@@ -43,6 +43,8 @@ public class ServerSideChat{
 				// listen for messages
 				String input;
 				while ((input = in.readLine()) != null) {
+					if (input.equals("quit"))
+						return;
                     for (PrintWriter writer : writerList) {
                     	if (writer != out)
                     		writer.println(name + ": " + input);
