@@ -6,7 +6,6 @@ package com.wdt.mult;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -15,22 +14,43 @@ import java.util.Map;
 public class MultThreading extends Thread {
     private static Integer commonIterator;
     
-    public void run() {
-        commonIterator++;
-        System.out.println("Iterator:"+commonIterator);
+    private final static int THREADS_AMOUNT = 10;
+
+    public int getCommonIterator() {
+        return commonIterator;
+    }
+
+    public void setCommonIterator(Integer commonIterator) {
+        MultThreading.commonIterator = commonIterator;
     }
     
-    public static void main(String[] args) {                
+    @Override
+    public void run() {
+        int localIterator = getCommonIterator();
+        localIterator++;
+        setCommonIterator(localIterator);
+        System.out.println(getName()+".Iterator:"+commonIterator);
+        
+    }
+    
+    public void startThreads() throws InterruptedException {
         System.out.println("Start");
-        commonIterator = 0;
-        List<Thread> arrThread= new ArrayList<Thread>();
-        for (int i=0; i<10; i++) {
+        List<Thread> arrThread = new ArrayList<Thread>();
+        for (int i = 0; i < THREADS_AMOUNT; i++) {
             arrThread.add(new MultThreading());
         }
-        for (int i=0; i<10; i++) {
-            arrThread.get(i).start();
+        for (Thread currentThread : arrThread) {
+            currentThread.start();
         }
-        System.out.println("End with Iterator:"+commonIterator);
+        System.out.println("End1 with Iterator:" + commonIterator);
+        arrThread.get(THREADS_AMOUNT-1).join();
+        System.out.println("End2 with Iterator:" + commonIterator);
+    }
+
+    
+    public static void main(String[] args) throws InterruptedException {
+        commonIterator = 0;
+        new MultThreading().startThreads();
     }
     
 }
