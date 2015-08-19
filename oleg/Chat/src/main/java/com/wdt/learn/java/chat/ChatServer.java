@@ -6,23 +6,58 @@
 
 package com.wdt.learn.java.chat;
 
+
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.ServerSocket;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.*;
 
 /**
  *
  * @author Oleg 
  */
 public class ChatServer implements Runnable {
+        
     public ChatServer(int serverPort){
+        ServerSocket server;
+        Socket client;
         try{
-            ServerSocket server = new ServerSocket(serverPort); 
+            server = new ServerSocket(serverPort); 
         }catch(IOException e){
             System.out.println("Failed to listen port: "+serverPort);
             System.exit(-1);
         }    
-    }
+//        listenSocketSocketserver.acceptSocket
+        try{
+            client = server.accept();
+        } catch (IOException e) {
+            System.out.println("Accept failed: 4321");
+            System.exit(-1);
+        }
+
+//      listenSocketBufferedReaderclientPrintWriter
+        try{
+            BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            PrintWriter out = new PrintWriter(client.getOutputStream(),true);
+        } catch (IOException e) {
+            System.out.println("Read failed");
+            System.exit(-1);
+        }
+//      listenSocket
+          while(true){
+            try{
+              String line = in.readLine();
+      //Send data back to client
+              System.out.println(line);
+            } catch (IOException e) {
+              System.out.println("Read failed");
+              System.exit(-1);
+            }
+          }}
+    
     public void run(){
 
     }
 }
+
