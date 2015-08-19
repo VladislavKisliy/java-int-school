@@ -12,31 +12,23 @@ import com.sun.corba.se.impl.orbutil.closure.Constant;
  *
  * @author Oleg 
  */
+
 public class ThreadsParallelRun implements Runnable{
-    Integer i= 0 ;
-//    public static int getGlobalValue(){
-//        return i;
-//    }
     public void incrementValue()
     {
-        i++;
-        System.out.println(i);
+        GlobalVariables.GLOBAL_I++;
+        System.out.println(GlobalVariables.GLOBAL_I);
     }
     public void run() {
-        this.incrementValue();
+        incrementValue();
     }
 
      public static void main(String args[]) throws InterruptedException {
-//        Thread testThread = new Thread(new ThreadsParallelRun());
-//        Runnable testRun = ; 
         System.out.println("Hello, World. I'm main.");
         for (int z=0;z<10;z++)
         {
-//            (new Thread(new ThreadsParallelRun())).start();
             Thread testThread = new Thread(new ThreadsParallelRun());
             testThread.start();
         }
-        
-//        System.out.println(String.valueOf(i));
      }
 }
