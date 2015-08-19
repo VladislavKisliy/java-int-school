@@ -19,6 +19,7 @@
       <!-- <module>short-tasks</module> -->
         <module>SmallTasks</module>
         <module>WinOrDie</module>
+        <module>Chat</module>
     </modules>
     
 </project>
