@@ -18,10 +18,12 @@ import java.net.*;
  * @author Oleg 
  */
 public class ChatServer implements Runnable {
-        
+    ServerSocket server;
+    Socket client;
+    BufferedReader in;
+    PrintWriter out;   
     public ChatServer(int serverPort){
-        ServerSocket server;
-        Socket client;
+
         try{
             server = new ServerSocket(serverPort); 
         }catch(IOException e){
@@ -38,8 +40,8 @@ public class ChatServer implements Runnable {
 
 //      listenSocketBufferedReaderclientPrintWriter
         try{
-            BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            PrintWriter out = new PrintWriter(client.getOutputStream(),true);
+            in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            out = new PrintWriter(client.getOutputStream(),true);
         } catch (IOException e) {
             System.out.println("Read failed");
             System.exit(-1);
@@ -58,6 +60,9 @@ public class ChatServer implements Runnable {
     
     public void run(){
 
+    }
+    public static void main(String args[]){
+        ChatServer localServer=new ChatServer(2047);
     }
 }
 
