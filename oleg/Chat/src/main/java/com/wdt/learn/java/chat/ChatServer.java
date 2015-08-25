@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.*;
 
+
 /**
  *
  * @author Oleg 
@@ -67,7 +68,9 @@ public class ChatServer implements Runnable {
 
     }
     public static void main(String args[]){
-        ChatServer localServer=new ChatServer(2047);
+        ChatConfiguration.setServerPort(2047);
+        int chatServerPort=ChatConfiguration.getServerPort();
+        ChatServer localServer=new ChatServer(chatServerPort);
     }
 }
 
