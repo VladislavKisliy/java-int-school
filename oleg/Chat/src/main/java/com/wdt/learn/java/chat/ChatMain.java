@@ -18,7 +18,7 @@ public class ChatMain {
     public static void main(String[] argc) throws IOException {
     ChatConfiguration.setServerPort(2047);
     ChatConfiguration.setServerName("127.0.0.1");
-    if(argc[1]=="server"){
+    if(argc[0].matches("server")){
         ServerSocket server = new ServerSocket(ChatConfiguration.getServerPort()) ;
         ClientForServer clentObject; 
         clentObject = ChatServerM.listenClentTalk(server);
@@ -27,7 +27,7 @@ public class ChatMain {
             clentObject.getOut().print(msgFromClient);
         }
     }
-    else if (argc[1]=="clent"){
+    else if (argc[0].matches("clent")){
         String userInput;
         ChatClientM client = new ChatClientM("Oleg",ChatConfiguration.getServerName(), ChatConfiguration.getServerPort());
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
@@ -37,6 +37,7 @@ public class ChatMain {
         }
     }
     else {
+        System.out.println("Incorrect input arguments:"+argc[0]);
         System.exit(-1);
     }
     }
