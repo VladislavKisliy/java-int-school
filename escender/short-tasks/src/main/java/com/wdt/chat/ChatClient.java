@@ -17,16 +17,20 @@ import java.net.Socket;
  */
 public class ChatClient  {
      public static void main(String[] args) throws IOException {
+        System.out.println("Client Point 1"); 
         Socket socket = new Socket("127.0.0.1", 8081);
+        System.out.println("Client Point 2"); 
         
         DataInputStream dataInStream = new DataInputStream(socket.getInputStream());
         DataOutputStream dataoutStream = new DataOutputStream(socket.getOutputStream());
         
         BufferedReader bfrReader = new BufferedReader(new InputStreamReader(System.in));
         
+        
         String line = null;
         while (true) {
            line = bfrReader.readLine();
+           
            dataoutStream.writeUTF(line);
            dataoutStream.flush();
            
