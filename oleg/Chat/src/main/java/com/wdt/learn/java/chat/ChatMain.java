@@ -24,7 +24,11 @@ public class ChatMain {
         clentObject = ChatServerM.listenClentTalk(server);
         String msgFromClient;
         while((msgFromClient=clentObject.getIn().readLine())!=null){
-            clentObject.getOut().print(msgFromClient);
+            for (int i = 0; i < ChatServerM.getListOfObjects().size(); i++) {
+                ClientForServer tempObject=(ClientForServer) ChatServerM.getListOfObjects().get(i);
+                tempObject.getOut().print(msgFromClient);
+            }
+            //clentObject.getOut().print(msgFromClient);
         }
     }
     else if (argc[0].matches("clent")){

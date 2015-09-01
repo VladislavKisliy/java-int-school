@@ -11,18 +11,32 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Oleg 
  */
 public class ChatServerM {
+    private static List <ClientForServer> listOfObjects = new ArrayList();
+    public static List getListOfObjects() {
+        return listOfObjects;
+    }
+
+    public static void setListOfObjects(ClientForServer object) {
+        listOfObjects.add(object);
+    }
        
     public static ClientForServer listenClentTalk(ServerSocket server) throws IOException{
         Socket client  = server.accept();
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         PrintWriter out = new PrintWriter(client.getOutputStream(),true);
+        ChatServerM.setListOfObjects(new ClientForServer(client,in,out));
         return new ClientForServer(client,in,out);
     }
+    
+    
 
 }
