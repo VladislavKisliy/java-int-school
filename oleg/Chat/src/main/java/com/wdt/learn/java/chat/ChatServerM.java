@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,15 +24,22 @@ public class ChatServerM {
         return listOfObjects;
     }
 
-    public static void setListOfObjects(ClientForServer object) {
+    public static void addToListOfObjects(ClientForServer object) {
         listOfObjects.add(object);
+    }
+    
+    public static void notifyAllSockets(String message){
+        for (int i=0; i<= ChatServerM.getListOfObjects().size();i++){
+            ClientForServer tempObject=(ClientForServer) ChatServerM.getListOfObjects().get(i);
+            tempObject.getOut().print(message);
+        }
     }
        
     public static ClientForServer listenClentTalk(ServerSocket server) throws IOException{
         Socket client  = server.accept();
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         PrintWriter out = new PrintWriter(client.getOutputStream(),true);
-        ChatServerM.setListOfObjects(new ClientForServer(client,in,out));
+        ChatServerM.addToListOfObjects(new ClientForServer(client,in,out));
         return new ClientForServer(client,in,out);
     }
     

@@ -20,18 +20,16 @@ public class ChatMain {
     ChatConfiguration.setServerName("127.0.0.1");
     if(argc[0].matches("server")){
         ServerSocket server = new ServerSocket(ChatConfiguration.getServerPort()) ;
+        //wrapt to Thread
         ClientForServer clentObject; 
         clentObject = ChatServerM.listenClentTalk(server);
         String msgFromClient;
         while((msgFromClient=clentObject.getIn().readLine())!=null){
-            for (int i = 0; i < ChatServerM.getListOfObjects().size(); i++) {
-                ClientForServer tempObject=(ClientForServer) ChatServerM.getListOfObjects().get(i);
-                tempObject.getOut().print(msgFromClient);
-            }
-            //clentObject.getOut().print(msgFromClient);
+            ChatServerM.notifyAllSockets(msgFromClient);
         }
+        //End thread
     }
-    else if (argc[0].matches("clent")){
+    else if (argc[0].matches("client")){
         String userInput;
         ChatClientM client = new ChatClientM("Oleg",ChatConfiguration.getServerName(), ChatConfiguration.getServerPort());
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
