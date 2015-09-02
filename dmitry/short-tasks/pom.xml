@@ -29,7 +29,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.wdt.java.WordsRead</mainClass>
+                            <mainClass>com.wdt.java.Dispatcher</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
