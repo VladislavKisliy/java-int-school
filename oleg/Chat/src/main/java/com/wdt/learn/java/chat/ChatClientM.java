@@ -28,10 +28,14 @@ public class ChatClientM {
         }
     public void listenServerSocket() throws IOException{
         String serverInput;
-        while ((serverInput = in.readLine())!=null){
-        System.out.println("Me: "+serverInput);
-        out.println(this.name+": "+serverInput);
-    }
+        String clientMessage=null;
+        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+        while ((serverInput = this.in.readLine())!=null || (clientMessage = stdIn.readLine())!=null){
+            System.err.println("I'm in client While!");
+            System.out.println(serverInput);
+            System.out.println("Me: "+clientMessage);
+            out.println(this.name+": "+clientMessage);
+        }
     }
     
 //public static void main (String[] argc) throws IOException{

@@ -30,13 +30,14 @@ public class ChatMain {
         //End thread
     }
     else if (argc[0].matches("client")){
-        String userInput;
+//        String userInput;
         ChatClientM client = new ChatClientM("Oleg",ChatConfiguration.getServerName(), ChatConfiguration.getServerPort());
-        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-        while ((userInput = stdIn.readLine())!=null){
-            System.out.println("Me: "+userInput);
-            ChatClientM.out.println(client.name+": "+userInput);
-        }
+//        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+        client.listenServerSocket();
+//        while ((userInput = stdIn.readLine())!=null){
+//            System.out.println("Me: "+userInput);
+//            ChatClientM.out.println(client.name+": "+userInput);
+//        }
     }
     else {
         System.out.println("Incorrect input arguments:"+argc[0]);

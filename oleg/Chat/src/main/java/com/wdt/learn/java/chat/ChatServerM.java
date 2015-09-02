@@ -29,7 +29,7 @@ public class ChatServerM {
     }
     
     public static void notifyAllSockets(String message){
-        for (int i=0; i<= ChatServerM.getListOfObjects().size();i++){
+        for (int i=0; i< ChatServerM.getListOfObjects().size();i++){
             ClientForServer tempObject=(ClientForServer) ChatServerM.getListOfObjects().get(i);
             tempObject.getOut().print(message);
         }
@@ -40,6 +40,7 @@ public class ChatServerM {
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         PrintWriter out = new PrintWriter(client.getOutputStream(),true);
         ChatServerM.addToListOfObjects(new ClientForServer(client,in,out));
+        out.print("Welcome to Chat!");
         return new ClientForServer(client,in,out);
     }
     
