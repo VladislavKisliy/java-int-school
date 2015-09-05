@@ -11,5 +11,18 @@ package com.wdt.java;
  * @author Oleg 
  */
 public class GlobalVariables {
-    public static Integer GLOBAL_I=0;
+    private static Integer globalI=0;
+
+    public synchronized static Integer getGLOBAL_I() {
+        return globalI;
+    }
+    public synchronized static void increment () {
+        GlobalVariables.globalI++;
+        
+    }
+    public synchronized static void setGLOBAL_I(Integer GLOBAL_I) {
+        GlobalVariables.globalI = GLOBAL_I;
+        
+    }
+    
 }
