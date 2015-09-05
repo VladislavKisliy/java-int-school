@@ -6,22 +6,24 @@
 package com.wdt.java;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
- * @author user
+ * @author Oleg
  */
-public class ThreadsExamplePool implements Callable {
+public class ThreadsExamplePool {
+
+    public static int getNumOfThreads() {
+        return numOfThreads;
+    }
+    private static int numOfThreads=20;
 //    public void run() {
 //        Random rand = new Random();
 //        try {
@@ -32,15 +34,17 @@ public class ThreadsExamplePool implements Callable {
 //            Logger.getLogger(ThreadsExamplePool.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
-    public static void main(String[] argc) {
-        
-        ExecutorService executor = Executors.newFixedThreadPool(20);
+    public static void main(String[] argc) {    
+        ExecutorService executor = Executors.newFixedThreadPool(ThreadsExamplePool.getNumOfThreads());
         Integer result=0;
-        Set<Future<Integer>> set = new HashSet<Future<Integer>>();
-        for (int i=0;i<20;i++){
-            ThreadsExamplePool tempThread = new ThreadsExamplePool();
-            Future <Integer> future=executor.submit(tempThread);
-            set.add(future);
+//        Set<Future<Integer>> set = new HashSet<Future<Integer>>();
+        BlockingQueue threadQueue = new ArrayBlockingQueue(ThreadsExamplePool.getNumOfThreads());
+        for (int i=0; i<ThreadsExamplePool.getNumOfThreads(); i++){
+            ThreadCallable tempThread = new ThreadCallable(i);
+            Future resultF = executor.submit(tempThread);
+            threadQueue.add(resultF);
+            //Future <Integer> future=executor.submit(tempThread);
+//            set.add(future);
 //            try {
 //                result =future.get();
 //            } catch (InterruptedException ex) {
@@ -55,19 +59,4 @@ public class ThreadsExamplePool implements Callable {
         }
         System.out.println("Finished all threads");
     }
-
-    @Override
-    public Integer call() throws Exception {
-        Random rand = new Random();
-        int timeToSleep=rand.nextInt(20);
-        try {
-            TimeUnit.SECONDS.sleep(timeToSleep);
-            System.out.println("Sleeping for "+timeToSleep +" secomds");
-            return timeToSleep;
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ThreadsExamplePool.class.getName()).log(Level.SEVERE, null, ex);
-        }
-       return timeToSleep;
-    }
-    
 }
