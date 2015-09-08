@@ -58,7 +58,6 @@ public class ForkJoinImageProcessClass {
                 image.setRGB(x, y, gray);
             }
         } else{
-            
             int lxStart = this.xStart;
             int lxEnd = (this.xStart-this.xEnd)/2-1;
             int lyStart = this.yStart;
