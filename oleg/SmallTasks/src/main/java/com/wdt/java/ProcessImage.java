@@ -65,26 +65,12 @@ public class ProcessImage {
         return returnArray;
     }
     //http://stackoverflow.com/questions/9131678/convert-a-rgb-image-to-grayscale-image-reducing-the-memory-in-java
-    public BufferedImage makeGray(BufferedImage image)
-    {
-        for (int x = 0; x < image.getWidth(); ++x)
-        for (int y = 0; y < image.getHeight(); ++y)
-        {
-            int rgb = image.getRGB(x, y);
-            int r = (rgb >> 16) & 0xFF;
-            int g = (rgb >> 8) & 0xFF;
-            int b = (rgb & 0xFF);
-            int grayLevel = (r + g + b) / 3;
-            int gray = (grayLevel << 16) + (grayLevel << 8) + grayLevel; 
-            image.setRGB(x, y, gray);
-        }
-        return image;
-    }
+
     public static void main (String[] argc) throws IOException{
         System.out.println("Starting RGB");
         ProcessImage procInstance = new ProcessImage("D:/I_KNOW.JPG");
         BufferedImage image=procInstance.openImage(procInstance.getPathToInFile());
-        procInstance.saveToFile(procInstance.makeGray(image));
+        procInstance.saveToFile(ForkJoinImageProcessClass.makeGray(image));
         System.out.println("After processing image");
     }
 }
