@@ -26,10 +26,9 @@ public class FixedTreadPool extends Thread {
     public static void main(String args[]) throws InterruptedException {
         System.out.println("Start Main");
         List<Future> arrFutures = new LinkedList<Future>();
-        ExecutorService pool = Executors.newFixedThreadPool(5);
-        Random rn = new Random();
+        ExecutorService pool = Executors.newFixedThreadPool(5);        
         for (int i = 0; i < 10; i++) {
-            arrFutures.add(pool.submit(new FixedTreadPool(rn.nextInt(3000))));
+            arrFutures.add(pool.submit(new FixedTreadPool()));
         }
 
         int i = 0;
@@ -46,11 +45,9 @@ public class FixedTreadPool extends Thread {
     }
     private Integer waitTime;
 
-    public FixedTreadPool(Integer waitTime) {
-        this.waitTime = waitTime;
-    }
-
     public void run() {
+        Random rn = new Random();
+        waitTime = rn.nextInt(3000);
         System.out.println("Start thread with sleep time in millisecond - " + waitTime);
         try {
             TimeUnit.MILLISECONDS.sleep(waitTime);
