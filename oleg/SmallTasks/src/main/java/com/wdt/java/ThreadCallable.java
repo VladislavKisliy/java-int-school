@@ -27,7 +27,7 @@ public class ThreadCallable implements Callable  {
         int timeToSleep=rand.nextInt(20);
         try {
             TimeUnit.SECONDS.sleep(timeToSleep);
-            System.out.println("Thread "+threadNum+". Sleeping for "+timeToSleep +" seconds.");
+//            System.out.println("Thread "+threadNum+". Sleeping for "+timeToSleep +" seconds.");
             return timeToSleep;
         } catch (InterruptedException ex) {
             Logger.getLogger(ThreadsExamplePool.class.getName()).log(Level.SEVERE, null, ex);

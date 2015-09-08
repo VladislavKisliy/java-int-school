@@ -7,6 +7,7 @@ package com.wdt.java;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -21,38 +22,23 @@ public class ThreadsExamplePool {
         return numOfThreads;
     }
     private static int numOfThreads=20;
-//    public void run() {
-//        Random rand = new Random();
-//        try {
-//            int timeToSleep=rand.nextInt(20);
-//            TimeUnit.SECONDS.sleep(timeToSleep);
-//            System.out.println("Sleeping for "+timeToSleep +" secomds");
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(ThreadsExamplePool.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
-    public static void main(String[] argc) {    
+    public static void main(String[] argc) throws InterruptedException, ExecutionException {    
         ExecutorService executor = Executors.newFixedThreadPool(ThreadsExamplePool.getNumOfThreads());
         Integer result=0;
-//        Set<Future<Integer>> set = new HashSet<Future<Integer>>();
         BlockingQueue threadQueue = new ArrayBlockingQueue(ThreadsExamplePool.getNumOfThreads());
         for (int i=0; i<ThreadsExamplePool.getNumOfThreads(); i++){
             ThreadCallable tempThread = new ThreadCallable(i);
             Future resultF = executor.submit(tempThread);
             threadQueue.add(resultF);
-            //Future <Integer> future=executor.submit(tempThread);
-//            set.add(future);
-//            try {
-//                result =future.get();
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(ThreadsExamplePool.class.getName()).log(Level.SEVERE, null, ex);
-//            } catch (ExecutionException ex) {
-//                Logger.getLogger(ThreadsExamplePool.class.getName()).log(Level.SEVERE, null, ex);
-//            }
             System.out.println("Thread "+i+" submitted.");
         }
         executor.shutdown();
         while (!executor.isTerminated()) {
+        }
+        while ( ! threadQueue.isEmpty()) {
+            int threadNum = threadQueue.size();
+            Future fObject = (Future) threadQueue.poll();
+            System.out.println("Thread "+threadNum+" returned value: "+(Integer) fObject.get()+" .");
         }
         System.out.println("Finished all threads");
     }
