@@ -1,4 +1,4 @@
-package package com.wdt.java;
+package com.wdt.java;
 
 import java.util.Date;
 import java.sql.Timestamp;
@@ -75,5 +75,3 @@ public class MyFork extends RecursiveTask<Long> {
     }
     
 }
-	
-
