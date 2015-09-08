@@ -38,7 +38,7 @@ public class ThreadsExamplePool {
         while ( ! threadQueue.isEmpty()) {
             int threadNum = threadQueue.size();
             Future fObject = (Future) threadQueue.poll();
-            System.out.println("Thread "+threadNum+" returned value: "+(Integer) fObject.get()+" .");
+            System.out.println("Thread "+threadNum+" returned value: "+(Integer) fObject.get());
         }
         System.out.println("Finished all threads");
     }
