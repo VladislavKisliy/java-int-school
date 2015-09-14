@@ -10,8 +10,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -36,10 +34,6 @@ public class ChatServer extends Thread {
         this.index = index;
     }
     static ExecutorService pool;
-    
-    static void remove(Integer index) {
-        clientList.remove(index);
-    }
 
     public void run() {
         System.out.println("Server Point 2");
@@ -51,16 +45,13 @@ public class ChatServer extends Thread {
             while (true) {
                 line = dataInStream.readUTF();
                 System.out.println("Client sent: " + line);
-                System.out.println("Client 3:" + clientList.size() + " ind:" +index);
                 for (ChatServer client : clientList) {
                     client.broadcast(line);
                 }
                 if (line.equals("buy")) {
-                    System.out.println("Client 4:" + clientList.size() + " ind:" +index);
                     dataInStream.close();
                     dataoutStream.close();
-                    remove(index);//clientList.remove(index);
-                    System.out.println("Client 5:" + clientList.size() + " ind:" +index);
+                    clientList.remove(this);
                     return;
                 }
             }
