@@ -23,6 +23,8 @@ import com.weigandtconsulting.javaschool.service.Player;
 import com.weigandtconsulting.javaschool.service.Referee;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -35,7 +37,7 @@ public class GuiApplication extends Application {
     public void start(Stage stage) throws Exception {
         
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/Scene.fxml"));
-        FXMLController fxmlController = new FXMLController();
+        final FXMLController fxmlController = new FXMLController();
         fxmlLoader.setController(fxmlController);
         
         Parent root = (Parent) fxmlLoader.load();
@@ -48,10 +50,18 @@ public class GuiApplication extends Application {
 
         stage.show();
         
-        TicTacToe playerTic = new Player(CellState.TIC);
-        TicTacToe playerTac = new Player(CellState.TAC);
-        Referee referee = new Referee(playerTic, playerTac);
-        referee.startGame(fxmlController, CellState.TIC);
+        // Use multithreading for avoid UI locks
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() {
+                TicTacToe playerTic = new Player(CellState.TIC);
+                TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
+                Referee referee = new Referee(playerTic, playerTac);
+                referee.startGame(fxmlController, CellState.TIC);
+                return null;
+            }
+        };
+        new Thread(task).start();
     }
 
     /**

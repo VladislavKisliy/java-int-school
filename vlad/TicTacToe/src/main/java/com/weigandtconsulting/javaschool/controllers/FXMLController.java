@@ -16,11 +16,17 @@
  */
 package com.weigandtconsulting.javaschool.controllers;
 
+import com.weigandtconsulting.javaschool.api.GameFieldHelper;
 import com.weigandtconsulting.javaschool.api.Showable;
+import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
+import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -47,9 +53,18 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private Button button8;
 
+    private CellState playerSign = CellState.TOE;
+    private boolean waitStepDone = true;
+
     @FXML
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me! event source" + event.getSource());
+        if (event.getSource() instanceof Button) {
+            Button button = (Button) event.getSource();
+            applyCellButton(playerSign, button);
+            waitStepDone = false;
+        }
+
     }
 
     @Override
@@ -59,7 +74,6 @@ public class FXMLController implements Initializable, Showable {
 
     @Override
     public void refreshBattleField(List<CellState> battleField) {
-        System.out.println("Turn ="+battleField);
         int counterCell = 0;
         for (CellState cellState : battleField) {
             switch (counterCell) {
@@ -104,6 +118,54 @@ public class FXMLController implements Initializable, Showable {
                 button.setText(cellState.toString());
                 button.setDisable(true);
                 break;
+        }
+    }
+
+    public class HumanPlayer implements TicTacToe {
+
+        private final CellState playerSymbol;
+        private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
+
+        public HumanPlayer(CellState mySymbol) {
+            this.playerSymbol = mySymbol;
+            playerSign = playerSymbol;
+        }
+
+        @Override
+        public List<CellState> nextStep(List<CellState> gameField) {
+            while (waitStepDone) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(300);
+//                    wait();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            waitStepDone = true;
+            return generateGameField();
+        }
+
+        @Override
+        public boolean hasNextStep(List<CellState> gameField) {
+            return !(innerGameField.isGameOver(gameField));
+        }
+
+        @Override
+        public String getPlayerName() {
+            return "Human Player";
+        }
+
+        private List<CellState> generateGameField() {
+            List<CellState> gameField = innerGameField.getNewField();
+            Button[] buttons = new Button[]{button0, button1, button2,
+                button3, button4, button5,
+                button6, button7, button8};
+            for (int i = 0; i < buttons.length; i++) {
+                Button button = buttons[i];
+                CellState cellState = CellState.getCellState(button.getText());
+                gameField.set(i, cellState);
+            }
+            return gameField;
         }
     }
 }

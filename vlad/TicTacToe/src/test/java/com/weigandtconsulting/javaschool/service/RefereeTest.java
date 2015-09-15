@@ -16,7 +16,6 @@
  */
 package com.weigandtconsulting.javaschool.service;
 
-import com.weigandtconsulting.javaschool.api.Showable;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import static com.weigandtconsulting.javaschool.beans.CellState.TAC;
 import static com.weigandtconsulting.javaschool.beans.CellState.TIC;
