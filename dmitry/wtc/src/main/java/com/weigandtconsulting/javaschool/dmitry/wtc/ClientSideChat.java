@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class ClientSideChat extends Thread{
-	
+	// Static ???
 	private static BufferedReader in;
     private static PrintWriter out;
     private static String name;

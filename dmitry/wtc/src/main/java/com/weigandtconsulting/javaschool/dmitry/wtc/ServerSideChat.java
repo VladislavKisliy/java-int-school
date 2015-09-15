@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ServerSideChat{
+        // Constants name should be use UPPERCASE
 	private static final int port = 4444;
 	private static ServerSocket listener;
 	private static List<PrintWriter> writerList = new ArrayList<PrintWriter>();
@@ -69,6 +70,8 @@ public class ServerSideChat{
 	}	
 
     public static void main(String[] args) throws IOException{
+        // NPE unsafed
+        // Array unsafed
     	if (args[0].equals("server")){
 			System.out.println("WhiteThrashChat server has been started!");    	
 	    	listener = new ServerSocket(port);
