@@ -16,6 +16,9 @@
  */
 package com.weigandtconsulting.javaschool.beans;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author vlad
@@ -26,7 +29,7 @@ public enum CellState {
     TAC("O"),
     TOE("-");
 
-    private String label;
+    private final String label;
 
     private CellState(String label) {
         this.label = label;
@@ -45,9 +48,28 @@ public enum CellState {
         return result;
     }
 
+    private static final Map<String, CellState> mapper = new HashMap<>();
+
+    static {
+        for (CellState value : values()) {
+            mapper.put(value.toString(), value);
+        }
+    }
+
+    public static CellState getCellState(String value) {
+        CellState stateValue = TOE;
+        if (value != null) {
+            stateValue = mapper.get(value);
+            if (stateValue == null) {
+                stateValue = TOE;
+            }
+        }
+
+        return stateValue;
+    }
+
     @Override
     public String toString() {
         return label;
     }
-
 }
