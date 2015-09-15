@@ -23,6 +23,7 @@ import java.util.logging.Logger;
  */
 public class ChatServer extends Thread {
     
+    // static ??? default ???
     static List<ChatServer> clientList;
     private Socket socket;
     private DataInputStream dataInStream;
@@ -33,6 +34,7 @@ public class ChatServer extends Thread {
         this.socket = socket;
         this.index = index;
     }
+    // static ??? default ???
     static ExecutorService pool;
 
     public void run() {

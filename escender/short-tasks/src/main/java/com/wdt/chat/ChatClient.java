@@ -19,6 +19,11 @@ import java.util.logging.Logger;
  */
 public class ChatClient extends Thread {
 
+    // Client doesn't work properly
+    // reading from server doesn't work
+    // when server close connection client won't stop
+    
+    // Static ???
     static Socket socket;
     static boolean endFlag = false;
 
@@ -42,6 +47,7 @@ public class ChatClient extends Thread {
                 dataoutStream.writeUTF(line);
                 dataoutStream.flush();
 
+                // NPE unsafed expression
                 if (line.equals("buy")) {
                     endFlag = true;
                     pollServer.join();
@@ -58,6 +64,7 @@ public class ChatClient extends Thread {
 
     @Override
     public void run() {
+        
         System.out.println("Client Point 2");
         DataInputStream dataInStream;
         try {
