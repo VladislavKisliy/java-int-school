@@ -12,12 +12,20 @@ import java.util.List;
 import java.util.Set;
 
 public class ServerSideChat{
-	private static final int port = 4444;
-	private static ServerSocket listener;
-	private static List<PrintWriter> writerList = new ArrayList<PrintWriter>();
-	private static Set<String> names = new HashSet<String>();
+	private final int PORT = 4444;
+	private ServerSocket listener;
+	private List<PrintWriter> writerList = new ArrayList<PrintWriter>();
+	private Set<String> names = new HashSet<String>();
 	
-	private static class ClientHandler extends Thread{
+	public void startClient(){
+		try {
+			new ClientHandler(listener.accept()).start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}	
+	
+	private class ClientHandler extends Thread{
 		private Socket clientSocket;
 		private BufferedReader in;
         private PrintWriter out;
@@ -67,19 +75,23 @@ public class ServerSideChat{
 			}
 		}
 	}	
-
+	
     public static void main(String[] args) throws IOException{
-    	if (args[0].equals("server")){
-			System.out.println("WhiteThrashChat server has been started!");    	
-	    	listener = new ServerSocket(port);
+    	ServerSideChat server = new ServerSideChat();
+    	if (args.length !=0  && args[0].equals("server")){
+			System.out.println("WhiteThrashChat server has been started!");  
+	    	server.listener = new ServerSocket(server.PORT);
 	        try {
 	            while (true) {
-	            	new ClientHandler(listener.accept()).start();	            	
+	            	server.startClient();	            	
 	            }
 	        } finally {
-	            listener.close();
+	            server.listener.close();
 	        }
-    	} else  
-	    	ClientSideChat.dowork("127.0.0.1", port); 
+    	} else {
+    		ClientSideChat client = new ClientSideChat();
+    		client.dowork("127.0.0.1", server.PORT); 
+    	}
+	    	
     }
 }

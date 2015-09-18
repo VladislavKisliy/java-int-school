@@ -10,10 +10,10 @@ import java.util.Scanner;
 
 public class ClientSideChat extends Thread{
 	
-	private static BufferedReader in;
-    private static PrintWriter out;
-    private static String name;
-    private static boolean working = true;
+	private BufferedReader in;
+    private PrintWriter out;
+    private String name;
+    private boolean working = true;
     
 	public void run(){
 		String fromServer;
@@ -30,7 +30,7 @@ public class ClientSideChat extends Thread{
 		}
 	}
 	
-	public static void dowork(String server, int port) throws UnknownHostException, IOException{
+	public void dowork(String server, int port) throws UnknownHostException, IOException{
         Socket socket = new Socket(server, port);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
