@@ -49,7 +49,7 @@ public class ChatRmiClient {
         // Register the classes that will be sent over the network.
         Network.register(client);
 
-		// Get the Player on the other end of the connection.
+        // Get the Player on the other end of the connection.
         // This allows the client to call methods on the server.
         player = ObjectSpace.getRemoteObject(client, Network.PLAYER, IPlayer.class);
 
@@ -98,7 +98,7 @@ public class ChatRmiClient {
         });
         chatFrame.setVisible(true);
 
-		// We'll do the connect on a new thread so the ChatFrame can show a progress bar.
+        // We'll do the connect on a new thread so the ChatFrame can show a progress bar.
         // Connecting to localhost is usually so fast you won't see the progress bar.
         new Thread("Connect") {
             public void run() {
