@@ -18,8 +18,18 @@ import java.net.Socket;
  */
 public class ChatClientM {
     final String name;
+    // static ??? default ???
     static PrintWriter out;
     static BufferedReader in;
+    
+    /**
+     * Still doesn't work properly. When server send message it will print Oleg:null
+     * when client send message do nothing
+     * @param inName
+     * @param serverName
+     * @param serverPort
+     * @throws IOException 
+     */
     public ChatClientM(String inName, String serverName, int serverPort) throws IOException{
         this.name=inName;
         Socket socket = new Socket(serverName,serverPort);

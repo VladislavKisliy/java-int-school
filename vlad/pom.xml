@@ -16,7 +16,7 @@
     </parent>
 
     <modules>
-      <!-- <module>short-tasks</module> -->
+      <module>short-tasks</module>
         <module>TicTacToe</module>
     </modules>
     

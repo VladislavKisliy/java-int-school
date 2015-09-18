@@ -19,6 +19,7 @@ import java.util.List;
  * @author Oleg 
  */
 public class ChatServerM {
+    // Doesn't work at all
     private static List <ClientForServer> listOfObjects = new ArrayList();
     public static List getListOfObjects() {
         return listOfObjects;

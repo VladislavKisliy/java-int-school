@@ -22,6 +22,7 @@ import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.Game;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.application.Platform;
 
 /**
  *
@@ -38,24 +39,32 @@ public class Referee {
         this.playerTac = playerTac;
     }
 
-    public void startGame(Showable view, CellState startSign) {
+    public void startGame(final Showable view, CellState startSign) {
         List<TicTacToe> generateTurns = generateTurns(startSign);
-        List<CellState> gameField = gameHelper.getNewField();
+        final List<CellState> gameField = gameHelper.getNewField();
         Game game;
         List<CellState> newStep;
         for (TicTacToe currentPlayer : generateTurns) {
             newStep = currentPlayer.nextStep(gameField);
+            System.out.println("Pl: " + currentPlayer.getPlayerName() + ". Turn =" + gameField);
             if (isCorrectTurn(gameField, newStep)) {
-                gameField = newStep;
-                view.refreshBattleField(gameField);
+                gameField.clear();
+                gameField.addAll(newStep);
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.refreshBattleField(gameField);
+                    }
+                });
+
                 game = gameHelper.analyzeGame(gameField);
                 if (game.getState() == Game.State.OVER) {
-                    System.out.println("Game is OVER ="+game);
+                    System.out.println("Game is OVER =" + game);
+                    System.out.println("Winner is " + currentPlayer.getPlayerName());
                     break;
                 }
             }
         }
-
     }
 
     boolean isCorrectTurn(List<CellState> gameFieldBefore, List<CellState> gameFieldAfter) {
