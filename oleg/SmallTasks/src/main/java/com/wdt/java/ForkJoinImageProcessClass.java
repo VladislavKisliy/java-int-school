@@ -16,7 +16,7 @@ public class ForkJoinImageProcessClass extends RecursiveAction {
     private int length;
     private int src [];
     private int dst [];
-    private final static int computeThreshold=1000;
+    private final static int computeThreshold=10000000;
 
     public static int getComputeThreshold() {
         return computeThreshold;
@@ -31,14 +31,15 @@ public class ForkJoinImageProcessClass extends RecursiveAction {
     
     public void makeGrayDirect()
     {
-        for (int x = 0; x <= this.length ; ++x)
+        for (int x = this.start; x <= this.length ; ++x)
         {
             int rgb = this.src[x];
+            int alpha = (rgb >> 24) & 0xFF;
             int r = (rgb >> 16) & 0xFF;
             int g = (rgb >> 8) & 0xFF;
             int b = (rgb & 0xFF);
             int grayLevel = (r + g + b) / 3;
-            int gray = (grayLevel << 16) + (grayLevel << 8) + grayLevel; 
+            int gray = (alpha << 24) + (grayLevel << 16) + (grayLevel << 8) + grayLevel; 
             this.dst[x]=gray;
         }
     }
@@ -50,6 +51,6 @@ public class ForkJoinImageProcessClass extends RecursiveAction {
         }
         int nLength = this.length/2;
         invokeAll(new ForkJoinImageProcessClass(this.start, nLength, this.src, this.dst),
-                new ForkJoinImageProcessClass(nLength+1, this.length-nLength, this.src, this.dst));
+                new ForkJoinImageProcessClass(this.start+nLength+1, nLength, this.src, this.dst));
     }
 }

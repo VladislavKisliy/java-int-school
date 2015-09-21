@@ -3,10 +3,12 @@ package com.wdt.java;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import static java.lang.System.exit;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Level;
@@ -73,7 +75,7 @@ public class ProcessImage {
         int[] dst = new int[src.length];
         ForkJoinImageProcessClass imageProcessInstance = new ForkJoinImageProcessClass(0, w, src, dst);
         ForkJoinPool pool = new ForkJoinPool();
-        BufferedImage dstImage = new BufferedImage(w, h, BufferedImage.TYPE_BYTE_GRAY);
+        BufferedImage dstImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         dstImage.setRGB(0, 0, w, h, dst, 0, w);
         procInstance.saveToFile(dstImage);
     }
