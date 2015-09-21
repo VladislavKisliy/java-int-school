@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import static java.lang.System.exit;
+import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -54,23 +55,26 @@ public class ProcessImage {
         }
         return image;
     }
+    
     public void saveToFile(BufferedImage image) throws IOException{
         BufferedImage img = image;
         File outputfile = new File(this.getPathToOutFile());
         ImageIO.write(img, "jpg", outputfile);
-    } 
-    public byte[] getSourceImageArray(BufferedImage image){
-        System.out.println("I'm getSourceImageArray");
-        byte[] returnArray=((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-        return returnArray;
-    }
+    }     
     //http://stackoverflow.com/questions/9131678/convert-a-rgb-image-to-grayscale-image-reducing-the-memory-in-java
 
     public static void main (String[] argc) throws IOException{
         System.out.println("Starting RGB");
         ProcessImage procInstance = new ProcessImage("D:/I_KNOW.JPG");
         BufferedImage image=procInstance.openImage(procInstance.getPathToInFile());
-        procInstance.saveToFile(ForkJoinImageProcessClass.makeGray(image));
-        System.out.println("After processing image");
+        int w = image.getWidth();
+        int h = image.getHeight();
+        int[] src = image.getRGB(0, 0, w, h, null, 0, w);
+        int[] dst = new int[src.length];
+        ForkJoinImageProcessClass imageProcessInstance = new ForkJoinImageProcessClass(0, w, src, dst);
+        ForkJoinPool pool = new ForkJoinPool();
+        BufferedImage dstImage = new BufferedImage(w, h, BufferedImage.TYPE_BYTE_GRAY);
+        dstImage.setRGB(0, 0, w, h, dst, 0, w);
+        procInstance.saveToFile(dstImage);
     }
 }
