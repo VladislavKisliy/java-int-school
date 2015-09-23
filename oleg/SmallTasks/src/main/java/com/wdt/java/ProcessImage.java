@@ -1,14 +1,9 @@
 package com.wdt.java;
-
-
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import static java.lang.System.exit;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Level;
@@ -72,6 +67,8 @@ public class ProcessImage {
         ForkJoinImageProcessClass imageProcessInstance = new ForkJoinImageProcessClass(0, image.getWidth(), image);
         ForkJoinPool pool = new ForkJoinPool();
         pool.invoke(imageProcessInstance);
+//        System.out.println("Hello, mark1");
         procInstance.saveToFile(imageProcessInstance.getOutImage());
+//        System.out.println("Hello, mark2");
     }
 }

@@ -5,7 +5,6 @@
  */
 
 package com.wdt.java;
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.RecursiveAction;
 
@@ -17,9 +16,9 @@ public class ForkJoinImageProcessClass extends RecursiveAction {
     private int xStart;
     private int length;
     private int yLength;
-    private BufferedImage inImage;
-    private final BufferedImage outImage;
-    private final static int computeThreshold=100;
+    private final BufferedImage inImage;
+    private final BufferedImage outImage;// = new BufferedImage(inImage.getWidth(),inImage.getHeight(),BufferedImage.TYPE_INT_ARGB);
+    private final static int computeThreshold=1000;
 
     public static int getComputeThreshold() {
         return computeThreshold;
@@ -33,29 +32,26 @@ public class ForkJoinImageProcessClass extends RecursiveAction {
         this.length = iLength;
         this.inImage=inImage;
         outImage=new BufferedImage(inImage.getWidth(),inImage.getHeight(),BufferedImage.TYPE_INT_ARGB);
-        
-//        this.src=iSrc;
-//        this.dst=iDst;
     }
     
     public void makeGrayDirect()
     {
-        for (int x = this.xStart; x < this.length ; x++)
+        for (int x = this.xStart; x < this.length && x < inImage.getWidth() ; ++x)
         {
-            for(int y = 0; y < outImage.getHeight(); y++)
+            for(int y = 0; y < outImage.getHeight(); ++y)
             {
                 int rgb = this.inImage.getRGB(x, y);
-                int a = (rgb >> 24) & 0xFF;
+//                int a = (rgb >> 24) & 0xFF;
                 int r = (rgb >> 16) & 0xFF;
                 int g = (rgb >> 8) & 0xFF;
                 int b = (rgb & 0xFF);
                 int grayLevel = (r + g + b) / 3;
-                int gray = (a << 24) +(grayLevel << 16)+(grayLevel << 8)+grayLevel; 
+                int gray = (grayLevel << 16)+(grayLevel << 8)+grayLevel; 
 //                System.out.print("RGB is:"+rgb);
-                this.outImage.setRGB(x, y, gray);
-                System.out.println("X: "+x+"; "+"Y: "+y);
+                outImage.setRGB(x, y, gray);
+//                System.out.println("X: "+x+"; "+"Y: "+y+" Gray is: "+gray);
 //                tempColor = new Color(grayScaleVal, grayScaleVal, grayScaleVal);
-//                image.setRGB(x, y, tempColor.getRGB());
+//                image.setRGB(x, y, tempColor.getRGB());   
             }
         }
     }
