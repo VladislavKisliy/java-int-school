@@ -23,7 +23,7 @@ import javax.imageio.ImageIO;
 public class ProcessImage {
     private final String pathToInFile;
     private final String pathToOutFile="D:/I_KNOW_GRAY.JPG";
-
+    public static  BufferedImage outImage;
     public String getPathToOutFile() {
         return pathToOutFile;
     }
