@@ -18,7 +18,7 @@ public class ForkJoinImageProcessClass extends RecursiveAction {
     private int yLength;
     private final BufferedImage inImage;
     private final BufferedImage outImage;// = new BufferedImage(inImage.getWidth(),inImage.getHeight(),BufferedImage.TYPE_INT_ARGB);
-    private final static int computeThreshold=1000;
+    private final static int computeThreshold=2000;
 
     public static int getComputeThreshold() {
         return computeThreshold;
@@ -31,7 +31,7 @@ public class ForkJoinImageProcessClass extends RecursiveAction {
         this.xStart = iStart;
         this.length = iLength;
         this.inImage=inImage;
-        outImage=new BufferedImage(inImage.getWidth(),inImage.getHeight(),BufferedImage.TYPE_INT_ARGB);
+        outImage=new BufferedImage(inImage.getWidth(),inImage.getHeight(),BufferedImage.TYPE_BYTE_GRAY);
     }
     
     public void makeGrayDirect()
@@ -45,13 +45,9 @@ public class ForkJoinImageProcessClass extends RecursiveAction {
                 int r = (rgb >> 16) & 0xFF;
                 int g = (rgb >> 8) & 0xFF;
                 int b = (rgb & 0xFF);
-                int grayLevel = (r + g + b) / 3;
+                int grayLevel = (int) ((r + g + b) / 3);
                 int gray = (grayLevel << 16)+(grayLevel << 8)+grayLevel; 
-//                System.out.print("RGB is:"+rgb);
                 outImage.setRGB(x, y, gray);
-//                System.out.println("X: "+x+"; "+"Y: "+y+" Gray is: "+gray);
-//                tempColor = new Color(grayScaleVal, grayScaleVal, grayScaleVal);
-//                image.setRGB(x, y, tempColor.getRGB());   
             }
         }
     }
