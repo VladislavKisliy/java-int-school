@@ -20,7 +20,7 @@ public class ForkJoinImageProcessClass extends RecursiveAction {
 //    private int yLength;
     private final BufferedImage inImage;
     // = new BufferedImage(inImage.getWidth(),inImage.getHeight(),BufferedImage.TYPE_INT_ARGB);
-    private final static int computeThreshold=100;
+    private final static int computeThreshold=50;
 
     public static int getComputeThreshold() {
         return computeThreshold;
@@ -41,7 +41,7 @@ public class ForkJoinImageProcessClass extends RecursiveAction {
         int xLimit = this.xStart+this.length;
         for (int x = this.xStart; x < xLimit && x < inImage.getWidth() ; ++x)
         {
-            for(int y = 0; y < outImage.getHeight(); ++y)
+            for(int y = 0; y < inImage.getHeight(); ++y)
             {
                 int rgb = this.inImage.getRGB(x, y);
                 int r = (rgb >> 16) & 0xFF;
@@ -61,6 +61,6 @@ public class ForkJoinImageProcessClass extends RecursiveAction {
         }
         int nLength = this.length/2;
         invokeAll(new ForkJoinImageProcessClass(this.xStart, nLength, this.inImage),
-                new ForkJoinImageProcessClass(this.xStart+nLength, nLength, this.inImage));
+                new ForkJoinImageProcessClass(this.xStart+nLength, this.length-nLength, this.inImage));
     }
 }

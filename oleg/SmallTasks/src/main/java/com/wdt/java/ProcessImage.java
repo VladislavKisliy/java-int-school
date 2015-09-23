@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import static java.lang.System.exit;
+import java.sql.Time;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -67,6 +69,7 @@ public class ProcessImage {
         ForkJoinImageProcessClass imageProcessInstance = new ForkJoinImageProcessClass(0, image.getWidth(), image);
         ForkJoinPool pool = new ForkJoinPool();
         pool.invoke(imageProcessInstance);
+//        TimeUnit.SECONDS.sleep(5);
         procInstance.saveToFile(imageProcessInstance.getOutImage());
     }
 }
