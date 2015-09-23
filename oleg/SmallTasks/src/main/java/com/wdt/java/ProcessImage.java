@@ -72,6 +72,6 @@ public class ProcessImage {
         ForkJoinImageProcessClass imageProcessInstance = new ForkJoinImageProcessClass(0, image.getWidth(), image);
         ForkJoinPool pool = new ForkJoinPool();
         pool.invoke(imageProcessInstance);
-        procInstance.saveToFile(image);
+        procInstance.saveToFile(imageProcessInstance.getOutImage());
     }
 }
