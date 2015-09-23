@@ -69,14 +69,9 @@ public class ProcessImage {
         System.out.println("Starting RGB");
         ProcessImage procInstance = new ProcessImage("D:/I_KNOW.JPG");
         BufferedImage image=procInstance.openImage(procInstance.getPathToInFile());
-        int w = image.getWidth();
-        int h = image.getHeight();
-        int[] src = image.getRGB(0, 0, w, h, null, 0, w);
-        int[] dst = new int[src.length];
-        ForkJoinImageProcessClass imageProcessInstance = new ForkJoinImageProcessClass(0, w, src, dst);
+        ForkJoinImageProcessClass imageProcessInstance = new ForkJoinImageProcessClass(0, image.getWidth(), image);
         ForkJoinPool pool = new ForkJoinPool();
-        BufferedImage dstImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        dstImage.setRGB(0, 0, w, h, dst, 0, w);
-        procInstance.saveToFile(dstImage);
+        pool.invoke(imageProcessInstance);
+        procInstance.saveToFile(image);
     }
 }

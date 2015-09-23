@@ -5,6 +5,7 @@
  */
 
 package com.wdt.java;
+import java.awt.image.BufferedImage;
 import java.util.concurrent.RecursiveAction;
 
 /**
@@ -12,35 +13,41 @@ import java.util.concurrent.RecursiveAction;
  * @author Oleg 
  */
 public class ForkJoinImageProcessClass extends RecursiveAction {
-    private int start;
+    private int xStart;
     private int length;
-    private int src [];
-    private int dst [];
+    private int yLength;
+    private BufferedImage inImage;
+    private BufferedImage outImage;
     private final static int computeThreshold=10000000;
 
     public static int getComputeThreshold() {
         return computeThreshold;
     }
 
-    public ForkJoinImageProcessClass(int iStart, int iLength, int iSrc [], int iDst [] ) {
-        this.start = iStart;
+    public ForkJoinImageProcessClass(int iStart, int iLength, BufferedImage inImage) {
+        this.xStart = iStart;
         this.length = iLength;
-        this.src=iSrc;
-        this.dst=iDst;
+        this.inImage=inImage;
+        this.outImage=new BufferedImage(inImage.getWidth(),inImage.getHeight(),BufferedImage.TYPE_BYTE_GRAY);
+        
+//        this.src=iSrc;
+//        this.dst=iDst;
     }
     
     public void makeGrayDirect()
     {
-        for (int x = this.start; x <= this.length ; ++x)
+        for (int x = this.xStart; x < this.length ; x++)
         {
-            int rgb = this.src[x];
-            int alpha = (rgb >> 24) & 0xFF;
-            int r = (rgb >> 16) & 0xFF;
-            int g = (rgb >> 8) & 0xFF;
-            int b = (rgb & 0xFF);
-            int grayLevel = (r + g + b) / 3;
-            int gray = (alpha << 24) + (grayLevel << 16) + (grayLevel << 8) + grayLevel; 
-            this.dst[x]=gray;
+            for(int y = 0; y < outImage.getHeight(); y++)
+            {
+                int rgb = this.inImage.getRGB(x, y);
+                int r = (rgb >> 16) & 0xFF;
+                int g = (rgb >> 8) & 0xFF;
+                int b = (rgb & 0xFF);
+                int grayLevel = (r + g + b) / 3;
+                int gray = (grayLevel << 16)+(grayLevel << 8)+grayLevel; 
+                this.outImage.setRGB(x, y, gray);
+            }
         }
     }
     @Override
@@ -50,7 +57,7 @@ public class ForkJoinImageProcessClass extends RecursiveAction {
             return;
         }
         int nLength = this.length/2;
-        invokeAll(new ForkJoinImageProcessClass(this.start, nLength, this.src, this.dst),
-                new ForkJoinImageProcessClass(this.start+nLength+1, nLength, this.src, this.dst));
+        invokeAll(new ForkJoinImageProcessClass(this.xStart, nLength, this.inImage),
+                new ForkJoinImageProcessClass(this.xStart+nLength+1, nLength, this.inImage));
     }
 }
