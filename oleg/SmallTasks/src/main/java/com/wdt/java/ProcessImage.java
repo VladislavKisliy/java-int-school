@@ -5,9 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import static java.lang.System.exit;
-import java.sql.Time;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -25,7 +23,6 @@ import javax.imageio.ImageIO;
 public class ProcessImage {
     private final String pathToInFile;
     private final String pathToOutFile="D:/I_KNOW_GRAY.JPG";
-    public static  BufferedImage outImage;
     public String getPathToOutFile() {
         return pathToOutFile;
     }
@@ -66,10 +63,10 @@ public class ProcessImage {
         System.out.println("Starting RGB");
         ProcessImage procInstance = new ProcessImage("D:/I_KNOW.JPG");
         BufferedImage image=procInstance.openImage(procInstance.getPathToInFile());
-        ForkJoinImageProcessClass imageProcessInstance = new ForkJoinImageProcessClass(0, image.getWidth(), image);
+        BufferedImage outImage = new BufferedImage(image.getWidth(),image.getHeight(),BufferedImage.TYPE_BYTE_GRAY);
+        ForkJoinImageProcessClass imageProcessInstance = new ForkJoinImageProcessClass(0, image.getWidth(), image, outImage);
         ForkJoinPool pool = new ForkJoinPool();
         pool.invoke(imageProcessInstance);
-//        TimeUnit.SECONDS.sleep(5);
-        procInstance.saveToFile(imageProcessInstance.getOutImage());
+        procInstance.saveToFile(outImage);
     }
 }

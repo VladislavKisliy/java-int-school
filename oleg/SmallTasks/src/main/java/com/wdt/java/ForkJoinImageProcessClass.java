@@ -1,14 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.wdt.java;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.RecursiveAction;
-//import com.wdt.java.ProcessImage;
-import static com.wdt.java.ProcessImage.outImage;
 
 /**
  *
@@ -17,23 +9,19 @@ import static com.wdt.java.ProcessImage.outImage;
 public class ForkJoinImageProcessClass extends RecursiveAction {
     private int xStart;
     private int length;
-//    private int yLength;
     private final BufferedImage inImage;
-    // = new BufferedImage(inImage.getWidth(),inImage.getHeight(),BufferedImage.TYPE_INT_ARGB);
-    private final static int computeThreshold=50;
+    private final BufferedImage outImage;
+    private final static int computeThreshold=400;
 
     public static int getComputeThreshold() {
         return computeThreshold;
     }
 
-    public BufferedImage getOutImage() {
-        return com.wdt.java.ProcessImage.outImage;
-    }
-    public ForkJoinImageProcessClass(int iStart, int iLength, BufferedImage inImage) {
+    public ForkJoinImageProcessClass(int iStart, int iLength, BufferedImage inImage, BufferedImage outImage ) {
         this.xStart = iStart;
         this.length = iLength;
         this.inImage=inImage;
-        outImage=new BufferedImage(inImage.getWidth(),inImage.getHeight(),BufferedImage.TYPE_BYTE_GRAY);
+        this.outImage= outImage ;
     }
     
     public void makeGrayDirect()
@@ -60,7 +48,7 @@ public class ForkJoinImageProcessClass extends RecursiveAction {
             return;
         }
         int nLength = this.length/2;
-        invokeAll(new ForkJoinImageProcessClass(this.xStart, nLength, this.inImage),
-                new ForkJoinImageProcessClass(this.xStart+nLength, this.length-nLength, this.inImage));
+        invokeAll(new ForkJoinImageProcessClass(this.xStart, nLength, this.inImage, this.outImage ),
+                new ForkJoinImageProcessClass(this.xStart+nLength, this.length-nLength, this.inImage, this.outImage));
     }
 }
