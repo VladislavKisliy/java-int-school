@@ -19,7 +19,13 @@
             <artifactId>mockito-all</artifactId>
             <version>1.8.4</version>
         </dependency>
-
+		<dependency>
+		    <groupId>com.oracle</groupId>
+		    <artifactId>ojdbc</artifactId>
+		    <version>14</version>
+		    <scope>system</scope>
+		    <systemPath>${basedir}/lib/ojdbc6.jar</systemPath> <!-- must match file name -->
+		</dependency>
     </dependencies>
     <build>
         <plugins>
