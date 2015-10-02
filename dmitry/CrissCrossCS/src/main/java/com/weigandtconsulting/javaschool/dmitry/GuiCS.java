@@ -21,9 +21,10 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+import javax.swing.JTextField;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -37,7 +38,9 @@ import java.io.IOException;
 
 @SuppressWarnings("serial")
 public class GuiCS extends JFrame {
-
+	private final int TCPPORT = 54555;
+	private final int UDPPORT = 54777;
+	private final int length=9;
 	private JPanel contentPane;
 	private Referee referee;
 	private List<CellState> gameField;
@@ -55,7 +58,6 @@ public class GuiCS extends JFrame {
 	private JButton btnReferee;	
 	private JLabel lblPlayer1;
 	private JLabel lblPlayer2;	
-	private final int length=9;
 	private Server server;
 	private Client client;
 	
@@ -65,7 +67,13 @@ public class GuiCS extends JFrame {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		if (args.length>0 && "server".equals(args[0])){
+		Object[] options = {"Server", "Client"};
+		int n = JOptionPane.showOptionDialog(null, "I would like to run...",
+													"CrissCrossGame!",
+												    JOptionPane.YES_NO_OPTION,
+												    JOptionPane.QUESTION_MESSAGE,
+												    null, options, options[0]);		
+		if (n == 0){
 	        EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					try {
@@ -104,7 +112,7 @@ public class GuiCS extends JFrame {
 		
 	}
 	
-	private void pauseAction(){
+/*	private void pauseAction(){
 		if (referee.playerTurn==1){
 			lblPlayer2.setText("Thinking...");
 			Thread t= new Thread()  {
@@ -125,7 +133,7 @@ public class GuiCS extends JFrame {
 	        };
 	        t.start();
 		}   
-	}
+	} */
 	
 	private int doAction(){
 		int step;
@@ -166,7 +174,7 @@ public class GuiCS extends JFrame {
 		btnCell8.setEnabled(enabled);
 	}
 	
-	private void initialize(boolean isServer){
+	private void initialize(boolean isServer, String clientName){
 		
 		if (isServer)
 			setTitle("TicTacToe Server");
@@ -227,15 +235,9 @@ public class GuiCS extends JFrame {
 		btnReferee = new JButton("New game");
 		panel.add(btnReferee, "4, 2, fill, fill");
 		
-		String name;
-		if (!isServer)
-			name = JOptionPane.showInputDialog(null, "What is your name?", null);
-		else
-			name = "Client";
-		lblPlayer1 = new JLabel(name);
+		lblPlayer1 = new JLabel(clientName);
 		panel.add(lblPlayer1, "2, 2, center, center");	
-		name = "Computer";
-		lblPlayer2 = new JLabel(name);
+		lblPlayer2 = new JLabel("Computer");
 		panel.add(lblPlayer2, "6, 2, center, center");
 		
 		//init gamefield		
@@ -255,10 +257,11 @@ public class GuiCS extends JFrame {
 	 * Create the frame.
 	 * @throws IOException 
 	 */
-	public GuiCS(boolean isServer) throws InterruptedException, IOException {		
+	public GuiCS(boolean isServer) throws InterruptedException, IOException {	
+		String clientName = "Client";
 		if (isServer){
 			server = new Server();
-			server.bind(54555, 54777);
+			server.bind(TCPPORT, UDPPORT);
 	        server.start();
 	        
 	        Kryo kryo = server.getKryo();
@@ -274,7 +277,8 @@ public class GuiCS extends JFrame {
 	        });	
 	        
 	        server.addListener(new Listener() {
-	            @Override
+	            @SuppressWarnings("unchecked")
+				@Override
 	            public void received(Connection connection, Object object) {
 	            	if (object instanceof ArrayList<?>){
 		            	gameField = (ArrayList<CellState>) object;
@@ -294,9 +298,33 @@ public class GuiCS extends JFrame {
 	            }
 	        });	        
 		}else{
+			JTextField tServer = new JTextField("127.0.0.1");
+			JTextField tPort = new JTextField("54555");	
+			JTextField tName = new JTextField("Карбофос");
+			final JComponent[] inputs = new JComponent[] {
+					new JLabel("Server:"),
+					tServer,
+					new JLabel("Port:"),
+					tPort,
+					new JLabel("Port:"),
+					tName
+			};
+			JOptionPane.showMessageDialog(null, inputs, "Specify connection parameters", JOptionPane.PLAIN_MESSAGE);
+			clientName = tName.getText();
+			
 			client = new Client();
 		    client.start();
-		    client.connect(5000, "127.0.0.1", 54555, 54777);	
+		    try {
+				client.connect(5000, tServer.getText(), Integer.valueOf(tPort.getText()), UDPPORT);
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "Wrong port. Contact your system administrator, asshole!");
+				e.printStackTrace();
+				System.exit(0);
+			} catch (IOException e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Couldn't connect. Contact your system administrator, asshole!");
+				System.exit(0);
+			}	
 		    
 		    Kryo kryo = client.getKryo();
 		    ObjectSpace.registerClasses(kryo);
@@ -311,7 +339,8 @@ public class GuiCS extends JFrame {
 	        });	
 	        
 	        client.addListener(new Listener() {
-	            @Override
+	            @SuppressWarnings("unchecked")
+				@Override
 	            public void received(Connection connection, Object object) {
 	            	if (object instanceof ArrayList<?>){
 		            	gameField = (ArrayList<CellState>) object;
@@ -323,7 +352,7 @@ public class GuiCS extends JFrame {
 	        });	        
 		}
 			
-		initialize(isServer);
+		initialize(isServer, clientName);
 
 		if (!isServer){
 			client.sendTCP("Name:"+lblPlayer1.getText());
