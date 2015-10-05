@@ -23,5 +23,10 @@
             <artifactId>kryonet</artifactId>
             <version>2.22.0-RC1</version>
         </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>${software.oracle.jdbc.version}</version>
+        </dependency>
     </dependencies>
 </project>

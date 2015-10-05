@@ -14,6 +14,8 @@
         <software.junit.version>4.12</software.junit.version>
         <software.commons-io.version>2.4</software.commons-io.version>
         <software.surefire.plugin>2.18.1</software.surefire.plugin>
+        <software.oracle.jdbc.version>12.1.0.1</software.oracle.jdbc.version>
+        <main.basedir>${basedir}</main.basedir>
         <skipTests>false</skipTests>
     </properties>
 
@@ -61,6 +63,21 @@
                 <artifactId>maven-install-plugin</artifactId>
                 <version>2.4</version>
                 <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.oracle</groupId>
+                            <artifactId>ojdbc6</artifactId>
+                            <version>${software.oracle.jdbc.version}</version>
+                            <packaging>jar</packaging>
+                            <file>${main.basedir}/api/automation/ojdbc6-12.1.0.1.jar</file>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>
@@ -101,4 +118,16 @@
         </pluginManagement>
     </build>
 
+<!--    <repositories>
+        <repository>
+            <id>basedir</id>
+            <layout>default</layout>
+            <name>Local filesystem maven repository</name>
+            <url>file:///${main.basedir}/automation/.m2/repository</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+        </repository>
+    </repositories>-->
 </project>
