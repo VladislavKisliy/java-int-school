@@ -4,6 +4,7 @@
  */
 package com.wdt.jdbcsample;
 
+import com.sun.rowset.JdbcRowSetImpl;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sql.rowset.JdbcRowSet;
+import oracle.jdbc.OraclePreparedStatement;
 import oracle.jdbc.pool.OracleDataSource;
 
 /**
@@ -36,22 +39,42 @@ public class DataSourceSample {
             ods.setPortNumber(1521);
             connection = ods.getConnection();
 
-            Statement statement = connection.createStatement();
+            Statement statement = connection.createStatement();        
             ResultSet resultSet = statement.executeQuery(
-                    "SELECT rownum RN, t.* FROM kws.customer_master t");
-
+                    "SELECT * FROM kws.customer_master t where rownum < 20");
+            
             int i = 0;
 
             while (resultSet.next() && i <= 10) {
-                System.out.print(resultSet.getLong("RN") + " ");
+                //System.out.print(resultSet.getLong("RN") + " ");
                 System.out.print(resultSet.getLong("CUSTOMER") + " ");
                 System.out.print(resultSet.getDate("MOD_DATE") + " ");
                 System.out.println(resultSet.getString("CUSTOMER_NAME"));
                 i++;
             }
-
+            
+            //resultSet.close();
+            //statement.close();
+            
+            System.out.println("testing JdbcRowSet...");
+            //JdbcRowSet jdbcRs = new JdbcRowSetImpl(resultSet);
+            
+            Statement oraclePreparedStatement = connection.createStatement
+                    (ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            
+            JdbcRowSet jdbcRowSet = new JdbcRowSetImpl(connection);            
+            jdbcRowSet.setCommand("SELECT * FROM kws.customer_master t where rownum < ? order by 1");
+            jdbcRowSet.execute();
+            i=0; 
+           while (jdbcRowSet.previous() && i <= 10) {
+                System.out.print(jdbcRowSet.getLong("CUSTOMER") + " ");
+                System.out.print(jdbcRowSet.getDate("MOD_DATE") + " ");
+                System.out.println(jdbcRowSet.getString("CUSTOMER_NAME"));
+                i++;
+            }
+            
             resultSet.close();
-            statement.close();
+            oraclePreparedStatement.close();
 
         } catch (SQLException ex) {
             System.out.println("Connection failed");
