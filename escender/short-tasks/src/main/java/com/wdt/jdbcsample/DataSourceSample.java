@@ -30,6 +30,7 @@ public class DataSourceSample {
         OracleDataSource ods = null;
         try {
 
+            System.out.println("~~~~~~~~~~~~~~DataSource~~~~~~~~~~~~~~~~~~~");
             ods = new OracleDataSource();
             ods.setUser("kws");
             ods.setPassword("drwkws5t");
@@ -41,11 +42,11 @@ public class DataSourceSample {
 
             Statement statement = connection.createStatement();        
             ResultSet resultSet = statement.executeQuery(
-                    "SELECT * FROM kws.customer_master t where rownum < 20");
+                    "SELECT * FROM kws.customer_master t where rownum < 1000 order by 1");
             
             int i = 0;
 
-            while (resultSet.next() && i <= 10) {
+            while (resultSet.next() && i <= 5) {
                 //System.out.print(resultSet.getLong("RN") + " ");
                 System.out.print(resultSet.getLong("CUSTOMER") + " ");
                 System.out.print(resultSet.getDate("MOD_DATE") + " ");
@@ -53,20 +54,20 @@ public class DataSourceSample {
                 i++;
             }
             
-            //resultSet.close();
-            //statement.close();
+            resultSet.close();
+            statement.close();
             
-            System.out.println("testing JdbcRowSet...");
-            //JdbcRowSet jdbcRs = new JdbcRowSetImpl(resultSet);
+            System.out.println("~~~~~~~~~~~~~~JdbcRowSet~~~~~~~~~~~~~~~~~~~");
             
             Statement oraclePreparedStatement = connection.createStatement
                     (ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             
             JdbcRowSet jdbcRowSet = new JdbcRowSetImpl(connection);            
-            jdbcRowSet.setCommand("SELECT * FROM kws.customer_master t where rownum < ? order by 1");
+            jdbcRowSet.setCommand("SELECT * FROM kws.customer_master t where rownum < 1000 order by 1");
             jdbcRowSet.execute();
+            jdbcRowSet.last();
             i=0; 
-           while (jdbcRowSet.previous() && i <= 10) {
+           while (jdbcRowSet.previous() && i <= 5) {
                 System.out.print(jdbcRowSet.getLong("CUSTOMER") + " ");
                 System.out.print(jdbcRowSet.getDate("MOD_DATE") + " ");
                 System.out.println(jdbcRowSet.getString("CUSTOMER_NAME"));
