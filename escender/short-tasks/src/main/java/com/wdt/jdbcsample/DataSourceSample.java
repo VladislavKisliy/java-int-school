@@ -7,6 +7,7 @@ package com.wdt.jdbcsample;
 import com.sun.rowset.JdbcRowSetImpl;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -59,12 +60,10 @@ public class DataSourceSample {
             
             System.out.println("~~~~~~~~~~~~~~JdbcRowSet~~~~~~~~~~~~~~~~~~~");
             
-            Statement oraclePreparedStatement = connection.createStatement
-                    (ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            
-            JdbcRowSet jdbcRowSet = new JdbcRowSetImpl(connection);            
-            jdbcRowSet.setCommand("SELECT * FROM kws.customer_master t where rownum < 1000 order by 1");
-            jdbcRowSet.execute();
+            OraclePreparedStatement oraclePreparedStatement = (OraclePreparedStatement) connection.prepareStatement
+                    ("SELECT * FROM kws.customer_master t where rownum < ? order by 1", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            oraclePreparedStatement.setInt(1, 10000);            
+            JdbcRowSet jdbcRowSet = new JdbcRowSetImpl(oraclePreparedStatement.executeQuery());
             jdbcRowSet.last();
             i=0; 
            while (jdbcRowSet.previous() && i <= 5) {
