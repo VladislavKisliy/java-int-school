@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.wdt.java;
+package com.wdt.java.ThreadsTask;
 
+import com.wdt.java.GlobalVariables;
 import java.util.concurrent.TimeUnit;
 
 /**

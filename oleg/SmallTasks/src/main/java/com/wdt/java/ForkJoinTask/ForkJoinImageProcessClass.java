@@ -1,4 +1,4 @@
-package com.wdt.java;
+package com.wdt.java.ForkJoinTask;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.RecursiveAction;
 

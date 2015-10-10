@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.wdt.java;
+package com.wdt.java.ThreadsTask;
 
 import java.util.Random;
 import java.util.concurrent.Callable;
