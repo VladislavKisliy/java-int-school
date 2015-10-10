@@ -108,7 +108,11 @@ public class JDBC_example
         st.close();
         cn.close();
     }
-    catch (Exception e) { return; }
+    catch (Exception e) 
+       {
+           System.out.println("Error appeared: "+e.getMessage());
+           return; 
+       }
     finally { System.out.println("Finished!"); }
     }
 }
