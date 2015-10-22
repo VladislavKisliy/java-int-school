@@ -306,7 +306,7 @@ public class GuiCS extends JFrame {
 					tServer,
 					new JLabel("Port:"),
 					tPort,
-					new JLabel("Port:"),
+					new JLabel("Player:"),
 					tName
 			};
 			JOptionPane.showMessageDialog(null, inputs, "Specify connection parameters", JOptionPane.PLAIN_MESSAGE);
