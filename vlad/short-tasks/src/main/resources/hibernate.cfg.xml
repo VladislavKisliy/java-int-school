@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
+    <property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
+    <property name="hibernate.connection.url">jdbc:oracle:thin:@konzum2.weigandt-consulting.com:1521:mom5t</property>
+    <property name="hibernate.connection.username">kws</property>
+    <property name="hibernate.connection.password">drwkws5t</property>
+    <mapping resource="com/weigandtconsulting/javaschool/db/hibernate/entity/DeliveryPoint.hbm.xml"/>
+    <mapping resource="com/weigandtconsulting/javaschool/db/hibernate/entity/ViewcSearchDocuments.hbm.xml"/>
+    <mapping resource="com/weigandtconsulting/javaschool/db/hibernate/entity/ContractPricingPriority.hbm.xml"/>
+    <mapping resource="com/weigandtconsulting/javaschool/db/hibernate/entity/CustomerMaster.hbm.xml"/>
+    <mapping resource="com/weigandtconsulting/javaschool/db/hibernate/entity/VolumeRebateDefinitions.hbm.xml"/>
+    <mapping resource="com/weigandtconsulting/javaschool/db/hibernate/entity/ViewLookupItem.hbm.xml"/>
+    <mapping resource="com/weigandtconsulting/javaschool/db/hibernate/entity/CustomerContract.hbm.xml"/>
+    <mapping resource="com/weigandtconsulting/javaschool/db/hibernate/entity/VolumeRebates.hbm.xml"/>
+    <mapping resource="com/weigandtconsulting/javaschool/db/hibernate/entity/SalesAgent.hbm.xml"/>
+    <mapping resource="com/weigandtconsulting/javaschool/db/hibernate/entity/ViewLookupDeliveryPoint.hbm.xml"/>
+    <mapping resource="com/weigandtconsulting/javaschool/db/hibernate/entity/CustomerAddr.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

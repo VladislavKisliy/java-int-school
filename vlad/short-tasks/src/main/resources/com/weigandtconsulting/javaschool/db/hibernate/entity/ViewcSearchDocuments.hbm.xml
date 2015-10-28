@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2015 4:51:35 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.weigandtconsulting.javaschool.db.hibernate.entity.ViewcSearchDocuments" table="VIEWC_SEARCH_DOCUMENTS" schema="KWS" optimistic-lock="version">
+        <composite-id name="id" class="com.weigandtconsulting.javaschool.db.hibernate.entity.ViewcSearchDocumentsId">
+            <key-property name="documentId" type="big_decimal">
+                <column name="DOCUMENT_ID" precision="20" scale="0" />
+            </key-property>
+            <key-property name="documentType" type="string">
+                <column name="DOCUMENT_TYPE" length="4" />
+            </key-property>
+            <key-property name="documentTypeLookup" type="string">
+                <column name="DOCUMENT_TYPE_LOOKUP" />
+            </key-property>
+            <key-property name="documentSubtype" type="string">
+                <column name="DOCUMENT_SUBTYPE" length="4" />
+            </key-property>
+            <key-property name="documentNum" type="string">
+                <column name="DOCUMENT_NUM" length="20" />
+            </key-property>
+            <key-property name="documentNumSort" type="string">
+                <column name="DOCUMENT_NUM_SORT" length="56" />
+            </key-property>
+            <key-property name="documentDate" type="date">
+                <column name="DOCUMENT_DATE" length="7" />
+            </key-property>
+            <key-property name="channelLookup" type="string">
+                <column name="CHANNEL_LOOKUP" length="91" />
+            </key-property>
+            <key-property name="customerLookup" type="string">
+                <column name="CUSTOMER_LOOKUP" length="792" />
+            </key-property>
+            <key-property name="status" type="string">
+                <column name="STATUS" length="4" />
+            </key-property>
+            <key-property name="statusLookup" type="string">
+                <column name="STATUS_LOOKUP" />
+            </key-property>
+            <key-property name="locationId" type="big_decimal">
+                <column name="LOCATION_ID" precision="20" scale="0" />
+            </key-property>
+            <key-property name="locationType" type="string">
+                <column name="LOCATION_TYPE" length="1" />
+            </key-property>
+            <key-property name="customerId" type="big_decimal">
+                <column name="CUSTOMER_ID" precision="20" scale="0" />
+            </key-property>
+            <key-property name="locationLookup" type="string">
+                <column name="LOCATION_LOOKUP" length="191" />
+            </key-property>
+            <key-property name="deliveryPointId" type="java.lang.Short">
+                <column name="DELIVERY_POINT_ID" precision="4" scale="0" />
+            </key-property>
+            <key-property name="deliveryPointLookup" type="string">
+                <column name="DELIVERY_POINT_LOOKUP" length="644" />
+            </key-property>
+            <key-property name="fiscalised" type="big_decimal">
+                <column name="FISCALISED" precision="22" scale="0" />
+            </key-property>
+            <key-property name="issuedBy" type="string">
+                <column name="ISSUED_BY" length="256" />
+            </key-property>
+            <key-property name="sourceLookup" type="string">
+                <column name="SOURCE_LOOKUP" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="64" />
+            </key-property>
+            <key-property name="stornoInd" type="big_decimal">
+                <column name="STORNO_IND" precision="22" scale="0" />
+            </key-property>
+            <key-property name="source" type="string">
+                <column name="SOURCE" length="4" />
+            </key-property>
+            <key-property name="consInd" type="big_decimal">
+                <column name="CONS_IND" precision="22" scale="0" />
+            </key-property>
+            <key-property name="orderId" type="big_decimal">
+                <column name="ORDER_ID" precision="20" scale="0" />
+            </key-property>
+            <key-property name="returnId" type="big_decimal">
+                <column name="RETURN_ID" precision="20" scale="0" />
+            </key-property>
+            <key-property name="orderTsfNo" type="java.lang.Long">
+                <column name="ORDER_TSF_NO" precision="10" scale="0" />
+            </key-property>
+            <key-property name="returnTsfNo" type="java.lang.Long">
+                <column name="RETURN_TSF_NO" precision="10" scale="0" />
+            </key-property>
+            <key-property name="refDocumentId" type="big_decimal">
+                <column name="REF_DOCUMENT_ID" precision="20" scale="0" />
+            </key-property>
+            <key-property name="fullUserName" type="string">
+                <column name="FULL_USER_NAME" length="513" />
+            </key-property>
+            <key-property name="amtTotal" type="big_decimal">
+                <column name="AMT_TOTAL" precision="22" scale="0" />
+            </key-property>
+            <key-property name="refDocumentNum" type="string">
+                <column name="REF_DOCUMENT_NUM" length="20" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

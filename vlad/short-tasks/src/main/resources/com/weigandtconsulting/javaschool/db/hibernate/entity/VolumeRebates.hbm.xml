@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2015 4:51:35 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.weigandtconsulting.javaschool.db.hibernate.entity.VolumeRebates" table="VOLUME_REBATES" schema="KWS" optimistic-lock="version">
+        <comment>Table with Volume Rebates Documents</comment>
+        <id name="id" type="big_decimal">
+            <column name="ID" precision="20" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="volumeRebateDefinitions" class="com.weigandtconsulting.javaschool.db.hibernate.entity.VolumeRebateDefinitions" fetch="select">
+            <column name="VOLUME_REBATE_DEFINITION_ID" precision="20" scale="0" not-null="true">
+                <comment>Volume Rebate Definition ID</comment>
+            </column>
+        </many-to-one>
+        <property name="customerId" type="long">
+            <column name="CUSTOMER_ID" precision="10" scale="0" not-null="true">
+                <comment>Customer ID</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="4" not-null="true">
+                <comment>Status of VR W - worksheet C - Calculated (Created by batch) A - approved (locked for editing) D - Deleted (locked for edition) R - rejected (locked for
+                editing)</comment>
+            </column>
+        </property>
+        <property name="wholesaleSide" type="string">
+            <column name="WHOLESALE_SIDE" length="4" not-null="true">
+                <comment>Rule to creation Credit notes: LOC - Create CN for each location CHN - Create Credite Note for each channel MCHL - Create one Credit Note for all VR
+                documents</comment>
+            </column>
+        </property>
+        <property name="currencyCode" type="string">
+            <column name="CURRENCY_CODE" length="3" not-null="true">
+                <comment>Currency</comment>
+            </column>
+        </property>
+        <property name="calcStartDate" type="date">
+            <column name="CALC_START_DATE" length="7" not-null="true">
+                <comment>Start of period for VR calculation</comment>
+            </column>
+        </property>
+        <property name="calcEndDate" type="date">
+            <column name="CALC_END_DATE" length="7" not-null="true">
+                <comment>End of period for VR calculation</comment>
+            </column>
+        </property>
+        <property name="changeReason" type="string">
+            <column name="CHANGE_REASON" length="4">
+                <comment>CODE_DETAILS (CODE_TYPE = VR_CHANGE_REASON)</comment>
+            </column>
+        </property>
+        <property name="changeComments" type="string">
+            <column name="CHANGE_COMMENTS" length="200">
+                <comment>Reason why approved rebate was changed/user comment. Free entry field.</comment>
+            </column>
+        </property>
+        <property name="comments" type="string">
+            <column name="COMMENTS" length="200">
+                <comment>Comments, from user</comment>
+            </column>
+        </property>
+        <property name="approvedBy" type="string">
+            <column name="APPROVED_BY" length="64">
+                <comment>User, who approved the Volume Rebate</comment>
+            </column>
+        </property>
+        <property name="approvedAt" type="date">
+            <column name="APPROVED_AT" length="7">
+                <comment>Date when Volume Rebate has been approved</comment>
+            </column>
+        </property>
+        <property name="rejectedBy" type="string">
+            <column name="REJECTED_BY" length="64">
+                <comment>User, who rejects Volume Rebate</comment>
+            </column>
+        </property>
+        <property name="rejectedAt" type="date">
+            <column name="REJECTED_AT" length="7">
+                <comment>Date when Volume Rebate has been rejected</comment>
+            </column>
+        </property>
+        <property name="rowStatus" type="string">
+            <column name="ROW_STATUS" length="1" not-null="true">
+                <comment>Table row status. Must be set to 'A' on insert 'A' - Active 'D' - Deleted</comment>
+            </column>
+        </property>
+        <property name="rowCreatedBy" type="string">
+            <column name="ROW_CREATED_BY" length="64" not-null="true">
+                <comment>Created user</comment>
+            </column>
+        </property>
+        <property name="rowCreatedAt" type="serializable">
+            <column name="ROW_CREATED_AT" not-null="true">
+                <comment>Date of Customer Order created in the system</comment>
+            </column>
+        </property>
+        <property name="rowUpdatedBy" type="string">
+            <column name="ROW_UPDATED_BY" length="64" not-null="true">
+                <comment>Updated user</comment>
+            </column>
+        </property>
+        <property name="rowUpdatedAt" type="serializable">
+            <column name="ROW_UPDATED_AT" not-null="true">
+                <comment>Last update date time</comment>
+            </column>
+        </property>
+        <property name="rowDeletedBy" type="string">
+            <column name="ROW_DELETED_BY" length="64">
+                <comment>User name who marked the record for deletion</comment>
+            </column>
+        </property>
+        <property name="rowDeletedAt" type="serializable">
+            <column name="ROW_DELETED_AT">
+                <comment>Date and Time when the record was marked for deletion</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

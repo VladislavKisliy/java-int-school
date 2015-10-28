@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2015 4:51:35 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.weigandtconsulting.javaschool.db.hibernate.entity.ViewLookupItem" table="VIEW_LOOKUP_ITEM" schema="KWS" optimistic-lock="version">
+        <composite-id name="id" class="com.weigandtconsulting.javaschool.db.hibernate.entity.ViewLookupItemId">
+            <key-property name="id" type="string">
+                <column name="ID" length="25" />
+            </key-property>
+            <key-property name="description" type="string">
+                <column name="DESCRIPTION" length="250" />
+            </key-property>
+            <key-property name="idLookup" type="string">
+                <column name="ID_LOOKUP" length="25" />
+            </key-property>
+            <key-property name="descriptionLookup" type="string">
+                <column name="DESCRIPTION_LOOKUP" length="250" />
+            </key-property>
+            <key-property name="lookup" type="string">
+                <column name="LOOKUP" length="276" />
+            </key-property>
+            <key-property name="supplierId" type="long">
+                <column name="SUPPLIER_ID" precision="10" scale="0" />
+            </key-property>
+            <key-property name="suppDescription" type="string">
+                <column name="SUPP_DESCRIPTION" length="240" />
+            </key-property>
+            <key-property name="supplierIdLookup" type="string">
+                <column name="SUPPLIER_ID_LOOKUP" length="40" />
+            </key-property>
+            <key-property name="suppDescriptionLookup" type="string">
+                <column name="SUPP_DESCRIPTION_LOOKUP" length="240" />
+            </key-property>
+            <key-property name="categoryId" type="short">
+                <column name="CATEGORY_ID" precision="4" scale="0" />
+            </key-property>
+            <key-property name="subcategoryId" type="short">
+                <column name="SUBCATEGORY_ID" precision="4" scale="0" />
+            </key-property>
+            <key-property name="groupId" type="short">
+                <column name="GROUP_ID" precision="4" scale="0" />
+            </key-property>
+            <key-property name="categoryIdLookup" type="string">
+                <column name="CATEGORY_ID_LOOKUP" length="40" />
+            </key-property>
+            <key-property name="subcategoryIdLookup" type="string">
+                <column name="SUBCATEGORY_ID_LOOKUP" length="40" />
+            </key-property>
+            <key-property name="groupIdLookup" type="string">
+                <column name="GROUP_ID_LOOKUP" length="40" />
+            </key-property>
+            <key-property name="locationId" type="long">
+                <column name="LOCATION_ID" precision="10" scale="0" />
+            </key-property>
+            <key-property name="locationType" type="string">
+                <column name="LOCATION_TYPE" length="1" />
+            </key-property>
+            <key-property name="availableQty" type="big_decimal">
+                <column name="AVAILABLE_QTY" precision="22" scale="0" />
+            </key-property>
+            <key-property name="stockOnHand" type="big_decimal">
+                <column name="STOCK_ON_HAND" precision="12" scale="4" />
+            </key-property>
+            <key-property name="uom" type="string">
+                <column name="UOM" length="4" />
+            </key-property>
+            <key-property name="dept" type="short">
+                <column name="DEPT" precision="4" scale="0" />
+            </key-property>
+            <key-property name="groupNo" type="short">
+                <column name="GROUP_NO" precision="4" scale="0" />
+            </key-property>
+            <key-property name="sellableInd" type="string">
+                <column name="SELLABLE_IND" length="1" />
+            </key-property>
+            <key-property name="packInd" type="string">
+                <column name="PACK_IND" length="1" />
+            </key-property>
+            <key-property name="itemType" type="string">
+                <column name="ITEM_TYPE" length="4000" />
+            </key-property>
+            <key-property name="containerItem" type="string">
+                <column name="CONTAINER_ITEM" length="25" />
+            </key-property>
+            <key-property name="retailPrice" type="big_decimal">
+                <column name="RETAIL_PRICE" precision="20" scale="4" />
+            </key-property>
+            <key-property name="sector" type="short">
+                <column name="SECTOR" precision="4" scale="0" />
+            </key-property>
+            <key-property name="sectorLookup" type="string">
+                <column name="SECTOR_LOOKUP" length="40" />
+            </key-property>
+            <key-property name="emballageInd" type="string">
+                <column name="EMBALLAGE_IND" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

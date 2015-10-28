@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2015 4:51:35 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.weigandtconsulting.javaschool.db.hibernate.entity.VolumeRebateDefinitions" table="VOLUME_REBATE_DEFINITIONS" schema="KWS" optimistic-lock="version">
+        <comment>Table with Volume Rebate Definision</comment>
+        <id name="id" type="big_decimal">
+            <column name="ID" precision="20" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="200" not-null="true">
+                <comment>Description</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="4" not-null="true">
+                <comment>Status of vol. Reb. Definition, possible values: W - worksheet A - active I - inactive E - expired D - deleted</comment>
+            </column>
+        </property>
+        <property name="definitionType" type="string">
+            <column name="DEFINITION_TYPE" length="4" not-null="true">
+                <comment>M - monthly Q - quarterly S - semiannual A - annual O - Once- for promotions</comment>
+            </column>
+        </property>
+        <property name="thresholdBaseType" type="string">
+            <column name="THRESHOLD_BASE_TYPE" length="4" not-null="true">
+                <comment>W - wholesale amount, VAT and fee3 excluded T - Total amount, VAT and fee3 included in calculationS</comment>
+            </column>
+        </property>
+        <property name="automaticModeInd" type="boolean">
+            <column name="AUTOMATIC_MODE_IND" precision="1" scale="0" not-null="true">
+                <comment>Y - VR result should be calculated autometically N - Users create VR documents manually</comment>
+            </column>
+        </property>
+        <property name="startDate" type="date">
+            <column name="START_DATE" length="7" not-null="true">
+                <comment>Start of Definition</comment>
+            </column>
+        </property>
+        <property name="endDate" type="date">
+            <column name="END_DATE" length="7" not-null="true">
+                <comment>End of Definition</comment>
+            </column>
+        </property>
+        <property name="currencyCode" type="string">
+            <column name="CURRENCY_CODE" length="4" not-null="true">
+                <comment>Currency of the Definition</comment>
+            </column>
+        </property>
+        <property name="defaultWholesaleSide" type="string">
+            <column name="DEFAULT_WHOLESALE_SIDE" length="4" not-null="true">
+                <comment>Rule to creation Credit notes: LOC - Create CN for each location CHN - Create Credite Note for each channel MCHL - Create one Credit Note for all VR
+                documents</comment>
+            </column>
+        </property>
+        <property name="rowStatus" type="string">
+            <column name="ROW_STATUS" length="1" not-null="true">
+                <comment>Table row status. Must be set to 'A' on insert 'A' - Active 'D' - Deleted</comment>
+            </column>
+        </property>
+        <property name="rowCreatedBy" type="string">
+            <column name="ROW_CREATED_BY" length="64" not-null="true">
+                <comment>Created user</comment>
+            </column>
+        </property>
+        <property name="rowCreatedAt" type="serializable">
+            <column name="ROW_CREATED_AT" not-null="true">
+                <comment>Date of Customer Order created in the system</comment>
+            </column>
+        </property>
+        <property name="rowUpdatedBy" type="string">
+            <column name="ROW_UPDATED_BY" length="64" not-null="true">
+                <comment>Updated user</comment>
+            </column>
+        </property>
+        <property name="rowUpdatedAt" type="serializable">
+            <column name="ROW_UPDATED_AT" not-null="true">
+                <comment>Last update date time</comment>
+            </column>
+        </property>
+        <property name="rowDeletedBy" type="string">
+            <column name="ROW_DELETED_BY" length="64">
+                <comment>User name who marked the record for deletion</comment>
+            </column>
+        </property>
+        <property name="rowDeletedAt" type="serializable">
+            <column name="ROW_DELETED_AT">
+                <comment>Date and Time when the record was marked for deletion</comment>
+            </column>
+        </property>
+        <property name="excludePplInd" type="boolean">
+            <column name="EXCLUDE_PPL_IND" precision="1" scale="0" not-null="true">
+                <comment>To exclude items with PPL prices from threshold calculations</comment>
+            </column>
+        </property>
+        <property name="excludeFplInd" type="boolean">
+            <column name="EXCLUDE_FPL_IND" precision="1" scale="0" not-null="true">
+                <comment>To exclude items with FPL prices from threshold calculations</comment>
+            </column>
+        </property>
+        <property name="excludeCplInd" type="boolean">
+            <column name="EXCLUDE_CPL_IND" precision="1" scale="0" not-null="true">
+                <comment>To exclude items with CPL prices from threshold calculations</comment>
+            </column>
+        </property>
+        <property name="allCustomerInd" type="boolean">
+            <column name="ALL_CUSTOMER_IND" precision="1" scale="0" not-null="true">
+                <comment>For promotion VR only</comment>
+            </column>
+        </property>
+        <property name="allPaymentTypeInd" type="boolean">
+            <column name="ALL_PAYMENT_TYPE_IND" precision="1" scale="0" not-null="true">
+                <comment>All payment types/ or user should choose them</comment>
+            </column>
+        </property>
+        <set name="volumeRebateses" table="VOLUME_REBATES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VOLUME_REBATE_DEFINITION_ID" precision="20" scale="0" not-null="true">
+                    <comment>Volume Rebate Definition ID</comment>
+                </column>
+            </key>
+            <one-to-many class="com.weigandtconsulting.javaschool.db.hibernate.entity.VolumeRebates" />
+        </set>
+    </class>
+</hibernate-mapping>

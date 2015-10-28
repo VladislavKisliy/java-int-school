@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2015 4:51:35 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.weigandtconsulting.javaschool.db.hibernate.entity.SalesAgent" table="SALES_AGENT" schema="KWS" optimistic-lock="version">
+        <comment>This table holds information about each Sales Agent.</comment>
+        <id name="salesAgent" type="int">
+            <column name="SALES_AGENT" precision="6" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="firstName" type="string">
+            <column name="FIRST_NAME" length="100" not-null="true">
+                <comment>Agent?s first name.</comment>
+            </column>
+        </property>
+        <property name="lastName" type="string">
+            <column name="LAST_NAME" length="100" not-null="true">
+                <comment>Agent?s last name.</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="600">
+                <comment>Agent?s description</comment>
+            </column>
+        </property>
+        <property name="saType" type="string">
+            <column name="SA_TYPE" length="2" not-null="true">
+                <comment>Types of Sales Agent: SA - Sales Agent KM - Key Account Manager</comment>
+            </column>
+        </property>
+        <property name="plannedSal" type="big_decimal">
+            <column name="PLANNED_SAL" precision="20" scale="4" not-null="true">
+                <comment>Sales Agent?s planned sales.</comment>
+            </column>
+        </property>
+        <property name="modDate" type="date">
+            <column name="MOD_DATE" length="7" not-null="true">
+                <comment>Date of last modification.</comment>
+            </column>
+        </property>
+        <property name="modId" type="string">
+            <column name="MOD_ID" length="30" not-null="true">
+                <comment>Executor of last modification.</comment>
+            </column>
+        </property>
+        <property name="creDate" type="date">
+            <column name="CRE_DATE" length="7" not-null="true">
+                <comment>Date of creation.</comment>
+            </column>
+        </property>
+        <property name="creId" type="string">
+            <column name="CRE_ID" length="30" not-null="true">
+                <comment>Executor of creation.</comment>
+            </column>
+        </property>
+        <set name="customerMastersForKamId" table="CUSTOMER_MASTER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="KAM_ID" precision="6" scale="0">
+                    <comment>Key account manager ID</comment>
+                </column>
+            </key>
+            <one-to-many class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerMaster" />
+        </set>
+        <set name="customerMastersForSaId" table="CUSTOMER_MASTER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SA_ID" precision="6" scale="0">
+                    <comment>Sales manager ID</comment>
+                </column>
+            </key>
+            <one-to-many class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerMaster" />
+        </set>
+        <set name="deliveryPoints" table="DELIVERY_POINT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SA_ID" precision="6" scale="0" not-null="true">
+                    <comment>Valid Sales agent ID based on selected VELPRO centre</comment>
+                </column>
+            </key>
+            <one-to-many class="com.weigandtconsulting.javaschool.db.hibernate.entity.DeliveryPoint" />
+        </set>
+    </class>
+</hibernate-mapping>

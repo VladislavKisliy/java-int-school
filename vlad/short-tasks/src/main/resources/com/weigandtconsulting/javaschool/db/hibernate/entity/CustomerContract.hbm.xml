@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2015 4:51:35 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerContract" table="CUSTOMER_CONTRACT" schema="KWS" optimistic-lock="version">
+        <comment>Table contains customer contract data</comment>
+        <id name="contract" type="big_decimal">
+            <column name="CONTRACT" precision="20" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="customerContract" class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerContract" fetch="select">
+            <column name="SPC_PARENT" precision="20" scale="0">
+                <comment>If null then it is general contract, else it is specific contract and this field points to its general contract</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="customerMaster" class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerMaster" fetch="select">
+            <column name="CUSTOMER_ID" precision="20" scale="0" not-null="true">
+                <comment>10-digits customer id</comment>
+            </column>
+        </many-to-one>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="160" not-null="true">
+                <comment>Short Description of Contract</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="1" not-null="true">
+                <comment>Indicates the status of the contract: W - Worksheet C - Confirmed (Approved) A - Active E - Expired I - Inactive (Cancelled)</comment>
+            </column>
+        </property>
+        <property name="credit" type="big_decimal">
+            <column name="CREDIT" precision="12" not-null="true">
+                <comment>The credit of customer contract amount</comment>
+            </column>
+        </property>
+        <property name="insDescription" type="string">
+            <column name="INS_DESCRIPTION" length="4000">
+                <comment>The insurance description</comment>
+            </column>
+        </property>
+        <property name="insAmount" type="big_decimal">
+            <column name="INS_AMOUNT" precision="12" scale="4">
+                <comment>The insurance amount</comment>
+            </column>
+        </property>
+        <property name="currencyCode" type="string">
+            <column name="CURRENCY_CODE" length="3" not-null="true">
+                <comment>The currency code</comment>
+            </column>
+        </property>
+        <property name="spcAssortment" type="boolean">
+            <column name="SPC_ASSORTMENT" precision="1" scale="0" not-null="true">
+                <comment>Special assortment indicator (0/1)</comment>
+            </column>
+        </property>
+        <property name="customerLevelPp" type="boolean">
+            <column name="CUSTOMER_LEVEL_PP" precision="1" scale="0" not-null="true">
+                <comment>Customer pricing priority level indicator</comment>
+            </column>
+        </property>
+        <property name="startDate" type="date">
+            <column name="START_DATE" length="7" not-null="true">
+                <comment>The Start Date of contract</comment>
+            </column>
+        </property>
+        <property name="endDate" type="date">
+            <column name="END_DATE" length="7" not-null="true">
+                <comment>The End Date of contract</comment>
+            </column>
+        </property>
+        <property name="creDate" type="date">
+            <column name="CRE_DATE" length="7" not-null="true">
+                <comment>Date and time of creation</comment>
+            </column>
+        </property>
+        <property name="creId" type="string">
+            <column name="CRE_ID" length="64" not-null="true">
+                <comment>Id of creator</comment>
+            </column>
+        </property>
+        <property name="modDate" type="date">
+            <column name="MOD_DATE" length="7" not-null="true">
+                <comment>Date and time of modification</comment>
+            </column>
+        </property>
+        <property name="modId" type="string">
+            <column name="MOD_ID" length="64" not-null="true">
+                <comment>Id of user who modified</comment>
+            </column>
+        </property>
+        <property name="approvalDate" type="date">
+            <column name="APPROVAL_DATE" length="7">
+                <comment>Date and time of approval</comment>
+            </column>
+        </property>
+        <property name="approvalId" type="string">
+            <column name="APPROVAL_ID" length="64">
+                <comment>Id of user who approved</comment>
+            </column>
+        </property>
+        <property name="exclusivityInd" type="boolean">
+            <column name="EXCLUSIVITY_IND" precision="1" scale="0" not-null="true" />
+        </property>
+        <property name="prevStatus" type="string">
+            <column name="PREV_STATUS" length="1" not-null="true" />
+        </property>
+        <property name="cancelDate" type="date">
+            <column name="CANCEL_DATE" length="7">
+                <comment>A Date of cancellation.</comment>
+            </column>
+        </property>
+        <property name="cancelId" type="string">
+            <column name="CANCEL_ID" length="64">
+                <comment>A user who inactivated record.</comment>
+            </column>
+        </property>
+        <property name="exContractId" type="string">
+            <column name="EX_CONTRACT_ID" length="200">
+                <comment>External Contract ID</comment>
+            </column>
+        </property>
+        <property name="invoiceWithoutVat" type="boolean">
+            <column name="INVOICE_WITHOUT_VAT" precision="1" scale="0" not-null="true">
+                <comment>Invoice without VAT indicator</comment>
+            </column>
+        </property>
+        <set name="customerContracts" table="CUSTOMER_CONTRACT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPC_PARENT" precision="20" scale="0">
+                    <comment>If null then it is general contract, else it is specific contract and this field points to its general contract</comment>
+                </column>
+            </key>
+            <one-to-many class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerContract" />
+        </set>
+        <one-to-one name="contractPricingPriority" class="com.weigandtconsulting.javaschool.db.hibernate.entity.ContractPricingPriority"></one-to-one>
+    </class>
+</hibernate-mapping>

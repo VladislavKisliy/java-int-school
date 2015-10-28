@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2015 4:51:35 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.weigandtconsulting.javaschool.db.hibernate.entity.DeliveryPoint" table="DELIVERY_POINT" schema="KWS" optimistic-lock="version">
+        <comment>Table contains delivery points data</comment>
+        <composite-id name="id" class="com.weigandtconsulting.javaschool.db.hibernate.entity.DeliveryPointId">
+            <key-property name="deliveryPoint" type="short">
+                <column name="DELIVERY_POINT" precision="4" scale="0" />
+            </key-property>
+            <key-property name="customerId" type="long">
+                <column name="CUSTOMER_ID" precision="10" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="customerMaster" class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerMaster" update="false" insert="false" fetch="select">
+            <column name="CUSTOMER_ID" precision="10" scale="0" not-null="true">
+                <comment>Customers HQ or BU ID</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="deliveryPoint" class="com.weigandtconsulting.javaschool.db.hibernate.entity.DeliveryPoint" fetch="select">
+            <column name="SUBSTITUTE_DP_ID" precision="4" scale="0">
+                <comment>DP created for substitution of the DP.</comment>
+            </column>
+            <column name="SUBSTITUTE_DP_CUSTOMER" precision="10" scale="0">
+                <comment>ID of a customer, which has assigned the DP substituting this DP.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="salesAgent" class="com.weigandtconsulting.javaschool.db.hibernate.entity.SalesAgent" fetch="select">
+            <column name="SA_ID" precision="6" scale="0" not-null="true">
+                <comment>Valid Sales agent ID based on selected VELPRO centre</comment>
+            </column>
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="NAME" length="480" not-null="true">
+                <comment>The name of the Customer delivery point</comment>
+            </column>
+        </property>
+        <property name="channel" type="java.lang.Long">
+            <column name="CHANNEL" precision="10" scale="0">
+                <comment>Highest level of customer hierarchy used in BI.</comment>
+            </column>
+        </property>
+        <property name="subchannel" type="java.lang.Long">
+            <column name="SUBCHANNEL" precision="10" scale="0">
+                <comment>Second level of the hierarchy used in BI.</comment>
+            </column>
+        </property>
+        <property name="subchannelType" type="java.lang.Long">
+            <column name="SUBCHANNEL_TYPE" precision="10" scale="0">
+                <comment>Sub channels type attribute illustrates precise level of customer definition.</comment>
+            </column>
+        </property>
+        <property name="dpGroup" type="java.lang.Long">
+            <column name="DP_GROUP" precision="10" scale="0">
+                <comment>Customer DP Group.</comment>
+            </column>
+        </property>
+        <property name="x" type="java.lang.Long">
+            <column name="X" precision="10" scale="0">
+                <comment>Additional required attributes.</comment>
+            </column>
+        </property>
+        <property name="y" type="java.lang.Long">
+            <column name="Y" precision="10" scale="0">
+                <comment>Additional required attributes.</comment>
+            </column>
+        </property>
+        <property name="invoicingLevel" type="string">
+            <column name="INVOICING_LEVEL" length="2" not-null="true">
+                <comment>Indicates invoicing level (HQ, BU)</comment>
+            </column>
+        </property>
+        <property name="notDeliverableInd" type="boolean">
+            <column name="NOT_DELIVERABLE_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) Flag - 1, will indicate the DPs which will be closed in the nearest future, else ? 0</comment>
+            </column>
+        </property>
+        <property name="vatRegion" type="short">
+            <column name="VAT_REGION" precision="4" scale="0" not-null="true">
+                <comment>VAT region of the customer. Standard Oracle RMS VAT regions utilized.</comment>
+            </column>
+        </property>
+        <property name="creDate" type="date">
+            <column name="CRE_DATE" length="7" not-null="true">
+                <comment>Date and time of creation of DP in KWS.</comment>
+            </column>
+        </property>
+        <property name="creId" type="string">
+            <column name="CRE_ID" length="30" not-null="true">
+                <comment>An ID of the user that created DP in KWS.</comment>
+            </column>
+        </property>
+        <property name="modDate" type="date">
+            <column name="MOD_DATE" length="7" not-null="true">
+                <comment>Date and time of modification of DP in KWS.</comment>
+            </column>
+        </property>
+        <property name="modId" type="string">
+            <column name="MOD_ID" length="30" not-null="true">
+                <comment>An ID of the user that modified DP in KWS.</comment>
+            </column>
+        </property>
+        <property name="delDate" type="date">
+            <column name="DEL_DATE" length="7">
+                <comment>Date and time of deletion of DP in KWS.</comment>
+            </column>
+        </property>
+        <property name="delId" type="string">
+            <column name="DEL_ID" length="30">
+                <comment>An ID of the user that deleted DP in KWS.</comment>
+            </column>
+        </property>
+        <property name="timeframe" type="java.lang.Long">
+            <column name="TIMEFRAME" precision="10" scale="0" />
+        </property>
+        <property name="id_1" type="big_decimal">
+            <column name="ID" precision="20" scale="0" not-null="true" unique="true" />
+        </property>
+        <set name="customerAddrs" table="CUSTOMER_ADDR" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DELIVERY_POINT_ID" precision="4" scale="0">
+                    <comment>Customer?s DP</comment>
+                </column>
+                <column name="CUSTOMER_ID" precision="10" scale="0" not-null="true">
+                    <comment>Customer?s HQ or Customer?s BU</comment>
+                </column>
+            </key>
+            <one-to-many class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerAddr" />
+        </set>
+        <set name="deliveryPoints" table="DELIVERY_POINT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSTITUTE_DP_ID" precision="4" scale="0">
+                    <comment>DP created for substitution of the DP.</comment>
+                </column>
+                <column name="SUBSTITUTE_DP_CUSTOMER" precision="10" scale="0">
+                    <comment>ID of a customer, which has assigned the DP substituting this DP.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.weigandtconsulting.javaschool.db.hibernate.entity.DeliveryPoint" />
+        </set>
+    </class>
+</hibernate-mapping>

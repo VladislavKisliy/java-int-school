@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2015 4:51:35 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerAddr" table="CUSTOMER_ADDR" schema="KWS" optimistic-lock="version">
+        <comment>Table contains all customers and delivery points addresses</comment>
+        <id name="addr" type="int">
+            <column name="ADDR" precision="6" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="customerMaster" class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerMaster" fetch="select">
+            <column name="CUSTOMER_ID" precision="10" scale="0" not-null="true">
+                <comment>Customer?s HQ or Customer?s BU</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="deliveryPoint" class="com.weigandtconsulting.javaschool.db.hibernate.entity.DeliveryPoint" update="false" insert="false" fetch="select">
+            <column name="DELIVERY_POINT_ID" precision="4" scale="0">
+                <comment>Customer?s DP</comment>
+            </column>
+            <column name="CUSTOMER_ID" precision="10" scale="0" not-null="true">
+                <comment>Customer?s HQ or Customer?s BU</comment>
+            </column>
+        </many-to-one>
+        <property name="addrType" type="string">
+            <column name="ADDR_TYPE" length="2" not-null="true">
+                <comment>Type of address (01 ? Business, 02 ? Postal, 03 ? Returns, 04 ? Order, 05 ?Invoice, 06 ?Remittance, 99 - Delivery)</comment>
+            </column>
+        </property>
+        <property name="primaryInd" type="boolean">
+            <column name="PRIMARY_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) indicates primary address type</comment>
+            </column>
+        </property>
+        <property name="gln" type="string">
+            <column name="GLN" length="13">
+                <comment>Global Location Number code for the customer</comment>
+            </column>
+        </property>
+        <property name="region" type="string">
+            <column name="REGION" length="960" not-null="true">
+                <comment>Customer?s region</comment>
+            </column>
+        </property>
+        <property name="city" type="string">
+            <column name="CITY" length="480" not-null="true">
+                <comment>Customer City</comment>
+            </column>
+        </property>
+        <property name="postalCode" type="string">
+            <column name="POSTAL_CODE" length="30">
+                <comment>Customer Postal Code</comment>
+            </column>
+        </property>
+        <property name="countryCode" type="string">
+            <column name="COUNTRY_CODE" length="3" not-null="true">
+                <comment>Customer Country</comment>
+            </column>
+        </property>
+        <property name="address1" type="string">
+            <column name="ADDRESS_1" length="960" not-null="true">
+                <comment>Address of Customer 1</comment>
+            </column>
+        </property>
+        <property name="address2" type="string">
+            <column name="ADDRESS_2" length="960">
+                <comment>Address of Customer 2</comment>
+            </column>
+        </property>
+        <property name="address3" type="string">
+            <column name="ADDRESS_3" length="960">
+                <comment>Address of Customer 3</comment>
+            </column>
+        </property>
+        <property name="contactName" type="string">
+            <column name="CONTACT_NAME" length="480">
+                <comment>Name of the Customer contact person.</comment>
+            </column>
+        </property>
+        <property name="contactPhone" type="string">
+            <column name="CONTACT_PHONE" length="33">
+                <comment>Customer contact person phone number.</comment>
+            </column>
+        </property>
+        <property name="contactFax" type="string">
+            <column name="CONTACT_FAX" length="31">
+                <comment>Customer contact person fax number.</comment>
+            </column>
+        </property>
+        <property name="contactEmail" type="string">
+            <column name="CONTACT_EMAIL" length="100">
+                <comment>Customer contact person e-mail address.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

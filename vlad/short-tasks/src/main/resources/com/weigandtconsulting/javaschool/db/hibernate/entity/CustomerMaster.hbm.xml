@@ -1,0 +1,397 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2015 4:51:35 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerMaster" table="CUSTOMER_MASTER" schema="KWS" optimistic-lock="version">
+        <comment>Table contains customer master data</comment>
+        <id name="customer" type="long">
+            <column name="CUSTOMER" precision="10" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="customerMasterByBillToCustomer" class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerMaster" fetch="select">
+            <column name="BILL_TO_CUSTOMER" precision="10" scale="0">
+                <comment>Code of another ?Active? Customer who will be paying for this customer</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="customerMasterByCustomerParentId" class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerMaster" fetch="select">
+            <column name="CUSTOMER_PARENT_ID" precision="10" scale="0">
+                <comment>HQ Customer ID for BU level customer</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="salesAgentByKamId" class="com.weigandtconsulting.javaschool.db.hibernate.entity.SalesAgent" fetch="select">
+            <column name="KAM_ID" precision="6" scale="0">
+                <comment>Key account manager ID</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="salesAgentBySaId" class="com.weigandtconsulting.javaschool.db.hibernate.entity.SalesAgent" fetch="select">
+            <column name="SA_ID" precision="6" scale="0">
+                <comment>Sales manager ID</comment>
+            </column>
+        </many-to-one>
+        <property name="customerName" type="string">
+            <column name="CUSTOMER_NAME" length="140" not-null="true">
+                <comment>Customer name</comment>
+            </column>
+        </property>
+        <property name="customerName2" type="string">
+            <column name="CUSTOMER_NAME2" length="140">
+                <comment>Customer name 2</comment>
+            </column>
+        </property>
+        <property name="customerName3" type="string">
+            <column name="CUSTOMER_NAME3" length="140">
+                <comment>Customer name 3</comment>
+            </column>
+        </property>
+        <property name="customerName4" type="string">
+            <column name="CUSTOMER_NAME4" length="140">
+                <comment>Customer name 4</comment>
+            </column>
+        </property>
+        <property name="customerStatus" type="string">
+            <column name="CUSTOMER_STATUS" length="1" not-null="true">
+                <comment>Indicate customer status in KWS (N-New, A-Active, I-Inactive, B-Blocked)</comment>
+            </column>
+        </property>
+        <property name="prevStatus" type="string">
+            <column name="PREV_STATUS" length="1" not-null="true">
+                <comment>Indicate previous status in the CUSTOMER_STATUS column</comment>
+            </column>
+        </property>
+        <property name="customerType" type="string">
+            <column name="CUSTOMER_TYPE" length="2" not-null="true">
+                <comment>T - Tender or NT - non-Tender</comment>
+            </column>
+        </property>
+        <property name="channel" type="java.lang.Long">
+            <column name="CHANNEL" precision="10" scale="0">
+                <comment>Highest level of customer hierarchy used in BI.</comment>
+            </column>
+        </property>
+        <property name="subchannel" type="long">
+            <column name="SUBCHANNEL" precision="10" scale="0" not-null="true">
+                <comment>Second level of the hierarchy used in BI.</comment>
+            </column>
+        </property>
+        <property name="subchannelType" type="java.lang.Long">
+            <column name="SUBCHANNEL_TYPE" precision="10" scale="0">
+                <comment>Sub channels type is more precise level of customer definition.</comment>
+            </column>
+        </property>
+        <property name="customerGroup" type="java.lang.Long">
+            <column name="CUSTOMER_GROUP" precision="10" scale="0">
+                <comment>Customer group</comment>
+            </column>
+        </property>
+        <property name="customerHierarchy" type="string">
+            <column name="CUSTOMER_HIERARCHY" length="2" not-null="true">
+                <comment>Indicates customer level (HQ ? Headquarter, BU ? Business unit)</comment>
+            </column>
+        </property>
+        <property name="lang" type="int">
+            <column name="LANG" precision="6" scale="0" not-null="true">
+                <comment>Language code of the Customer</comment>
+            </column>
+        </property>
+        <property name="recyclingInd" type="boolean">
+            <column name="RECYCLING_IND" precision="1" scale="0" not-null="true">
+                <comment>Indicates if the customer is recyclable company. (1 ? Yes, the customer is recycling company; 0 ? no, the customer is regular customer)</comment>
+            </column>
+        </property>
+        <property name="mainLocation" type="java.lang.Long">
+            <column name="MAIN_LOCATION" precision="10" scale="0">
+                <comment>Main RMS location associated with customer (Physical Warehouse or Retail Store)</comment>
+            </column>
+        </property>
+        <property name="multiLocInd" type="boolean">
+            <column name="MULTI_LOC_IND" precision="1" scale="0" not-null="true">
+                <comment>Multiple location indicator 1 ? customer has multiple locations assigned to one DP, 0 ? has not</comment>
+            </column>
+        </property>
+        <property name="accountGroup" type="string">
+            <column name="ACCOUNT_GROUP" length="4" not-null="true">
+                <comment>Account group to be used for posting invoice and Credit notes to SAP</comment>
+            </column>
+        </property>
+        <property name="taxNumber" type="string">
+            <column name="TAX_NUMBER" length="16">
+                <comment>Customer Tax ID</comment>
+            </column>
+        </property>
+        <property name="custAccountNum" type="string">
+            <column name="CUST_ACCOUNT_NUM" length="35">
+                <comment>Customer's account number in bank at which we will send money or he will send money to Konzum</comment>
+            </column>
+        </property>
+        <property name="oib" type="string">
+            <column name="OIB" length="11">
+                <comment>Customer?s personal ID</comment>
+            </column>
+        </property>
+        <property name="currencyCode" type="string">
+            <column name="CURRENCY_CODE" length="3">
+                <comment>Customer?s Currency code</comment>
+            </column>
+        </property>
+        <property name="orderCurrency" type="string">
+            <column name="ORDER_CURRENCY" length="3">
+                <comment>Defines the Currency that should be used on Customer order</comment>
+            </column>
+        </property>
+        <property name="agrGroupInd" type="boolean">
+            <column name="AGR_GROUP_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) 1 ? Yes or 0 - No, this will be used during AR account mapping process</comment>
+            </column>
+        </property>
+        <property name="consInvInd" type="boolean">
+            <column name="CONS_INV_IND" precision="1" scale="0" not-null="true">
+                <comment>Consolidate invoices (0/1). Indicates if invoice is created automatically after shipment is created(0) , or Invoice is created for all shipments in
+                defined periods of time (1)</comment>
+            </column>
+        </property>
+        <property name="consTimeframe" type="java.lang.Long">
+            <column name="CONS_TIMEFRAME" precision="10" scale="0">
+                <comment>Time frame to create consolidated invoice (Dispatch, daily, 5 days, 7 days, 10 days, 14 days, end of month day)</comment>
+            </column>
+        </property>
+        <property name="invoiceLayout" type="java.lang.Short">
+            <column name="INVOICE_LAYOUT" precision="3" scale="0">
+                <comment>Predefined invoice layout</comment>
+            </column>
+        </property>
+        <property name="shippmentLayout" type="java.lang.Short">
+            <column name="SHIPPMENT_LAYOUT" precision="3" scale="0">
+                <comment>Predefined shipment layout</comment>
+            </column>
+        </property>
+        <property name="proofOfDelInd" type="boolean">
+            <column name="PROOF_OF_DEL_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) If set to 0, final shipment is created and invoice can be created based on consolidation flag. If set to 1, first POD shipment is created. After
+                delivery of goods, POD shipment must be confirmed, and final shipment must be created. Invoice can be created based on consolidation flag.</comment>
+            </column>
+        </property>
+        <property name="assortItemInd" type="boolean">
+            <column name="ASSORT_ITEM_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) 1 - Konzum is allowed to ship only items that have customer item, 0 ? all items</comment>
+            </column>
+        </property>
+        <property name="retPackageInd" type="boolean">
+            <column name="RET_PACKAGE_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) Defined how the Returned Pallets or packages should be handled. This indicator will impact Credit note process.</comment>
+            </column>
+        </property>
+        <property name="assortFplInd" type="boolean">
+            <column name="ASSORT_FPL_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) 1 - Konzum is allowed to ship only items that have price on fixed pricelist and were ordered, 0 ? all items</comment>
+            </column>
+        </property>
+        <property name="retOrderInd" type="boolean">
+            <column name="RET_ORDER_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) Defining if a Customer return for this Customer can be created without a Customer order</comment>
+            </column>
+        </property>
+        <property name="podPriceInd" type="boolean">
+            <column name="POD_PRICE_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) POD document show price information</comment>
+            </column>
+        </property>
+        <property name="usageItemInd" type="boolean">
+            <column name="USAGE_ITEM_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) 1 ? Customer item codes must be printed on shipments, invoices and credit notes, 0 ? not managed, not printed</comment>
+            </column>
+        </property>
+        <property name="ediOrderInd" type="boolean">
+            <column name="EDI_ORDER_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) Defining if the Customer order can be sent or received via EDI for this Customer</comment>
+            </column>
+        </property>
+        <property name="ediInvoiceInd" type="boolean">
+            <column name="EDI_INVOICE_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) Defining if the Customer invoice can be sent via EDI to this Customer</comment>
+            </column>
+        </property>
+        <property name="ediReturnInd" type="boolean">
+            <column name="EDI_RETURN_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) Defining if the Customer return order can be sent or received via EDI for this Customer</comment>
+            </column>
+        </property>
+        <property name="ediPriceListInd" type="boolean">
+            <column name="EDI_PRICE_LIST_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) Defining if the Price list can be sent via EDI to this Customer</comment>
+            </column>
+        </property>
+        <property name="ediDispatchAdvInd" type="boolean">
+            <column name="EDI_DISPATCH_ADV_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) If checked than indicates that customer receive Dispatch advises via EDI.</comment>
+            </column>
+        </property>
+        <property name="ediAsnInd" type="boolean">
+            <column name="EDI_ASN_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) Defining if the Customer order Shipment (ASN) can be sent via EDI to this Customer</comment>
+            </column>
+        </property>
+        <property name="ediOrderConfInd" type="boolean">
+            <column name="EDI_ORDER_CONF_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) 1 indicates that customer receive Customer order confirmation via EDI.</comment>
+            </column>
+        </property>
+        <property name="ediProofOfDelInd" type="boolean">
+            <column name="EDI_PROOF_OF_DEL_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) If checked than indicates that customer receive Proof of delivery via EDI.</comment>
+            </column>
+        </property>
+        <property name="invoiceVatInd" type="boolean">
+            <column name="INVOICE_VAT_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) 1 indicates invoicing with VAT, 0 indicates invoicing without VAT</comment>
+            </column>
+        </property>
+        <property name="x" type="java.lang.Long">
+            <column name="X" precision="10" scale="0">
+                <comment>Additional required attributes</comment>
+            </column>
+        </property>
+        <property name="y" type="long">
+            <column name="Y" precision="10" scale="0" not-null="true">
+                <comment>Additional required attributes</comment>
+            </column>
+        </property>
+        <property name="insuranceInstitution" type="string">
+            <column name="INSURANCE_INSTITUTION" length="30">
+                <comment>Insurance institution</comment>
+            </column>
+        </property>
+        <property name="comments" type="string">
+            <column name="COMMENTS" length="4000">
+                <comment>Free text for comment about customer</comment>
+            </column>
+        </property>
+        <property name="auxCompanyCode" type="string">
+            <column name="AUX_COMPANY_CODE" length="4">
+                <comment>Company code</comment>
+            </column>
+        </property>
+        <property name="auxGlAccount" type="string">
+            <column name="AUX_GL_ACCOUNT" length="10">
+                <comment>Reconcilation account in G/L</comment>
+            </column>
+        </property>
+        <property name="auxShortName" type="string">
+            <column name="AUX_SHORT_NAME" length="25">
+                <comment>Short supplier name</comment>
+            </column>
+        </property>
+        <property name="creDate" type="date">
+            <column name="CRE_DATE" length="7" not-null="true">
+                <comment>A date and time at which interface created customer in KWS.</comment>
+            </column>
+        </property>
+        <property name="creId" type="string">
+            <column name="CRE_ID" length="30" not-null="true">
+                <comment>An ID of the user created customer in KWS. Interface will create customer in KWS, thus, KWS Security will populate standard name in this field.</comment>
+            </column>
+        </property>
+        <property name="approvalDate" type="date">
+            <column name="APPROVAL_DATE" length="7">
+                <comment>A date at which user approved customer in KWS.</comment>
+            </column>
+        </property>
+        <property name="approvalId" type="string">
+            <column name="APPROVAL_ID" length="30">
+                <comment>An ID of the user who approved customer in KWS.</comment>
+            </column>
+        </property>
+        <property name="inactiveDate" type="date">
+            <column name="INACTIVE_DATE" length="7">
+                <comment>A date at which user inactivated customer in KWS.</comment>
+            </column>
+        </property>
+        <property name="inactiveId" type="string">
+            <column name="INACTIVE_ID" length="30">
+                <comment>An ID of the user who inactivated customer in KWS.</comment>
+            </column>
+        </property>
+        <property name="modDate" type="date">
+            <column name="MOD_DATE" length="7" not-null="true">
+                <comment>A date time stamp of the most recent update by the user. This field is required by the Security.</comment>
+            </column>
+        </property>
+        <property name="modId" type="string">
+            <column name="MOD_ID" length="30" not-null="true">
+                <comment>Holds the user ID of the user who most recently updated this record. This field is required by the Security.</comment>
+            </column>
+        </property>
+        <property name="blockDate" type="date">
+            <column name="BLOCK_DATE" length="7">
+                <comment>A date at which interface or user block the customer in KWS (change customer status to ?Blocked?).</comment>
+            </column>
+        </property>
+        <property name="blockId" type="string">
+            <column name="BLOCK_ID" length="30">
+                <comment>An ID of user blocked the customer in KWS. In case when interface will block customer in KWS, Security will populate standard name in this
+                field.</comment>
+            </column>
+        </property>
+        <property name="vatNumber" type="string">
+            <column name="VAT_NUMBER" length="32">
+                <comment>VAT identification number</comment>
+            </column>
+        </property>
+        <property name="vatLiable" type="boolean">
+            <column name="VAT_LIABLE" precision="1" scale="0" not-null="true">
+                <comment>Shows is the customer VAT tax liable. 0 ? the customer is not VAT liable, 1 ? the customer is VAT liable.</comment>
+            </column>
+        </property>
+        <property name="noVatReason" type="java.lang.Long">
+            <column name="NO_VAT_REASON" precision="10" scale="0" />
+        </property>
+        <property name="customerPlusmInd" type="boolean">
+            <column name="CUSTOMER_PLUSM_IND" precision="1" scale="0" not-null="true" />
+        </property>
+        <property name="ediInvoiceByMailInd" type="boolean">
+            <column name="EDI_INVOICE_BY_MAIL_IND" precision="1" scale="0" not-null="true">
+                <comment>(0/1) Defining if the PDF-form Customer finance document can be sent via email Customer</comment>
+            </column>
+        </property>
+        <set name="deliveryPoints" table="DELIVERY_POINT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CUSTOMER_ID" precision="10" scale="0" not-null="true">
+                    <comment>Customers HQ or BU ID</comment>
+                </column>
+            </key>
+            <one-to-many class="com.weigandtconsulting.javaschool.db.hibernate.entity.DeliveryPoint" />
+        </set>
+        <set name="customerContracts" table="CUSTOMER_CONTRACT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CUSTOMER_ID" precision="20" scale="0" not-null="true">
+                    <comment>10-digits customer id</comment>
+                </column>
+            </key>
+            <one-to-many class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerContract" />
+        </set>
+        <set name="customerMastersForBillToCustomer" table="CUSTOMER_MASTER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="BILL_TO_CUSTOMER" precision="10" scale="0">
+                    <comment>Code of another ?Active? Customer who will be paying for this customer</comment>
+                </column>
+            </key>
+            <one-to-many class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerMaster" />
+        </set>
+        <set name="customerMastersForCustomerParentId" table="CUSTOMER_MASTER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CUSTOMER_PARENT_ID" precision="10" scale="0">
+                    <comment>HQ Customer ID for BU level customer</comment>
+                </column>
+            </key>
+            <one-to-many class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerMaster" />
+        </set>
+        <set name="customerAddrs" table="CUSTOMER_ADDR" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CUSTOMER_ID" precision="10" scale="0" not-null="true">
+                    <comment>Customer?s HQ or Customer?s BU</comment>
+                </column>
+            </key>
+            <one-to-many class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerAddr" />
+        </set>
+    </class>
+</hibernate-mapping>

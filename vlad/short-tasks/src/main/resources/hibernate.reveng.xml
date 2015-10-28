@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+    <schema-selection match-schema="KWS"/>
+    <table-filter match-name="CUSTOMER_MASTER"/>
+    <table-filter match-name="SALES_AGENT"/>
+    <table-filter match-name="VOLUME_REBATE_DEFINITIONS"/>
+    <table-filter match-name="CUSTOMER_CONTRACT"/>
+    <table-filter match-name="CONTRACT_PRICING_PRIORITY"/>
+    <table-filter match-name="DELIVERY_POINT"/>
+    <table-filter match-name="CUSTOMER_ADDR"/>
+    <table-filter match-name="VOLUME_REBATES"/>
+    <table-filter match-name="VIEWC_SEARCH_DOCUMENTS"/>
+    <table-filter match-name="VIEW_LOOKUP_DELIVERY_POINT"/>
+    <table-filter match-name="VIEW_LOOKUP_ITEM"/>
+</hibernate-reverse-engineering>

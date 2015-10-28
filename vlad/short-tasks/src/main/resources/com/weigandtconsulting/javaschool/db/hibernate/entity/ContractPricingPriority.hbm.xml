@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2015 4:51:35 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.weigandtconsulting.javaschool.db.hibernate.entity.ContractPricingPriority" table="CONTRACT_PRICING_PRIORITY" schema="KWS" optimistic-lock="version">
+        <comment>This table holds information about Customer level of Pricing Priority connected to Contract.</comment>
+        <id name="contractId" type="big_decimal">
+            <column name="CONTRACT_ID" precision="20" scale="0" />
+            <generator class="foreign">
+                <param name="property">customerContract</param>
+            </generator>
+        </id>
+        <one-to-one name="customerContract" class="com.weigandtconsulting.javaschool.db.hibernate.entity.CustomerContract" constrained="true"></one-to-one>
+        <property name="basePrice" type="boolean">
+            <column name="BASE_PRICE" precision="1" scale="0" not-null="true">
+                <comment>Priority number for Base price line (1-4).</comment>
+            </column>
+        </property>
+        <property name="fixedPrice" type="boolean">
+            <column name="FIXED_PRICE" precision="1" scale="0" not-null="true">
+                <comment>Priority number for Fixed price line (1-4).</comment>
+            </column>
+        </property>
+        <property name="producerPrice" type="boolean">
+            <column name="PRODUCER_PRICE" precision="1" scale="0" not-null="true">
+                <comment>Priority number for Producer price line (1-4).</comment>
+            </column>
+        </property>
+        <property name="customerPromo" type="boolean">
+            <column name="CUSTOMER_PROMO" precision="1" scale="0" not-null="true">
+                <comment>Priority number for Customer promotions line (1-4).</comment>
+            </column>
+        </property>
+        <property name="creDate" type="date">
+            <column name="CRE_DATE" length="7" not-null="true">
+                <comment>Date of creation.</comment>
+            </column>
+        </property>
+        <property name="creId" type="string">
+            <column name="CRE_ID" length="64" not-null="true">
+                <comment>User ID of the user who created this record.</comment>
+            </column>
+        </property>
+        <property name="modDate" type="date">
+            <column name="MOD_DATE" length="7" not-null="true">
+                <comment>Date of last modification.</comment>
+            </column>
+        </property>
+        <property name="modId" type="string">
+            <column name="MOD_ID" length="64" not-null="true">
+                <comment>User ID of the user who most recently modified this record.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

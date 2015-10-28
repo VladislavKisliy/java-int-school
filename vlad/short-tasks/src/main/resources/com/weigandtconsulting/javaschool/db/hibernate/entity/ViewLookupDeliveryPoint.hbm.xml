@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2015 4:51:35 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.weigandtconsulting.javaschool.db.hibernate.entity.ViewLookupDeliveryPoint" table="VIEW_LOOKUP_DELIVERY_POINT" schema="KWS" optimistic-lock="version">
+        <composite-id name="id" class="com.weigandtconsulting.javaschool.db.hibernate.entity.ViewLookupDeliveryPointId">
+            <key-property name="id" type="java.lang.Short">
+                <column name="ID" precision="4" scale="0" />
+            </key-property>
+            <key-property name="description" type="string">
+                <column name="DESCRIPTION" length="1000" />
+            </key-property>
+            <key-property name="lookup" type="string">
+                <column name="LOOKUP" length="1164" />
+            </key-property>
+            <key-property name="customerId" type="java.lang.Long">
+                <column name="CUSTOMER_ID" precision="10" scale="0" />
+            </key-property>
+            <key-property name="deliveryPoint" type="big_decimal">
+                <column name="DELIVERY_POINT" precision="20" scale="0" />
+            </key-property>
+            <key-property name="locationId" type="big_decimal">
+                <column name="LOCATION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="idLookup" type="string">
+                <column name="ID_LOOKUP" length="40" />
+            </key-property>
+            <key-property name="descriptionLookup" type="string">
+                <column name="DESCRIPTION_LOOKUP" length="1000" />
+            </key-property>
+            <key-property name="customerIdLookup" type="string">
+                <column name="CUSTOMER_ID_LOOKUP" length="796" />
+            </key-property>
+            <key-property name="locationIdLookup" type="string">
+                <column name="LOCATION_ID_LOOKUP" length="40" />
+            </key-property>
+            <key-property name="locationType" type="string">
+                <column name="LOCATION_TYPE" length="2" />
+            </key-property>
+            <key-property name="physicalWh" type="big_decimal">
+                <column name="PHYSICAL_WH" precision="22" scale="0" />
+            </key-property>
+            <key-property name="notDeliverableInd" type="java.lang.Boolean">
+                <column name="NOT_DELIVERABLE_IND" precision="1" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>
