@@ -24,7 +24,6 @@ import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -53,6 +52,7 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private Button button8;
 
+    private final Object lockObject = new Object();
     private CellState playerSign = CellState.TOE;
     private boolean waitStepDone = true;
 
@@ -62,9 +62,12 @@ public class FXMLController implements Initializable, Showable {
         if (event.getSource() instanceof Button) {
             Button button = (Button) event.getSource();
             applyCellButton(playerSign, button);
-            waitStepDone = false;
-        }
+            synchronized (lockObject) {
+                waitStepDone = false;
+                lockObject.notifyAll();
+            }
 
+        }
     }
 
     @Override
@@ -134,11 +137,12 @@ public class FXMLController implements Initializable, Showable {
         @Override
         public List<CellState> nextStep(List<CellState> gameField) {
             while (waitStepDone) {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(300);
-//                    wait();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                synchronized (lockObject) {
+                    try {
+                        lockObject.wait();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
             waitStepDone = true;
