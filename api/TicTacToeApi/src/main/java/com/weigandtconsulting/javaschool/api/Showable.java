@@ -24,5 +24,8 @@ import java.util.List;
  * @author vlad
  */
 public interface Showable {
-	void refreshBattleField(List<CellState> battleField);
+
+    void refreshBattleField(List<CellState> battleField);
+
+    void lockBattleField();
 }
