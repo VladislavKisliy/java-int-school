@@ -18,6 +18,7 @@
     <modules>
 	<module>short-tasks</module>
 	<module>wtc</module>
+	<module>CrissCrossCS</module>
 	<module>CrissCross</module>
 	<module>hiberwords</module>
     </modules>
