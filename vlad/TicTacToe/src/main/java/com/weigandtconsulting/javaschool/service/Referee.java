@@ -33,38 +33,47 @@ public class Referee {
     private final GameFieldHelperImpl gameHelper = new GameFieldHelperImpl();
     private final TicTacToe playerTic;
     private final TicTacToe playerTac;
+    private final Showable view;
 
-    public Referee(TicTacToe playerTic, TicTacToe playerTac) {
+    public Referee(TicTacToe playerTic, TicTacToe playerTac, Showable view) {
         this.playerTic = playerTic;
         this.playerTac = playerTac;
+        this.view = view;
     }
 
-    public void startGame(final Showable view, CellState startSign) {
-        List<TicTacToe> generateTurns = generateTurns(startSign);
+    public void startGame(CellState startSign) {
+        final List<TicTacToe> generateTurns = generateTurns(startSign);
         final List<CellState> gameField = gameHelper.getNewField();
-        Game game;
-        List<CellState> newStep;
-        for (TicTacToe currentPlayer : generateTurns) {
-            newStep = currentPlayer.nextStep(gameField);
-            System.out.println("Pl: " + currentPlayer.getPlayerName() + ". Turn =" + gameField);
-            if (isCorrectTurn(gameField, newStep)) {
-                gameField.clear();
-                gameField.addAll(newStep);
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        view.refreshBattleField(gameField);
-                    }
-                });
+        Runnable runThread = new Runnable() {
+            @Override
+            public void run() {
+                Game game;
+                List<CellState> newStep;
+                for (TicTacToe currentPlayer : generateTurns) {
+                    newStep = currentPlayer.nextStep(gameField);
+                    System.out.println("Pl: " + currentPlayer.getPlayerName() + ". Turn =" + gameField);
+                    if (isCorrectTurn(gameField, newStep)) {
+                        gameField.clear();
+                        gameField.addAll(newStep);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.refreshBattleField(gameField);
+                            }
+                        });
 
-                game = gameHelper.analyzeGame(gameField);
-                if (game.getState() == Game.State.OVER) {
-                    System.out.println("Game is OVER =" + game);
-                    System.out.println("Winner is " + currentPlayer.getPlayerName());
-                    break;
+                        game = gameHelper.analyzeGame(gameField);
+                        if (game.getState() == Game.State.OVER) {
+                            lockView();
+                            System.out.println("Game is OVER =" + game);
+                            System.out.println("Winner is " + currentPlayer.getPlayerName());
+                            break;
+                        }
+                    }
                 }
             }
-        }
+        };
+        new Thread(runThread).start();
     }
 
     boolean isCorrectTurn(List<CellState> gameFieldBefore, List<CellState> gameFieldAfter) {
@@ -99,4 +108,12 @@ public class Referee {
         return result;
     }
 
+    private void lockView() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                view.lockBattleField();
+            }
+        });
+    }
 }
