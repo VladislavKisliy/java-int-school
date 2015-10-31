@@ -17,20 +17,30 @@
 package com.weigandtconsulting.javaschool.api;
 
 import com.weigandtconsulting.javaschool.beans.CellState;
+import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
+import com.weigandtconsulting.javaschool.controllers.FXMLController;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author vlad
  */
-public interface TicTacToe {
-
-    List<CellState> nextStep(List<CellState> gameField);
-
-    boolean hasNextStep(List<CellState> gameField);
-
-    String getPlayerName();
+public abstract class BaseTicTacToe implements TicTacToe {
     
-    Request getRequest(List<CellState> gameField);
+    @Override
+    public Request getRequest(List<CellState> gameField) {
+        Request request = new Request();
+        request.setRefereeRequest(RefereeRequest.EMPTY);
+        request.setGameField(nextStep(gameField));
+        return request;
+    }
+    
+    public List<CellState> getAStep(List<CellState> gameField) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

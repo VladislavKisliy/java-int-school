@@ -16,10 +16,12 @@
  */
 package com.weigandtconsulting.javaschool.controllers;
 
+import com.weigandtconsulting.javaschool.api.BaseTicTacToe;
 import com.weigandtconsulting.javaschool.api.GameFieldHelper;
 import com.weigandtconsulting.javaschool.api.Showable;
-import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
+import com.weigandtconsulting.javaschool.beans.RefereeRequest;
+import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
 import java.net.URL;
 import java.util.List;
@@ -53,6 +55,7 @@ public class FXMLController implements Initializable, Showable {
     private Button button8;
 
     private final Object lockObject = new Object();
+    private RefereeRequest refereeRequest = RefereeRequest.EMPTY;
     private CellState playerSign = CellState.TOE;
     private boolean waitStepDone = true;
 
@@ -66,7 +69,29 @@ public class FXMLController implements Initializable, Showable {
                 waitStepDone = false;
                 lockObject.notifyAll();
             }
+        }
+    }
 
+    @FXML
+    private void handleConnectToAction(ActionEvent event) {
+        System.out.println("handleConnectToAction = You clicked me! event source" + event.getSource());
+    }
+
+    @FXML
+    private void handleCreateServerAction(ActionEvent event) {
+        System.out.println("handleCreateServerAction = You clicked me! event source" + event.getSource());
+    }
+
+    @FXML
+    private void handleRestartAction(ActionEvent event) {
+        System.out.println("handleRestartAction = You clicked me! event source" + event.getSource());
+        refereeRequest = RefereeRequest.RESTART;
+        if (event.getSource() instanceof Button) {
+            Button button = (Button) event.getSource();
+            synchronized (lockObject) {
+                waitStepDone = false;
+                lockObject.notifyAll();
+            }
         }
     }
 
@@ -116,6 +141,8 @@ public class FXMLController implements Initializable, Showable {
     private void applyCellButton(CellState cellState, Button button) {
         switch (cellState) {
             case TOE:
+                button.setText("");
+                button.setDisable(false);
                 break;
             default:
                 button.setText(cellState.toString());
@@ -124,7 +151,20 @@ public class FXMLController implements Initializable, Showable {
         }
     }
 
-    public class HumanPlayer implements TicTacToe {
+    @Override
+    public void lockBattleField() {
+        button0.setDisable(true);
+        button1.setDisable(true);
+        button2.setDisable(true);
+        button3.setDisable(true);
+        button4.setDisable(true);
+        button5.setDisable(true);
+        button6.setDisable(true);
+        button7.setDisable(true);
+        button8.setDisable(true);
+    }
+
+    public class HumanPlayer extends BaseTicTacToe {
 
         private final CellState playerSymbol;
         private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
@@ -170,6 +210,19 @@ public class FXMLController implements Initializable, Showable {
                 gameField.set(i, cellState);
             }
             return gameField;
+        }
+
+        @Override
+        public Request getRequest(List<CellState> gameField) {
+            Request request = new Request();
+            // Reset old value
+            if (refereeRequest != RefereeRequest.EMPTY) {
+                refereeRequest = RefereeRequest.EMPTY;
+            }
+            
+            request.setGameField(nextStep(gameField));
+            request.setRefereeRequest(refereeRequest);
+            return request;
         }
     }
 }

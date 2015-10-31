@@ -14,23 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.weigandtconsulting.javaschool.api;
+package com.weigandtconsulting.javaschool.beans;
 
-import com.weigandtconsulting.javaschool.beans.CellState;
-import com.weigandtconsulting.javaschool.beans.Request;
 import java.util.List;
 
 /**
  *
  * @author vlad
  */
-public interface TicTacToe {
-
-    List<CellState> nextStep(List<CellState> gameField);
-
-    boolean hasNextStep(List<CellState> gameField);
-
-    String getPlayerName();
+public class Request {
     
-    Request getRequest(List<CellState> gameField);
+    private List<CellState> gameField;
+    private RefereeRequest refereeRequest;
+
+    public List<CellState> getGameField() {
+        return gameField;
+    }
+
+    public void setGameField(List<CellState> gameField) {
+        this.gameField = gameField;
+    }
+
+    public RefereeRequest getRefereeRequest() {
+        return refereeRequest;
+    }
+
+    public void setRefereeRequest(RefereeRequest refereeRequest) {
+        this.refereeRequest = refereeRequest;
+    }
 }

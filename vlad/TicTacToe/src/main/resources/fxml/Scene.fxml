@@ -33,5 +33,8 @@
             <Button fx:id="button8" onAction="#handleButtonAction" prefHeight="62.0" prefWidth="95.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
          </children>
       </GridPane>
+      <Button fx:id="restart" layoutX="27.0" layoutY="27.0" mnemonicParsing="false" onAction="#handleRestartAction" text="Restart game" />
+      <Button fx:id="createServer" layoutX="176.0" layoutY="27.0" mnemonicParsing="false" onAction="#handleCreateServerAction" text="Create server" />
+      <Button fx:id="connectTo" layoutX="311.0" layoutY="27.0" mnemonicParsing="false" onAction="#handleConnectToAction" text="Connect to server" />
     </children>
 </AnchorPane>

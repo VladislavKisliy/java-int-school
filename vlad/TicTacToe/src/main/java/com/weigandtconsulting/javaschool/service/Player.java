@@ -16,8 +16,8 @@
  */
 package com.weigandtconsulting.javaschool.service;
 
+import com.weigandtconsulting.javaschool.api.BaseTicTacToe;
 import com.weigandtconsulting.javaschool.api.GameFieldHelper;
-import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,12 +28,12 @@ import java.util.Random;
  *
  * @author vlad
  */
-public class Player implements TicTacToe {
+public class Player extends BaseTicTacToe {
 
     private static final int WIN_SCORE = 10;
     private final CellState playerSymbol;
     private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
-    private final int[] bestStartSolutions = {0,2,6,8,4};
+    private final int[] bestStartSolutions = {0, 2, 6, 8, 4};
     private final Random random = new Random();
 
     public Player(CellState mySymbol) {
@@ -47,11 +47,11 @@ public class Player implements TicTacToe {
         }
         Integer bestStep;
         if (innerGameField.isFieldEmpty(gameField)) {
-           bestStep = randomStep();
+            bestStep = randomStep();
         } else {
             bestStep = miniMax(gameField, 0);
         }
-        
+
         return innerGameField.doStep(gameField, playerSymbol, bestStep);
     }
 
@@ -76,7 +76,7 @@ public class Player implements TicTacToe {
     }
 
     Integer miniMax(List<CellState> gameField, int depth) {
-        Integer result = null;
+        Integer result;
         if (innerGameField.isGameOver(gameField)) {
             result = score(gameField, depth, playerSymbol);
         } else {
@@ -91,7 +91,7 @@ public class Player implements TicTacToe {
                 scores.add(miniMax(newGameField, depth));
                 moves.add(newMove);
             }
-            int scoreIndex = 0;
+            int scoreIndex;
             if (activeSign == playerSymbol) {
                 scoreIndex = scores.indexOf(Collections.max(scores));
             } else {

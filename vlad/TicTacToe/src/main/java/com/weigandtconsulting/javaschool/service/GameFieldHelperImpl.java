@@ -92,7 +92,7 @@ public class GameFieldHelperImpl implements GameFieldHelper {
 
     @Override
     public List<CellState> getNewField() {
-        return EMPTY_GAME_FIELD;
+        return new ArrayList<>(EMPTY_GAME_FIELD);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class GameFieldHelperImpl implements GameFieldHelper {
         } else if (isFieldFull(gameField)) {
             game.setState(Game.State.OVER);
             game.setResult(Game.Result.DRAW);
-        } else if (gameField == getNewField()) {
+        } else if (gameField.equals(getNewField())) {
             game.setState(Game.State.START);
         } else {
             game.setState(Game.State.CONTINUE);

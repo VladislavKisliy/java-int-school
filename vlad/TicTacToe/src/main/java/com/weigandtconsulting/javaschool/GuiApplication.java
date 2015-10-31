@@ -19,6 +19,7 @@ package com.weigandtconsulting.javaschool;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.controllers.FXMLController;
+import com.weigandtconsulting.javaschool.service.DumbPlayer;
 import com.weigandtconsulting.javaschool.service.Player;
 import com.weigandtconsulting.javaschool.service.Referee;
 import javafx.application.Application;
@@ -48,10 +49,10 @@ public class GuiApplication extends Application {
         stage.show();
 
         TicTacToe playerTic = new Player(CellState.TIC);
-//        TicTacToe playerTac = new DumbPlayer(CellState.TAC);
+//        AsyncTicTacToe playerTac = new DumbPlayer(CellState.TAC);
         TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
         Referee referee = new Referee(playerTic, playerTac, fxmlController);
-        referee.startGame(CellState.TIC);
+        referee.startGame(CellState.TAC);
     }
 
     /**

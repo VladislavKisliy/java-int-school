@@ -16,10 +16,12 @@
  */
 package com.weigandtconsulting.javaschool.service;
 
-import com.weigandtconsulting.javaschool.api.Showable;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
+import com.weigandtconsulting.javaschool.api.Showable;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.Game;
+import com.weigandtconsulting.javaschool.beans.RefereeRequest;
+import com.weigandtconsulting.javaschool.beans.Request;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
@@ -34,6 +36,9 @@ public class Referee {
     private final TicTacToe playerTic;
     private final TicTacToe playerTac;
     private final Showable view;
+    
+    private List<TicTacToe> generateTurns;
+    private Thread refereeThread;
 
     public Referee(TicTacToe playerTic, TicTacToe playerTac, Showable view) {
         this.playerTic = playerTic;
@@ -42,38 +47,8 @@ public class Referee {
     }
 
     public void startGame(CellState startSign) {
-        final List<TicTacToe> generateTurns = generateTurns(startSign);
-        final List<CellState> gameField = gameHelper.getNewField();
-        Runnable runThread = new Runnable() {
-            @Override
-            public void run() {
-                Game game;
-                List<CellState> newStep;
-                for (TicTacToe currentPlayer : generateTurns) {
-                    newStep = currentPlayer.nextStep(gameField);
-                    System.out.println("Pl: " + currentPlayer.getPlayerName() + ". Turn =" + gameField);
-                    if (isCorrectTurn(gameField, newStep)) {
-                        gameField.clear();
-                        gameField.addAll(newStep);
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.refreshBattleField(gameField);
-                            }
-                        });
-
-                        game = gameHelper.analyzeGame(gameField);
-                        if (game.getState() == Game.State.OVER) {
-                            lockView();
-                            System.out.println("Game is OVER =" + game);
-                            System.out.println("Winner is " + currentPlayer.getPlayerName());
-                            break;
-                        }
-                    }
-                }
-            }
-        };
-        new Thread(runThread).start();
+        generateTurns = generateTurns(startSign);
+        initNewGame();
     }
 
     boolean isCorrectTurn(List<CellState> gameFieldBefore, List<CellState> gameFieldAfter) {
@@ -115,5 +90,74 @@ public class Referee {
                 view.lockBattleField();
             }
         });
+    }
+
+    private void showBattleField(final List<CellState> gameField) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                view.refreshBattleField(gameField);
+            }
+        });
+    }
+
+    private void initNewGame() {
+        final List<CellState> gameField = gameHelper.getNewField();
+        refereeThread = new Thread(new RefereeThread(gameField, generateTurns));
+        refereeThread.start();
+    }
+
+    private class RefereeThread implements Runnable {
+
+        private final List<CellState> gameField;
+        private final List<TicTacToe> generateTurns;
+
+        public RefereeThread(List<CellState> gameField, List<TicTacToe> generateTurns) {
+            this.gameField = gameField;
+            this.generateTurns = generateTurns;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("New referee was created");
+            showBattleField(gameField);
+            Game game;
+            List<CellState> newStep;
+            for (TicTacToe currentPlayer : generateTurns) {
+                Request request = currentPlayer.getRequest(gameField);
+                newStep = request.getGameField();
+                System.out.println("Pl: " + currentPlayer.getPlayerName() + ". Req =" + request.getRefereeRequest());
+                System.out.println("Pl: " + currentPlayer.getPlayerName() + ". Turn =" + gameField);
+                RefereeRequest refereeRequest = request.getRefereeRequest();
+                if (refereeRequest == RefereeRequest.EMPTY) {
+                    if (isCorrectTurn(gameField, newStep)) {
+                        gameField.clear();
+                        gameField.addAll(newStep);
+                        showBattleField(gameField);
+
+                        game = gameHelper.analyzeGame(gameField);
+                        if (game.getState() == Game.State.OVER) {
+                            lockView();
+                            System.out.println("Game is OVER =" + game);
+                            System.out.println("Winner is " + currentPlayer.getPlayerName());
+                            break;
+                        }
+                    }
+                } else {
+                    switch (refereeRequest) {
+                        case SURRENDER:
+                            System.out.println("Dweeb. " + currentPlayer.getPlayerName() + " lost the game");
+                            break;
+                        case RESTART:
+                            System.out.println("Ok, restart game. Asked " + currentPlayer.getPlayerName());
+                            initNewGame();
+                            break;
+                    }
+                    // break loop
+                    break;
+                }
+            }
+            System.out.println("Referee died.");
+        }
     }
 }

@@ -16,7 +16,7 @@
  */
 package com.weigandtconsulting.javaschool.service;
 
-import com.weigandtconsulting.javaschool.api.TicTacToe;
+import com.weigandtconsulting.javaschool.api.BaseTicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -25,9 +25,10 @@ import java.util.logging.Logger;
 
 /**
  * Only for async testing
+ *
  * @author vlad
  */
-public class DumbPlayer implements TicTacToe {
+public class DumbPlayer extends BaseTicTacToe {
 
     private final int DELAY = 5;
     private final CellState playerSymbol;
@@ -38,7 +39,7 @@ public class DumbPlayer implements TicTacToe {
 
     @Override
     public List<CellState> nextStep(List<CellState> gameField) {
-        List<CellState> result  = gameField;
+        List<CellState> result = gameField;
         try {
             TimeUnit.SECONDS.sleep(DELAY);
             for (int i = 0; i < gameField.size(); i++) {
@@ -63,5 +64,4 @@ public class DumbPlayer implements TicTacToe {
     public String getPlayerName() {
         return "Really slow player";
     }
-
 }
