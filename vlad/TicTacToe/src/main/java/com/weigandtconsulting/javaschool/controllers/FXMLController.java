@@ -27,7 +27,6 @@ import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +34,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextInputDialog;
 
 public class FXMLController implements Initializable, Showable {
 
@@ -79,13 +77,13 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private void handleConnectToAction(ActionEvent event) {
         System.out.println("handleConnectToAction = You clicked me! event source" + event.getSource());
-        TextInputDialog dialog = new TextInputDialog("localhost:5555");
-        dialog.setTitle("Connect to");
-        dialog.setHeaderText("Network information");
-        dialog.setContentText("Please enter server:port ");
+//        TextInputDialog dialog = new TextInputDialog("localhost:5555");
+//        dialog.setTitle("Connect to");
+//        dialog.setHeaderText("Network information");
+//        dialog.setContentText("Please enter server:port ");
         
         // The Java 8 way to get the response value (with lambda expression).
-        Optional<String> result = dialog.showAndWait();
+//        Optional<String> result = dialog.showAndWait();
 //        result.ifPresent(name -> System.out.println("Your name: " + name));
     }
 
