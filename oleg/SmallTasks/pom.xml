@@ -20,11 +20,6 @@
                 </repository>
         </repositories>
         <dependencies>
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc6</artifactId>
-            <version>${software.oracle.jdbc.version}</version>
-        </dependency>
                 <dependency>
                         <groupId>org.hibernate</groupId>
                         <artifactId>hibernate-entitymanager</artifactId>

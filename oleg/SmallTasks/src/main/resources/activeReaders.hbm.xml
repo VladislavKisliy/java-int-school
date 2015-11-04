@@ -1,0 +1,31 @@
+<hibernate-mapping>
+    <!--
+    ACTIVE_READERS
+    ID	NUMBER(4)
+    BOOK_ID	NUMBER(10)
+    USER_ID	NUMBER(10)
+    DATE_GOT	DATE
+    private int id;
+    private int bookId;
+    private int userId;
+    private Date dateGot;  
+    -->
+  <class name="com.wdt.java.ActiveReaders" table="ACTIVE_READERS">
+    <id column="ID" name="id" type="java.lang.Integer">
+      <generator class="increment"/>
+    </id>
+    
+    <property column="DATE_GOT" name="dateGot" type="java.util.Date"/>
+    
+    <set name="bookId" table="ACTIVE_READERS" lazy="true">
+       <key column="bookId"/>
+       <one-to-many column="BOOK_ID" class="com.wdt.java.Books"/>
+    </set>
+    
+    <set name="userId" table="ACTIVE_READERS" lazy="true">
+       <key column="USER_ID"/>
+       <one-to-many column="USER_ID" class="com.wdt.java.Users"/>
+    </set>
+   
+  </class>
+</hibernate-mapping>

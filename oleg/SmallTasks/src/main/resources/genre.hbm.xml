@@ -1,0 +1,8 @@
+<hibernate-mapping>
+    <!--
+    GENRE	VARCHAR2(25)
+    -->
+  <class name="com.wdt.java.Genre" table="BOOK_GENRES">
+    <property column="GENRE" name="genre" type="java.lang.String"/>
+  </class>
+</hibernate-mapping>
