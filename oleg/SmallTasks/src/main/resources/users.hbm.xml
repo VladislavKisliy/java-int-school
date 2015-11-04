@@ -1,0 +1,20 @@
+<hibernate-mapping>
+    <!--
+    USER_ID
+    USERNAME
+    SECOND_NAME
+    DATE_OF_BURTH
+    REGISTERED
+    SEX
+    -->
+  <class name="com.wdt.java.Users" table="USERS">
+    <id column="USER_ID" name="userId" type="java.lang.Integer">
+      <generator class="increment"/>
+    </id>
+    <property column="USERNAME" name="usernsme" type="java.lang.String"/>
+    <property column="SECOND_NAME" name="secondName" type="java.lang.String"/>
+    <property column="DATE_OF_BURTH" name="dateOfBurth" type="java.util.Date"/>
+    <property column="REGISTERED" name="registered" type="java.util.Date"/>
+    <property column="SEX" name="registered" type="java.lang.Char"/>  
+  </class>
+</hibernate-mapping>

@@ -22,6 +22,7 @@ import com.weigandtconsulting.javaschool.beans.Game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  *
@@ -92,7 +93,7 @@ public class GameFieldHelperImpl implements GameFieldHelper {
 
     @Override
     public List<CellState> getNewField() {
-        return new ArrayList<>(EMPTY_GAME_FIELD);
+        return new CopyOnWriteArrayList<>(EMPTY_GAME_FIELD);
     }
 
     @Override

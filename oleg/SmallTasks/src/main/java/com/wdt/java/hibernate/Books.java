@@ -29,7 +29,7 @@ public class Books {
     private String short_desc;
     private String publishing_dept;
     private Date released;
-    private String genere;
+    private String genre;
     private int rating;
 
     public Books(int book_id) {
@@ -76,12 +76,12 @@ public class Books {
         this.released = released;
     }
 
-    public String getGenere() {
-        return genere;
+    public String getGenre() {
+        return genre;
     }
 
-    public void setGenere(String genere) {
-        this.genere = genere;
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public int getRating() {

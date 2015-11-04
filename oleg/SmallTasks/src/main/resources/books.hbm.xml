@@ -1,0 +1,29 @@
+<hibernate-mapping>
+    <!--
+    BOOK_ID	NUMBER(10)
+    AUTHOR	VARCHAR2(150)
+    TITLE	VARCHAR2(200)
+    SHORT_DESCRIPTION	VARCHAR2(2000)
+    PUBLISHING_DEPT	VARCHAR2(100)
+    RELEASED	DATE
+    GENERE	VARCHAR2(25)
+    RATING	NUMBER(3)
+    -->
+  <class name="com.wdt.java.Users" table="USERS">
+    <id column="BOOK_ID" name="bookId" type="java.lang.Integer">
+      <generator class="increment"/>
+    </id>
+    <property column="AUTHOR" name="usernsme" type="java.lang.String"/>
+    <property column="TITLE" name="secondName" type="java.lang.String"/>
+    <property column="SHORT_DESCRIPTION" name="shortDescription" type="java.lang.String"/>
+    <property column="PUBLISHING_DEPT" name="publishingDept" type="java.lang.String"/>
+    <property column="RELEASED" name="released" type="java.util.Date"/>
+    <property column="GENRE" name="genre" type="java.lang.String"/>
+    <property column="RATING" name="registered" type="java.lang.Integer"/>
+    <set name="genre" table="BOOK_GENRES" lazy="false">
+       <key column="GENRE"/>
+       <one-to-many column="GENRE" class="com.wdt.java.Genre"/>
+    </set>
+   
+  </class>
+</hibernate-mapping>

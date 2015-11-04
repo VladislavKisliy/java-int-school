@@ -16,20 +16,14 @@
  */
 package com.weigandtconsulting.javaschool.api;
 
-import com.weigandtconsulting.javaschool.beans.CellState;
-import java.util.List;
+import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 
 /**
  *
  * @author vlad
  */
-public interface Showable {
+public interface Observer {
 
-    void refreshBattleField(List<CellState> battleField);
+    void update(RefereeRequest refereeRequest);
 
-    void lockBattleField();
-
-    void addListener(Observer observer);
-
-    void removeListener(Observer observer);
 }
