@@ -24,6 +24,7 @@ import com.weigandtconsulting.javaschool.service.Player;
 import com.weigandtconsulting.javaschool.service.Referee;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -47,12 +48,15 @@ public class GuiApplication extends Application {
         stage.setResizable(false);
 
         stage.show();
-
+        
         TicTacToe playerTic = new Player(CellState.TIC);
 //        AsyncTicTacToe playerTac = new DumbPlayer(CellState.TAC);
         TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
-        Referee referee = new Referee(playerTic, playerTac, fxmlController);
-        referee.startGame(CellState.TAC);
+        Referee referee = new Referee(playerTac, playerTic, fxmlController);
+        fxmlController.addListener(referee);
+        fxmlController.lockBattleField();
+//        Referee referee = new Referee(playerTic, playerTac, fxmlController);
+//        
     }
 
     /**

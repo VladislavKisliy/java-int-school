@@ -16,6 +16,7 @@
  */
 package com.weigandtconsulting.javaschool.service;
 
+import com.weigandtconsulting.javaschool.api.Observer;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.api.Showable;
 import com.weigandtconsulting.javaschool.beans.CellState;
@@ -24,13 +25,15 @@ import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 
 /**
  *
  * @author vlad
  */
-public class Referee {
+public class Referee implements Observer {
 
     private final GameFieldHelperImpl gameHelper = new GameFieldHelperImpl();
     private final TicTacToe playerTic;
@@ -105,6 +108,22 @@ public class Referee {
         final List<CellState> gameField = gameHelper.getNewField();
         refereeThread = new Thread(new RefereeThread(gameField, generateTurns));
         refereeThread.start();
+    }
+
+    @Override
+    public void update(RefereeRequest refereeRequest) {
+        if (refereeThread != null) {
+            if (refereeThread.isAlive()) {
+                refereeThread.interrupt();
+                System.out.println("Waiting for interrupt");
+                try {
+                    refereeThread.join(500);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Referee.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        startGame(CellState.TAC);
     }
 
     private class RefereeThread implements Runnable {

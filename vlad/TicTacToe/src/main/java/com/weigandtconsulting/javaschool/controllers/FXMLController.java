@@ -18,13 +18,18 @@ package com.weigandtconsulting.javaschool.controllers;
 
 import com.weigandtconsulting.javaschool.api.BaseTicTacToe;
 import com.weigandtconsulting.javaschool.api.GameFieldHelper;
+import com.weigandtconsulting.javaschool.api.Observer;
 import com.weigandtconsulting.javaschool.api.Showable;
+import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
+import com.weigandtconsulting.javaschool.service.Referee;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +37,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextInputDialog;
 
 public class FXMLController implements Initializable, Showable {
 
@@ -57,7 +63,8 @@ public class FXMLController implements Initializable, Showable {
     private final Object lockObject = new Object();
     private RefereeRequest refereeRequest = RefereeRequest.EMPTY;
     private CellState playerSign = CellState.TOE;
-    private boolean waitStepDone = true;
+    
+    private final List<Observer> observers = new ArrayList<>();
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -66,7 +73,6 @@ public class FXMLController implements Initializable, Showable {
             Button button = (Button) event.getSource();
             applyCellButton(playerSign, button);
             synchronized (lockObject) {
-                waitStepDone = false;
                 lockObject.notifyAll();
             }
         }
@@ -75,6 +81,14 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private void handleConnectToAction(ActionEvent event) {
         System.out.println("handleConnectToAction = You clicked me! event source" + event.getSource());
+        TextInputDialog dialog = new TextInputDialog("localhost:5555");
+        dialog.setTitle("Connect to");
+        dialog.setHeaderText("Network information");
+        dialog.setContentText("Please enter server:port ");
+        
+        // The Java 8 way to get the response value (with lambda expression).
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(name -> System.out.println("Your name: " + name));
     }
 
     @FXML
@@ -85,14 +99,9 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private void handleRestartAction(ActionEvent event) {
         System.out.println("handleRestartAction = You clicked me! event source" + event.getSource());
-        refereeRequest = RefereeRequest.RESTART;
-        if (event.getSource() instanceof Button) {
-            Button button = (Button) event.getSource();
-            synchronized (lockObject) {
-                waitStepDone = false;
-                lockObject.notifyAll();
-            }
-        }
+        observers.stream().forEach((observer) -> {
+            observer.update(RefereeRequest.RESTART);
+        });
     }
 
     @Override
@@ -101,7 +110,7 @@ public class FXMLController implements Initializable, Showable {
     }
 
     @Override
-    public void refreshBattleField(List<CellState> battleField) {
+    public synchronized void refreshBattleField(List<CellState> battleField) {
         int counterCell = 0;
         for (CellState cellState : battleField) {
             switch (counterCell) {
@@ -142,10 +151,17 @@ public class FXMLController implements Initializable, Showable {
         switch (cellState) {
             case TOE:
                 button.setText("");
+                button.setId("button");
                 button.setDisable(false);
                 break;
-            default:
+            case TIC:
                 button.setText(cellState.toString());
+                button.setId("button-tic");
+                button.setDisable(true);
+                break;
+            case TAC:
+                button.setText(cellState.toString());
+                button.setId("button-tac");
                 button.setDisable(true);
                 break;
         }
@@ -164,6 +180,16 @@ public class FXMLController implements Initializable, Showable {
         button8.setDisable(true);
     }
 
+    @Override
+    public void addListener(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeListener(Observer observer) {
+        observers.remove(observer);
+    }
+
     public class HumanPlayer extends BaseTicTacToe {
 
         private final CellState playerSymbol;
@@ -176,16 +202,13 @@ public class FXMLController implements Initializable, Showable {
 
         @Override
         public List<CellState> nextStep(List<CellState> gameField) {
-            while (waitStepDone) {
                 synchronized (lockObject) {
                     try {
                         lockObject.wait();
                     } catch (InterruptedException ex) {
                         Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    } 
                 }
-            }
-            waitStepDone = true;
             return generateGameField();
         }
 
@@ -219,7 +242,7 @@ public class FXMLController implements Initializable, Showable {
             if (refereeRequest != RefereeRequest.EMPTY) {
                 refereeRequest = RefereeRequest.EMPTY;
             }
-            
+
             request.setGameField(nextStep(gameField));
             request.setRefereeRequest(refereeRequest);
             return request;

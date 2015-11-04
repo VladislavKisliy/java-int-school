@@ -1,3 +1,14 @@
-.button {
+#button {
     -fx-font-weight: bold;
 }
+#button-tic {
+    -fx-font: bold 20pt "Arial";
+    -fx-text-fill: #0066CC;
+    -fx-base: #b6e7c9;
+}
+#button-tac {
+    -fx-font: bold 20pt "Arial";
+    -fx-background-color: #DFB951;
+    -fx-text-fill: #009933
+}
+
