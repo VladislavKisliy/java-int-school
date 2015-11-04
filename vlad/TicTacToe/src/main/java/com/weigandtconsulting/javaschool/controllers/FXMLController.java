@@ -20,12 +20,10 @@ import com.weigandtconsulting.javaschool.api.BaseTicTacToe;
 import com.weigandtconsulting.javaschool.api.GameFieldHelper;
 import com.weigandtconsulting.javaschool.api.Observer;
 import com.weigandtconsulting.javaschool.api.Showable;
-import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
-import com.weigandtconsulting.javaschool.service.Referee;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +86,7 @@ public class FXMLController implements Initializable, Showable {
         
         // The Java 8 way to get the response value (with lambda expression).
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(name -> System.out.println("Your name: " + name));
+//        result.ifPresent(name -> System.out.println("Your name: " + name));
     }
 
     @FXML
@@ -99,9 +97,9 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private void handleRestartAction(ActionEvent event) {
         System.out.println("handleRestartAction = You clicked me! event source" + event.getSource());
-        observers.stream().forEach((observer) -> {
+        for (Observer observer : observers) {
             observer.update(RefereeRequest.RESTART);
-        });
+        }
     }
 
     @Override
