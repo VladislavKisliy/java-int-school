@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
 <hibernate-mapping>
     <class name="com.wdt.hibernate.CustomerMasterTable" table="CUSTOMER_MASTER">
-    </calss>
+        <id name="customer" type="long">
+            <column name="CUSTOMER" precision="10" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="customerName" type="string">
+            <column name="CUSTOMER_NAME" length="140" not-null="true">
+            </column>
+        </property>
+        <property name="modDate" type="date">
+            <column name="MOD_DATE" length="7" not-null="true">
+            </column>
+        </property>
+    </class>
 </hibernate-mapping>
+

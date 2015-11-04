@@ -11,14 +11,26 @@ import java.sql.Date;
  * @author W
  */
 public class CustomerMasterTable {
+
     private Long customer;
     private String customerName;
-    private Date modName;
 
-    public CustomerMasterTable(Long customer, String customerName, Date modName) {
+    public CustomerMasterTable(Long customer, String customerName, java.util.Date modDate) {
         this.customer = customer;
         this.customerName = customerName;
-        this.modName = modName;
+        this.modDate = modDate;
+    }
+    private java.util.Date modDate;
+
+    public void setModDate(java.util.Date modDate) {
+        this.modDate = modDate;
+    }
+
+    public java.util.Date getModDate() {
+        return modDate;
+    }
+
+    public CustomerMasterTable() {
     }
 
     public Long getCustomer() {
@@ -37,16 +49,8 @@ public class CustomerMasterTable {
         this.customerName = customerName;
     }
 
-    public Date getModName() {
-        return modName;
-    }
-
-    public void setModName(Date modName) {
-        this.modName = modName;
-    }
-
     @Override
     public String toString() {
-        return "CustomerMasterTable{" + "customer=" + customer + ", customerName=" + customerName + ", modName=" + modName + '}';
-    }   
+        return "CustomerMasterTable{" + "customer=" + customer + ", customerName=" + customerName + ", modDate=" + modDate + '}';
+    }
 }
