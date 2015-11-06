@@ -36,6 +36,12 @@
             <version>${software.oracle.jdbc.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>4.3.1.Final</version>
@@ -54,6 +60,12 @@
             <groupId>unknown.binary</groupId>
             <artifactId>orai18n-12.1.0.1</artifactId>
             <version>SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.5.1</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 </project>
