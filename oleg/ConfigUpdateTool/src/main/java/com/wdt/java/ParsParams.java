@@ -22,16 +22,10 @@ public class ParsParams {
         try{
             input = getClass().getClassLoader().getResourceAsStream(file);
             if (input == null) {
-		System.out.println("Sorry, unable to find " + file);
-                    
-	}
-        prop.load(input);
-//        Enumeration<?> e = prop.propertyNames();
-//	while (e.hasMoreElements()) {
-//            String key = (String) e.nextElement();
-//            String value = prop.getProperty(key);
-//            System.out.println("Key : " + key + ", Value : " + value);
-//	}
+		System.out.println("Sorry, unable to find " + file);           
+            }else{
+                prop.load(input);
+            }
 	} catch (IOException ex) {
 		ex.printStackTrace();
 	} finally {
@@ -55,7 +49,6 @@ public class ParsParams {
                         catch (IOException e) 
                             {System.err.println(e.getMessage());}
 		}
-        
 	}
     }
 }
