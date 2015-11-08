@@ -20,6 +20,7 @@
         <module>SmallTasks</module>
         <module>WinOrDie</module>
         <module>Chat</module>
+        <module>ConfigUpdateTool</module>
     </modules>
     
 </project>
