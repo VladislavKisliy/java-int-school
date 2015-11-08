@@ -9,9 +9,11 @@ import com.sun.rowset.JdbcRowSetImpl;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Enumeration;
 import java.util.Properties;
 import javax.sql.DataSource;
 import javax.sql.rowset.JdbcRowSet;
@@ -34,10 +36,8 @@ public class DataBaseIO {
     public Properties readPropertiesFromDB(String tableName) throws Exception{
         Properties prop = new Properties();
         Connection connection = getDs().getConnection();
-        System.out.println("Connection Done");
         Statement statement = connection.createStatement();
-        JdbcRowSet jdbcRowSet;
-        jdbcRowSet = new JdbcRowSetImpl(connection);
+        JdbcRowSet jdbcRowSet = new JdbcRowSetImpl(connection);
         jdbcRowSet.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
         String queryString = "SELECT * from "+ tableName;
         jdbcRowSet.setCommand(queryString);
@@ -69,20 +69,19 @@ public class DataBaseIO {
     }
     public void writePropertiesToDB(Properties prop, String tableName) throws Exception{
         Connection connection = getDs().getConnection();
-        System.out.println("Connection Done");
-        Statement statement = connection.createStatement();
-        JdbcRowSet jdbcRowSet;
-        jdbcRowSet = new JdbcRowSetImpl(connection);
-        jdbcRowSet.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
-        String queryString = "SELECT * from KWS.CUSTOMER_MASTER where rownum<11t";
-        jdbcRowSet.setCommand(queryString);
-        jdbcRowSet.execute();
-
-        while (jdbcRowSet.next()) {
-            while(jdbcRowSet.next()){
-                System.out.println("CUSTOMER=" + jdbcRowSet.getString(1));
-                }
-        }
+        String sql = "UPDATE "+tableName+" SET VALUE=? WHERE PROPERTIE=?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        Enumeration<?> e = prop.propertyNames();
+	while (e.hasMoreElements()) {
+            String key = (String) e.nextElement();
+            String value = prop.getProperty(key);
+            statement.setString(1, value);
+            statement.setString(2, key);
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated <= 0) {
+                System.err.println("Such option doesn't exsist: "+key);
+            }
+	}
         connection.close();
     }
     
