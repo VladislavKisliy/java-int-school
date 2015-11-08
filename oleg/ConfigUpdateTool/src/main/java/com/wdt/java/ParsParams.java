@@ -5,17 +5,18 @@
  */
 package com.wdt.java;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
+import java.io.OutputStream;
 import java.util.Properties;
 
 /**
  *
- * @author user
+ * @author Oleg
  */
 public class ParsParams {
-    private Properties getProperties(String file){
+    public Properties getPropertiesFromFile(String file){
         Properties prop = new Properties();
         InputStream input = null;
         try{
@@ -25,7 +26,7 @@ public class ParsParams {
                     
 	}
         prop.load(input);
-        Enumeration<?> e = prop.propertyNames();
+//        Enumeration<?> e = prop.propertyNames();
 //	while (e.hasMoreElements()) {
 //            String key = (String) e.nextElement();
 //            String value = prop.getProperty(key);
@@ -41,5 +42,20 @@ public class ParsParams {
 	}
         return prop;
     }
-    
+    public void writePropertiesToFile(String filename, Properties prop){
+	OutputStream output = null;
+	try {
+		output = new FileOutputStream(filename);
+                prop.store(output, null);
+	} catch (IOException io) {
+		io.printStackTrace();
+	} finally {
+		if (output != null) {
+			try {output.close();} 
+                        catch (IOException e) 
+                            {System.err.println(e.getMessage());}
+		}
+        
+	}
+    }
 }
