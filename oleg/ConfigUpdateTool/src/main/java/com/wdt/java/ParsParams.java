@@ -5,6 +5,7 @@
  */
 package com.wdt.java;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,12 +21,8 @@ public class ParsParams {
         Properties prop = new Properties();
         InputStream input = null;
         try{
-            input = getClass().getClassLoader().getResourceAsStream(file);
-            if (input == null) {
-		System.out.println("Sorry, unable to find " + file);           
-            }else{
-                prop.load(input);
-            }
+            input = new FileInputStream(file);
+            prop.load(input);
 	} catch (IOException ex) {
 		ex.printStackTrace();
 	} finally {
