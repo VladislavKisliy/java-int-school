@@ -80,7 +80,8 @@ public class DataBaseIO {
     }
     public void writePropertiesToDB(Properties prop, String tableName) throws Exception{
         Connection connection = getDs().getConnection();
-        String sql = "UPDATE "+tableName+" SET VALUE=? WHERE PROPERTIE=?";
+        String sql = "UPDATE "//+connection.getSchema()+"." //commented as user connected could differ from table owner
+                +tableName+" SET VALUE=? WHERE PROPERTIE=?";
         PreparedStatement statement = connection.prepareStatement(sql);
         Enumeration<?> e = prop.propertyNames();
 	while (e.hasMoreElements()) {

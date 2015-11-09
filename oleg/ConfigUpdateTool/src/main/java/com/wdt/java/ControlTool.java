@@ -24,5 +24,6 @@ public class ControlTool {
             System.out.println("key: "+key+" value: "+value);
         }
         pp.writePropertiesToFile(argv [0]+"out", prop);
+        
     }
 }
