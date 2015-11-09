@@ -51,18 +51,29 @@ public class DataBaseIO {
         connection.close();
         return prop;
     }
-    public DataSource getDSParameters(String parameterFile){
+    public Properties getDBproperties(String parameterFile){
         Properties props = new Properties();
         FileInputStream fis = null;
-        OracleDataSource oracleDS = null;
         try {
             fis = new FileInputStream(parameterFile);
             props.load(fis);
+        }catch(IOException e){
+            System.err.println(e.getMessage());
+        }
+        return props;
+    }
+    //props.getProperty("ORACLE_DB_URL")
+    //props.getProperty("ORACLE_DB_USERNAME")
+    //props.getProperty("ORACLE_DB_PASSWORD")
+    public DataSource getDS(String [] parameters){
+ 
+        OracleDataSource oracleDS = null;
+        try {
             oracleDS = new OracleDataSource();
-            oracleDS.setURL(props.getProperty("ORACLE_DB_URL"));
-            oracleDS.setUser(props.getProperty("ORACLE_DB_USERNAME"));
-            oracleDS.setPassword(props.getProperty("ORACLE_DB_PASSWORD"));
-        } catch (IOException | SQLException e) {
+            oracleDS.setURL(parameters[0]);
+            oracleDS.setUser(parameters[1]);
+            oracleDS.setPassword(parameters[2]);
+        } catch ( SQLException e) {
             e.printStackTrace();
         }
         return oracleDS;
