@@ -65,14 +65,14 @@ public class DataBaseIO {
     //props.getProperty("ORACLE_DB_URL")
     //props.getProperty("ORACLE_DB_USERNAME")
     //props.getProperty("ORACLE_DB_PASSWORD")
-    public DataSource getDS(String [] parameters){
+    public DataSource getDS(Properties props){
  
         OracleDataSource oracleDS = null;
         try {
             oracleDS = new OracleDataSource();
-            oracleDS.setURL(parameters[0]);
-            oracleDS.setUser(parameters[1]);
-            oracleDS.setPassword(parameters[2]);
+            oracleDS.setURL(props.getProperty("ORACLE_DB_URL"));
+            oracleDS.setUser(props.getProperty("ORACLE_DB_USERNAME"));
+            oracleDS.setPassword(props.getProperty("ORACLE_DB_PASSWORD"));
         } catch ( SQLException e) {
             e.printStackTrace();
         }
