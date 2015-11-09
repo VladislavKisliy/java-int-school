@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 import javax.sql.rowset.JdbcRowSet;
 import oracle.jdbc.pool.OracleDataSource;
@@ -78,10 +80,13 @@ public class DataBaseIO {
         }
         return oracleDS;
     }
-    public void writePropertiesToDB(Properties prop, String tableName) throws Exception{
-        Connection connection = getDs().getConnection();
+    public void writePropertiesToDB(Properties prop, String tableName) {
+        Connection connection;
+        try {
+            connection = getDs().getConnection();
+
         String sql = "UPDATE "//+connection.getSchema()+"." //commented as user connected could differ from table owner
-                +tableName+" SET VALUE=? WHERE PROPERTIE=?";
+                +tableName+" SET VALUE='?' WHERE PROPERTIE=\"?\";";
         PreparedStatement statement = connection.prepareStatement(sql);
         Enumeration<?> e = prop.propertyNames();
 	while (e.hasMoreElements()) {
@@ -89,12 +94,18 @@ public class DataBaseIO {
             String value = prop.getProperty(key);
             statement.setString(1, value);
             statement.setString(2, key);
+            System.out.println("Key is: "+key+";  Value is: "+value);
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated <= 0) {
                 System.err.println("Such option doesn't exsist: "+key);
             }
 	}
+        System.out.println("7");
         connection.close();
+        System.out.println("8");
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

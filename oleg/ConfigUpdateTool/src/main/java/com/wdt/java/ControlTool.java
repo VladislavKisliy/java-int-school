@@ -30,6 +30,7 @@ public class ControlTool {
         pp.writePropertiesToFile(argv [0]+"out", prop);
         Properties dbSettings=dbIO.getDBproperties(file);
         DataSource ods = dbIO.getDS(dbSettings);
+        dbIO.setDs(ods);
         dbIO.writePropertiesToDB(prop, "TEST_PROPERTIES");
     }
 }
