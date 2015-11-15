@@ -83,7 +83,6 @@ public class DataBaseIO {
         connection = getDs().getConnection();
         String sql = "UPDATE "+tableOwner+"."//+connection.getSchema()+"." //commented as user connected could differ from table owner
                 +tableName+" SET PROPERTIE_VALUE=? WHERE PROPERTIE=?";
-        System.out.println(sql);
         PreparedStatement statement = connection.prepareStatement(sql);
         Enumeration<?> e = prop.propertyNames();
 	while (e.hasMoreElements()) {
@@ -101,5 +100,27 @@ public class DataBaseIO {
             Logger.getLogger(DataBaseIO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+    public void insertPropertiesInDB(Properties prop, String tableOwner, String tableName){
+        Connection connection;
+        try {
+        connection = getDs().getConnection();
+        String sql = "INSERT INTO "+tableOwner+"."//+connection.getSchema()+"." //commented as user connected could differ from table owner
+                +tableName+" (PROPERTIE_VALUE,PROPERTIE) VALUES(?,?)";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        Enumeration<?> e = prop.propertyNames();
+	while (e.hasMoreElements()) {
+            String key = (String) e.nextElement();
+            String value = prop.getProperty(key);
+            statement.setString(1, value);
+            statement.setString(2, key);
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated <= 0) {
+                System.err.println("Such option doesn't exsist: "+key);
+            }
+	}
+        connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseIO.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }
 }
