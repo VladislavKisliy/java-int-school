@@ -31,6 +31,6 @@ public class ControlTool {
         Properties dbSettings=dbIO.getDBproperties(file);
         DataSource ods = dbIO.getDS(dbSettings);
         dbIO.setDs(ods);
-        dbIO.writePropertiesToDB(prop, "TEST_PROPERTIES");
+        dbIO.writePropertiesToDB(prop,"OTOPORKOV", "TEST_PROPERTIES");
     }
 }
