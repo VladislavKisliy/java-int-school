@@ -5,6 +5,7 @@
  */
 package com.wdt.java;
 
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -16,11 +17,12 @@ import oracle.jdbc.pool.OracleDataSource;
  */
 public class ControlTool {
     public static void main(String[] argv) throws Exception{
-        String file = "C:/test/db.properties.txt";
         Properties fromDB=new Properties();
         ParsParams pp = new ParsParams();
         DataBaseIO dbIO=new DataBaseIO();
-        System.out.println(argv[0]);
+
+//        String file = "C:/test/db.properties.txt";
+
         Properties prop = pp.getPropertiesFromFile(argv [0]);
         Enumeration<?> e = prop.propertyNames();
 	while (e.hasMoreElements()) {
@@ -29,7 +31,7 @@ public class ControlTool {
             System.out.println("key: "+key+" value: "+value);
         }
 //        pp.writePropertiesToFile(argv [0]+"_out", prop);
-        Properties dbSettings=dbIO.getDBproperties(file);
+        Properties dbSettings=dbIO.getDBproperties("db.properties");
         DataSource ods = dbIO.getDS(dbSettings);
         dbIO.setDs(ods);
         dbIO.insertPropertiesInDB(prop,"OTOPORKOV", "TEST_PROPERTIES");
