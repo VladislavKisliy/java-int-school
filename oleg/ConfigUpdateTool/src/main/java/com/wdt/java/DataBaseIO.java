@@ -35,7 +35,7 @@ public class DataBaseIO {
     public void setDs(DataSource ds) {
         this.ds = ds;
     }
-    public Properties readPropertiesFromDB(String tableName) throws Exception{
+    public Properties readPropertiesFromDB(String tableOwner, String tableName) throws Exception{
         Properties prop = new Properties();
         Connection connection = getDs().getConnection();
         Statement statement = connection.createStatement();
@@ -64,9 +64,6 @@ public class DataBaseIO {
         }
         return props;
     }
-    //props.getProperty("ORACLE_DB_URL")
-    //props.getProperty("ORACLE_DB_USERNAME")
-    //props.getProperty("ORACLE_DB_PASSWORD")
     public DataSource getDS(Properties props){
  
         OracleDataSource oracleDS = null;
@@ -80,12 +77,12 @@ public class DataBaseIO {
         }
         return oracleDS;
     }
-    public void writePropertiesToDB(Properties prop, String tableOwner, String tableName) {
+    public void updatePropertiesInDB(Properties prop, String tableOwner, String tableName) {
         Connection connection;
         try {
         connection = getDs().getConnection();
         String sql = "UPDATE "+tableOwner+"."//+connection.getSchema()+"." //commented as user connected could differ from table owner
-                +tableName+" SET VALUE=? WHERE PROPERTIE=?";
+                +tableName+" SET PROPERTIE_VALUE=? WHERE PROPERTIE=?";
         System.out.println(sql);
         PreparedStatement statement = connection.prepareStatement(sql);
         Enumeration<?> e = prop.propertyNames();

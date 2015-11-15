@@ -17,6 +17,7 @@ import oracle.jdbc.pool.OracleDataSource;
 public class ControlTool {
     public static void main(String[] argv) throws Exception{
         String file = "C:/test/db.properties.txt";
+        Properties fromDB=new Properties();
         ParsParams pp = new ParsParams();
         DataBaseIO dbIO=new DataBaseIO();
         System.out.println(argv[0]);
@@ -27,10 +28,13 @@ public class ControlTool {
             String value = prop.getProperty(key);
             System.out.println("key: "+key+" value: "+value);
         }
-        pp.writePropertiesToFile(argv [0]+"out", prop);
+//        pp.writePropertiesToFile(argv [0]+"_out", prop);
         Properties dbSettings=dbIO.getDBproperties(file);
         DataSource ods = dbIO.getDS(dbSettings);
         dbIO.setDs(ods);
-        dbIO.writePropertiesToDB(prop,"OTOPORKOV", "TEST_PROPERTIES");
+        dbIO.updatePropertiesInDB(prop,"OTOPORKOV", "TEST_PROPERTIES");
+        fromDB=dbIO.readPropertiesFromDB("OTOPORKOV", "TEST_PROPERTIES");
+        pp.writePropertiesToFile(argv [0]+".properties", prop);
+        
     }
 }
