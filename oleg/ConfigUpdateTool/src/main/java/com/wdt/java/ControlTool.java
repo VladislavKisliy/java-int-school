@@ -16,6 +16,7 @@ import oracle.jdbc.pool.OracleDataSource;
  * @author Oleg
  */
 public class ControlTool {
+    
     public static void main(String[] argv) throws Exception{
         Properties fromDB=new Properties();
         ParsParams pp = new ParsParams();
