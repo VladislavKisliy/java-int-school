@@ -5,22 +5,12 @@
  */
 package com.wdt.java;
 
-//import java.io.File;
-//import java.io.PrintStream;
-//import java.util.HashSet;
-//import java.util.Set;
-//import org.apache.commons.cli.CommandLine;
-//import org.apache.commons.cli.GnuParser;
-//import org.apache.commons.cli.HelpFormatter;
-//import org.apache.commons.cli.MissingArgumentException;
-//import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
-//import org.apache.commons.cli.UnrecognizedOptionException;
 /**
  *
- * @author user
+ * @author Oleg
  */
 public class OptionControlClass {
    public Options OptionControlClass(String[] argv) throws Exception{
@@ -44,7 +34,6 @@ public class OptionControlClass {
         .hasArg()
         .withDescription(  "use given file to get/write properties" )
         .create( "propertieFile" );
-
 
     Options options = new Options();
 
