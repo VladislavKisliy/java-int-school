@@ -13,7 +13,7 @@ import org.apache.commons.cli.Options;
  * @author Oleg
  */
 public class OptionControlClass {
-   public Options OptionControlClass(String[] argv) throws Exception{
+   public static Options OptionControlClass(String[] argv) throws Exception{
     Option conffile = OptionBuilder.withArgName( "conffile" )
         .hasArg()
         .withDescription(  "use given file for DataSource configuration" )
@@ -29,7 +29,7 @@ public class OptionControlClass {
     Option user = OptionBuilder.withArgName( "user" )
         .hasArg()
         .withDescription(  "use given user to configure DataSourcce" )
-        .create( "url" );
+        .create( "user" );
     Option propertieFile = OptionBuilder.withArgName( "propertieFile" )
         .hasArg()
         .withDescription(  "use given file to get/write properties" )
@@ -39,7 +39,7 @@ public class OptionControlClass {
 
     options.addOption("force", false, "force overwrite properties");
     options.addOption("check", false, "check diff of properties without update");
-    options.addOption("db2file", false, "direction of properties flow");
+//    options.addOption("db2file", false, "direction of properties flow");
     options.addOption("file2db", false, "direction of properties flow");
     options.addOption("?", false, "display this help");
     options.addOption(conffile);
@@ -50,5 +50,4 @@ public class OptionControlClass {
     return options;
     }
 
- 
 }

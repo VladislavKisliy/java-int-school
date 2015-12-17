@@ -43,23 +43,37 @@ public class ControlTool {
 //        dbIO.insertPropertiesInDB(prop,"OTOPORKOV", "TEST_PROPERTIES");
 //        fromDB=dbIO.readPropertiesFromDB("OTOPORKOV", "TEST_PROPERTIES");
 //        pp.writePropertiesToFile(argv [0]+".properties", prop);
-        Options options = getOptions();
-        
+        Options options = OptionControlClass.OptionControlClass(args);
         CommandLineParser parser = new GnuParser();
 	try {
             // parse the command line arguments
             CommandLine line = parser.parse( options, args );
             
-	    if (line.hasOption("?")) {
-                usage(options);
-                return;
-            }
+
         }catch( ParseException exp ) {
             // oops, something went wrong
             System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
             usage(options);
         }
 }
+    private static void parseOptions(CommandLine line, Options options){
+    	if (line.hasOption("?")) {
+            usage(options);
+            return;
+        }
+        if (! line.hasOption("conffile")){
+            if( ! line.hasOption("url")|| ! line.hasOption("passwd")|| ! line.hasOption("user")){
+                usage(options);
+                return;
+            }else{
+                Constants.setURL(line.getOptionValue("url"));
+                Constants.setPASSWD(line.getOptionValue("passwd"));
+                Constants.setUSER(line.getOptionValue("user"));
+            }
+        }else{
+            Constants.setUSER(line.getOptionValue("user"));
+        }
+    }
     private static void error(Options options, String msg) {
         System.err.println(msg);
         usage(options);
@@ -67,12 +81,12 @@ public class ControlTool {
     }
 
       private static void usage(Options options) {
-        // automatically generate the help statement
-        HelpFormatter formatter = new HelpFormatter();
-       formatter.printHelp( "ivy", options );
+       // automatically generate the help statement
+       HelpFormatter formatter = new HelpFormatter();
+       formatter.printHelp( "ControlTool", options );
     }        
 
-    private static Options getOptions() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+//    private static Options getOptions() {
+//        throw new UnsupportedOperationException("Not supported yet."); 
+//    }
     }
