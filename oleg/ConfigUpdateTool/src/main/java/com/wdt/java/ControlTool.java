@@ -8,6 +8,8 @@ package com.wdt.java;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 import oracle.jdbc.pool.OracleDataSource;
 import org.apache.commons.cli.CommandLine;
@@ -23,58 +25,38 @@ import org.apache.commons.cli.ParseException;
  */
 public class ControlTool {
     
-    public static void main(String[] args) throws Exception{
-//        Properties fromDB=new Properties();
-//        ParsParams pp = new ParsParams();
-//        DataBaseIO dbIO=new DataBaseIO();
+    public static void main(String[] args) throws Exception {
+        Properties dbSettings = new Properties();
+//        Options options = OptionControlClass.OptionControlClass();
+//	try {
 
-//        String file = "C:/test/db.properties.txt";
-
-//        Properties prop = pp.getPropertiesFromFile(argv [0]);
-//        Enumeration<?> e = prop.propertyNames();
-//	while (e.hasMoreElements()) {
-//            String key = (String) e.nextElement();
-//            String value = prop.getProperty(key);
-//            System.out.println("key: "+key+" value: "+value);
-//        }
-//        Properties dbSettings=dbIO.getDBproperties("db.properties");
-//        DataSource ods = dbIO.getDS(dbSettings);
-//        dbIO.setDs(ods);
-//        dbIO.insertPropertiesInDB(prop,"OTOPORKOV", "TEST_PROPERTIES");
-//        fromDB=dbIO.readPropertiesFromDB("OTOPORKOV", "TEST_PROPERTIES");
-//        pp.writePropertiesToFile(argv [0]+".properties", prop);
-        Options options = OptionControlClass.OptionControlClass(args);
-        CommandLineParser parser = new GnuParser();
-	try {
-            // parse the command line arguments
-            CommandLine line = parser.parse( options, args );
             
-
-        }catch( ParseException exp ) {
-            // oops, something went wrong
-            System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
-            usage(options);
-        }
+//            CommandLineParser parser = new GnuParser();
+            DataBaseIO dbIO=new DataBaseIO();
+//            CommandLine line = parser.parse( options, args );
+//            if (line.hasOption("?")) {
+//                usage(options);
+//                return;
+//            }
+//            if (! line.hasOption("conffile")){
+//                if( ! line.hasOption("url")|| ! line.hasOption("passwd")|| ! line.hasOption("user")){
+//                    usage(options);
+//                    return;
+//                }else{
+//                    dbSettings.setProperty("ORACLE_DB_URL", line.getOptionValue("url"));
+//                    dbSettings.setProperty("ORACLE_DB_USERNAME", line.getOptionValue("user"));
+//                    dbSettings.setProperty("ORACLE_DB_PASSWORD", line.getOptionValue("passwd"));
+//                }
+//            }else{
+//                dbSettings=dbIO.getDBproperties(line.getOptionValue("conffile"));
+//            }            
+//        }catch( ParseException exp ) {
+//            // oops, something went wrong
+//            System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
+//            usage(options);
+//        }
 }
-    private static void parseOptions(CommandLine line, Options options){
-    	if (line.hasOption("?")) {
-            usage(options);
-            return;
-        }
-        if (! line.hasOption("conffile")){
-            if( ! line.hasOption("url")|| ! line.hasOption("passwd")|| ! line.hasOption("user")){
-                usage(options);
-                return;
-            }else{
-                Constants.setURL(line.getOptionValue("url"));
-                Constants.setPASSWD(line.getOptionValue("passwd"));
-                Constants.setUSER(line.getOptionValue("user"));
-            }
-        }else{
-            Constants.setUSER(line.getOptionValue("user"));
-        }
-    }
-    private static void error(Options options, String msg) {
+      private static void error(Options options, String msg) {
         System.err.println(msg);
         usage(options);
         System.exit(1);
@@ -85,8 +67,4 @@ public class ControlTool {
        HelpFormatter formatter = new HelpFormatter();
        formatter.printHelp( "ControlTool", options );
     }        
-
-//    private static Options getOptions() {
-//        throw new UnsupportedOperationException("Not supported yet."); 
-//    }
     }
