@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -42,6 +43,7 @@ public class ParsParamsTest {
      * Test of getPropertiesFromFile method, of class ParsParams.
      */
     @Test
+    @Ignore
     public void testGetPropertiesFromFile() {
         System.out.println("getPropertiesFromFile");
         String file = "";
@@ -57,6 +59,7 @@ public class ParsParamsTest {
      * Test of writePropertiesToFile method, of class ParsParams.
      */
     @Test
+    @Ignore
     public void testWritePropertiesToFile() {
         System.out.println("writePropertiesToFile");
         String filename = "";

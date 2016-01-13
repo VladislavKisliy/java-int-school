@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -43,6 +44,7 @@ public class DataBaseIOTest {
      * Test of getDs method, of class DataBaseIO.
      */
     @Test
+    @Ignore
     public void testGetDs() {
         System.out.println("getDs");
         DataBaseIO instance = new DataBaseIO();
@@ -57,6 +59,7 @@ public class DataBaseIOTest {
      * Test of setDs method, of class DataBaseIO.
      */
     @Test
+    @Ignore
     public void testSetDs() {
         System.out.println("setDs");
         DataSource ds = null;
@@ -70,6 +73,7 @@ public class DataBaseIOTest {
      * Test of readPropertiesFromDB method, of class DataBaseIO.
      */
     @Test
+    @Ignore
     public void testReadPropertiesFromDB() throws Exception {
         System.out.println("readPropertiesFromDB");
         String tableOwner = "";
@@ -86,6 +90,7 @@ public class DataBaseIOTest {
      * Test of getDBproperties method, of class DataBaseIO.
      */
     @Test
+    @Ignore
     public void testGetDBproperties() {
         System.out.println("getDBproperties");
         String parameterFile = "";
@@ -101,6 +106,7 @@ public class DataBaseIOTest {
      * Test of getDS method, of class DataBaseIO.
      */
     @Test
+    @Ignore
     public void testGetDS() {
         System.out.println("getDS");
         Properties props = null;
@@ -116,6 +122,7 @@ public class DataBaseIOTest {
      * Test of updatePropertiesInDB method, of class DataBaseIO.
      */
     @Test
+    @Ignore
     public void testUpdatePropertiesInDB() {
         System.out.println("updatePropertiesInDB");
         Properties prop = null;
@@ -131,6 +138,7 @@ public class DataBaseIOTest {
      * Test of insertPropertiesInDB method, of class DataBaseIO.
      */
     @Test
+    @Ignore
     public void testInsertPropertiesInDB() {
         System.out.println("insertPropertiesInDB");
         Properties prop = null;
