@@ -27,34 +27,51 @@ public class ControlTool {
     
     public static void main(String[] args) throws Exception {
         Properties dbSettings = new Properties();
-//        Options options = OptionControlClass.OptionControlClass();
-//	try {
+        Options options = OptionControlClass.OptionControlClass();
+        String file = "C:/test/db.properties.txt";
+        ParsParams pp = new ParsParams();
+        Properties prop = pp.getPropertiesFromFile(file);
+        Properties fromDB = new Properties();
+        Enumeration<?> e = prop.propertyNames();
+	while (e.hasMoreElements()) {
+            String key = (String) e.nextElement();
+            String value = prop.getProperty(key);
+            System.out.println("key: "+key+" value: "+value);
+        }
+        DataBaseIO dbIO=new DataBaseIO();
+	try {
 
+          
+            CommandLineParser parser = new GnuParser();
             
-//            CommandLineParser parser = new GnuParser();
-            DataBaseIO dbIO=new DataBaseIO();
-//            CommandLine line = parser.parse( options, args );
-//            if (line.hasOption("?")) {
-//                usage(options);
-//                return;
-//            }
-//            if (! line.hasOption("conffile")){
-//                if( ! line.hasOption("url")|| ! line.hasOption("passwd")|| ! line.hasOption("user")){
-//                    usage(options);
-//                    return;
-//                }else{
-//                    dbSettings.setProperty("ORACLE_DB_URL", line.getOptionValue("url"));
-//                    dbSettings.setProperty("ORACLE_DB_USERNAME", line.getOptionValue("user"));
-//                    dbSettings.setProperty("ORACLE_DB_PASSWORD", line.getOptionValue("passwd"));
-//                }
-//            }else{
-//                dbSettings=dbIO.getDBproperties(line.getOptionValue("conffile"));
-//            }            
-//        }catch( ParseException exp ) {
-//            // oops, something went wrong
-//            System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
-//            usage(options);
-//        }
+            CommandLine line = parser.parse( options, args );
+            if (line.hasOption("?")) {
+                usage(options);
+                return;
+            }
+            if (! line.hasOption("conffile")){
+                if( ! line.hasOption("url")|| ! line.hasOption("passwd")|| ! line.hasOption("user")){
+                    usage(options);
+                    return;
+                }else{
+                    dbSettings.setProperty("ORACLE_DB_URL", line.getOptionValue("url"));
+                    dbSettings.setProperty("ORACLE_DB_USERNAME", line.getOptionValue("user"));
+                    dbSettings.setProperty("ORACLE_DB_PASSWORD", line.getOptionValue("passwd"));
+                }
+            }else{
+                dbSettings=dbIO.getDBproperties(line.getOptionValue("conffile"));
+            }            
+        }catch( ParseException exp ) {
+            // oops, something went wrong
+            System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
+            usage(options);
+        }
+        DataSource ods = dbIO.getDS(dbSettings);
+        dbIO.setDs(ods);
+        dbIO.insertPropertiesInDB(prop,"OTOPORKOV", "TEST_PROPERTIES");
+        
+        fromDB=dbIO.readPropertiesFromDB("OTOPORKOV", "TEST_PROPERTIES");
+        pp.writePropertiesToFile(file+".properties_new", prop);
 }
       private static void error(Options options, String msg) {
         System.err.println(msg);
