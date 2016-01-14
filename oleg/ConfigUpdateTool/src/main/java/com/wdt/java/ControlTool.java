@@ -24,24 +24,23 @@ import org.apache.commons.cli.ParseException;
  * @author Oleg
  */
 public class ControlTool {
-    
+    //usage example:
+    //java -jar .\target\ConfigUpdateTool-1.0-SNAPSHOT.jar -propertieFile C:\test\db.properties.txt -propTableName TEST_PROPERTIES -propTableOwner OTOPORKOV -db2file -conffile .\db.properties
     public static void main(String[] args) throws Exception {
         Properties dbSettings = new Properties();
         Options options = OptionControlClass.OptionControlClass();
-        String file = "C:/test/db.properties.txt";
+//        String file ;//= "C:/test/db.properties.txt";
         ParsParams pp = new ParsParams();
-        Properties prop = pp.getPropertiesFromFile(file);
+        Properties prop = new Properties();// = pp.getPropertiesFromFile(file);
         Properties fromDB = new Properties();
-        Enumeration<?> e = prop.propertyNames();
-	while (e.hasMoreElements()) {
-            String key = (String) e.nextElement();
-            String value = prop.getProperty(key);
-            System.out.println("key: "+key+" value: "+value);
-        }
+        String propFile = new String();
+        String tableName = new String();
+        String tableOwner = new String();
         DataBaseIO dbIO=new DataBaseIO();
+        CommandLine line = null;
 	try {          
             CommandLineParser parser = new GnuParser();            
-            CommandLine line = parser.parse( options, args );
+            line = parser.parse( options, args );
             if (line.hasOption("?")) {
                 usage(options);
                 return;
@@ -55,6 +54,17 @@ public class ControlTool {
                     ){
                 error(options, "propertieFile, propTableName, propTableOwner and direction of propertie load [db2file|file2db] are mandatory to define.");
                 return;
+            }
+            tableName=line.getOptionValue("propTableName");
+            tableOwner=line.getOptionValue("propTableOwner");
+            propFile=line.getOptionValue("propertieFile");
+            prop = pp.getPropertiesFromFile(propFile);
+            //get properties from input propertie file
+            Enumeration<?> e = prop.propertyNames();
+            while (e.hasMoreElements()) {
+                String key = (String) e.nextElement();
+                String value = prop.getProperty(key);
+                System.out.println("key: "+key+" value: "+value);
             }
             //you can define connection properties separate or as conffile
             if (! line.hasOption("conffile")){
@@ -77,10 +87,13 @@ public class ControlTool {
         
         DataSource ods = dbIO.getDS(dbSettings);
         dbIO.setDs(ods);
-        dbIO.insertPropertiesInDB(prop,"OTOPORKOV", "TEST_PROPERTIES");
         
-        fromDB=dbIO.readPropertiesFromDB("OTOPORKOV", "TEST_PROPERTIES");
-        pp.writePropertiesToFile(file+".properties_new", prop);
+        if (line.hasOption("db2file")) {
+            fromDB=dbIO.readPropertiesFromDB(tableOwner, tableName);
+            pp.writePropertiesToFile(propFile+".properties_new", prop);
+        } else if (line.hasOption("file2db")){
+            dbIO.insertPropertiesInDB(prop,tableOwner, tableName);
+        }        
 }
       private static void error(Options options, String msg) {
         System.err.println(msg);
