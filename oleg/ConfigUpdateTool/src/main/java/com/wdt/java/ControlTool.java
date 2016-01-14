@@ -39,19 +39,27 @@ public class ControlTool {
             System.out.println("key: "+key+" value: "+value);
         }
         DataBaseIO dbIO=new DataBaseIO();
-	try {
-
-          
-            CommandLineParser parser = new GnuParser();
-            
+	try {          
+            CommandLineParser parser = new GnuParser();            
             CommandLine line = parser.parse( options, args );
             if (line.hasOption("?")) {
                 usage(options);
                 return;
             }
+            //
+            //check if direction defined
+            if (    ((! line.hasOption("db2file"))&&(! line.hasOption("file2db")))
+                    || (! line.hasOption("propTableName"))
+                    || (! line.hasOption("propTableOwner"))
+                    || (! line.hasOption("propertieFile"))                    
+                    ){
+                error(options, "propertieFile, propTableName, propTableOwner and direction of propertie load [db2file|file2db] are mandatory to define.");
+                return;
+            }
+            //you can define connection properties separate or as conffile
             if (! line.hasOption("conffile")){
                 if( ! line.hasOption("url")|| ! line.hasOption("passwd")|| ! line.hasOption("user")){
-                    usage(options);
+                    error(options, "Please define either \"conffile\" or connection properties (url, passwd, user)!");
                     return;
                 }else{
                     dbSettings.setProperty("ORACLE_DB_URL", line.getOptionValue("url"));
@@ -66,6 +74,7 @@ public class ControlTool {
             System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
             usage(options);
         }
+        
         DataSource ods = dbIO.getDS(dbSettings);
         dbIO.setDs(ods);
         dbIO.insertPropertiesInDB(prop,"OTOPORKOV", "TEST_PROPERTIES");
