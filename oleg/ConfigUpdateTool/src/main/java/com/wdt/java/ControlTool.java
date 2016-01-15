@@ -25,7 +25,7 @@ import org.apache.commons.cli.ParseException;
  */
 public class ControlTool {
     //usage example:
-    //java -jar .\target\ConfigUpdateTool-1.0-SNAPSHOT.jar -propertieFile C:\test\db.properties.txt -propTableName TEST_PROPERTIES -propTableOwner OTOPORKOV -db2file -conffile .\db.properties
+    //java -jar .\target\ConfigUpdateTool-1.0-SNAPSHOT.jar -propertieFile C:\test\db.properties.txt -propTableName TEST_PROPERTIES -propTableOwner OTOPORKOV -file2db -conffile .\db.properties
     public static void main(String[] args) throws Exception {
         Properties dbSettings = new Properties();
         Options options = OptionControlClass.OptionControlClass();
@@ -53,6 +53,10 @@ public class ControlTool {
                     || (! line.hasOption("propertieFile"))                    
                     ){
                 error(options, "propertieFile, propTableName, propTableOwner and direction of propertie load [db2file|file2db] are mandatory to define.");
+                return;
+            } 
+            if ((line.hasOption("db2file"))&&(line.hasOption("file2db"))){
+                error(options, "Can't define both options: db2file file2db at same time.");
                 return;
             }
             tableName=line.getOptionValue("propTableName");
@@ -92,6 +96,7 @@ public class ControlTool {
             fromDB=dbIO.readPropertiesFromDB(tableOwner, tableName);
             pp.writePropertiesToFile(propFile+".properties_new", prop);
         } else if (line.hasOption("file2db")){
+            dbIO.deletePropertiesInDB(tableOwner, tableName);
             dbIO.insertPropertiesInDB(prop,tableOwner, tableName);
         }        
 }

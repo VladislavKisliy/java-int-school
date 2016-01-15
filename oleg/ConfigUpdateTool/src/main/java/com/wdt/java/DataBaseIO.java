@@ -123,4 +123,16 @@ public class DataBaseIO {
             Logger.getLogger(DataBaseIO.class.getName()).log(Level.SEVERE, null, ex);
         }        
     }
+    public void deletePropertiesInDB(String tableOwner, String tableName){
+        Connection connection;
+        try {
+        connection = getDs().getConnection();
+        String sql = "TRUNCATE TABLE "+tableOwner+"."+tableName;
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.executeUpdate();
+        connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseIO.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }
 }
