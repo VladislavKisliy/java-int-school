@@ -44,7 +44,6 @@ public class DataBaseIO {
         String queryString = "SELECT * from "+ tableName;
         jdbcRowSet.setCommand(queryString);
         jdbcRowSet.execute();
-
         while (jdbcRowSet.next()) {
             while(jdbcRowSet.next()){
                 prop.put(jdbcRowSet.getString(1), jdbcRowSet.getString(2));
@@ -104,8 +103,7 @@ public class DataBaseIO {
         Connection connection;
         try {
         connection = getDs().getConnection();
-        String sql = "INSERT INTO "+tableOwner+"."//+connection.getSchema()+"." //commented as user connected could differ from table owner
-                +tableName+" (PROPERTIE_VALUE,PROPERTIE) VALUES(?,?)";
+        String sql = "INSERT INTO "+tableOwner+"."+tableName+" (PROPERTIE_VALUE,PROPERTIE) VALUES(?,?)";
         PreparedStatement statement = connection.prepareStatement(sql);
         Enumeration<?> e = prop.propertyNames();
 	while (e.hasMoreElements()) {
@@ -123,11 +121,12 @@ public class DataBaseIO {
             Logger.getLogger(DataBaseIO.class.getName()).log(Level.SEVERE, null, ex);
         }        
     }
-    public void deletePropertiesInDB(String tableOwner, String tableName){
+    public void deletePropertiesFromDB(String tableOwner, String tableName){
         Connection connection;
         try {
         connection = getDs().getConnection();
-        String sql = "TRUNCATE TABLE "+tableOwner+"."+tableName;
+        String sql = "DELETE FROM "+tableOwner+"."+tableName;
+//            System.out.println(sql);
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.executeUpdate();
         connection.close();
