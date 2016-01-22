@@ -36,6 +36,7 @@ public class DataBaseIO {
         this.ds = ds;
     }
     public Properties readPropertiesFromDB(String tableOwner, String tableName) throws Exception{
+        //Java exceptions - read
         Properties prop = new Properties();
         Connection connection = getDs().getConnection();
         Statement statement = connection.createStatement();
@@ -76,29 +77,29 @@ public class DataBaseIO {
         }
         return oracleDS;
     }
-    public void updatePropertiesInDB(Properties prop, String tableOwner, String tableName) {
-        Connection connection;
-        try {
-        connection = getDs().getConnection();
-        String sql = "UPDATE "+tableOwner+"."//+connection.getSchema()+"." //commented as user connected could differ from table owner
-                +tableName+" SET PROPERTIE_VALUE=? WHERE PROPERTIE=?";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        Enumeration<?> e = prop.propertyNames();
-	while (e.hasMoreElements()) {
-            String key = (String) e.nextElement();
-            String value = prop.getProperty(key);
-            statement.setString(1, value);
-            statement.setString(2, key);
-            int rowsUpdated = statement.executeUpdate();
-            if (rowsUpdated <= 0) {
-                System.err.println("Such option doesn't exsist: "+key);
-            }
-	}
-        connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DataBaseIO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public void updatePropertiesInDB(Properties prop, String tableOwner, String tableName) {
+//        Connection connection;
+//        try {
+//        connection = getDs().getConnection();
+//        String sql = "UPDATE "+tableOwner+"."//+connection.getSchema()+"." //commented as user connected could differ from table owner
+//                +tableName+" SET PROPERTIE_VALUE=? WHERE PROPERTIE=?";
+//        PreparedStatement statement = connection.prepareStatement(sql);
+//        Enumeration<?> e = prop.propertyNames();
+//	while (e.hasMoreElements()) {
+//            String key = (String) e.nextElement();
+//            String value = prop.getProperty(key);
+//            statement.setString(1, value);
+//            statement.setString(2, key);
+//            int rowsUpdated = statement.executeUpdate();
+//            if (rowsUpdated <= 0) {
+//                System.err.println("Such option doesn't exsist: "+key);
+//            }
+//	}
+//        connection.close(); //!!!!!move after catch
+//        } catch (SQLException ex) {
+//            Logger.getLogger(DataBaseIO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     public void insertPropertiesInDB(Properties prop, String tableOwner, String tableName){
         Connection connection;
         try {

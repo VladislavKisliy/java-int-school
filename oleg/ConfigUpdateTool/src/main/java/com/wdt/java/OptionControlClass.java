@@ -13,7 +13,7 @@ import org.apache.commons.cli.Options;
  * @author Oleg
  */
 public class OptionControlClass {
-   public static Options OptionControlClass() throws Exception{
+   public static Options OptionControlClass() {
     Option conffile = OptionBuilder.withArgName( "conffile" )
         .hasArg()
         .withDescription(  "use given file for DataSource configuration." )

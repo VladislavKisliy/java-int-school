@@ -19,6 +19,8 @@ import java.util.logging.Logger;
  */
 public class ParsParams {
     private static final Logger LOG = Logger.getLogger(ParsParams.class.getName());
+    //use LOG
+    //if use java 7 - then try-close resources
     public Properties getPropertiesFromFile(String file){
         Properties prop = new Properties();
         InputStream input = null;

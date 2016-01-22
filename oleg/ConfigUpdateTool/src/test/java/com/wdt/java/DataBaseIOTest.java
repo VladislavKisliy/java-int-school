@@ -121,18 +121,18 @@ public class DataBaseIOTest {
     /**
      * Test of updatePropertiesInDB method, of class DataBaseIO.
      */
-    @Test
-    @Ignore
-    public void testUpdatePropertiesInDB() {
-        System.out.println("updatePropertiesInDB");
-        Properties prop = null;
-        String tableOwner = "";
-        String tableName = "";
-        DataBaseIO instance = new DataBaseIO();
-        instance.updatePropertiesInDB(prop, tableOwner, tableName);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    @Test
+//    @Ignore
+//    public void testUpdatePropertiesInDB() {
+//        System.out.println("updatePropertiesInDB");
+//        Properties prop = null;
+//        String tableOwner = "";
+//        String tableName = "";
+//        DataBaseIO instance = new DataBaseIO();
+//        instance.updatePropertiesInDB(prop, tableOwner, tableName);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
     /**
      * Test of insertPropertiesInDB method, of class DataBaseIO.

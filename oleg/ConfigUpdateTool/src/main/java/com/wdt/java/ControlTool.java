@@ -31,7 +31,11 @@ public class ControlTool {
     //ORACLE_DB_URL=jdbc:oracle:thin:@konzum2.weigandt-consulting.com:1521:mom5t
     //ORACLE_DB_USERNAME=OTOPORKOV
     //ORACLE_DB_PASSWORD=password
+    
+    //checked/unchecked exception -hierarhy of exceptions
+    //rewrite to process sql exception 
     public static void main(String[] args) throws Exception {
+        //!!!! move most of settings to separate class
         Properties dbSettings = new Properties();
         Options options = OptionControlClass.OptionControlClass();
         ParsParams pp = new ParsParams();
