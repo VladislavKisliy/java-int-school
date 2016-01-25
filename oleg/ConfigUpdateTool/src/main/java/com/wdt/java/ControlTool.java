@@ -6,6 +6,7 @@
 package com.wdt.java;
 
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -31,9 +32,6 @@ public class ControlTool {
     //ORACLE_DB_URL=jdbc:oracle:thin:@konzum2.weigandt-consulting.com:1521:mom5t
     //ORACLE_DB_USERNAME=OTOPORKOV
     //ORACLE_DB_PASSWORD=password
-    
-    //checked/unchecked exception -hierarhy of exceptions
-    //rewrite to process sql exception 
     public static void main(String[] args) {
         Options options = OptionControlClass.OptionControlClass();
         CommandLineParser parser = new GnuParser(); 
@@ -53,8 +51,7 @@ public class ControlTool {
         String propFile = new String();
         String tableName = new String();
         String tableOwner = new String();
-        DataBaseIO dbIO=new DataBaseIO();
-	try{          
+        DataBaseIO dbIO=new DataBaseIO();        
             if (line.hasOption("?")) {
                 usage(options);
                 return;
@@ -94,13 +91,8 @@ public class ControlTool {
                 dbIO.insertPropertiesInDB(mainProperties,tableOwner, tableName);
             }  else{
                 error(options, "You should define db2file or file2db");
-                return;
+//                return;
             }              
-        }catch(Exception exp ) {
-            //something went wrong
-            System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
-            usage(options);
-        }
     }
     private static void error(Options options, String msg) {
         System.err.println(msg);

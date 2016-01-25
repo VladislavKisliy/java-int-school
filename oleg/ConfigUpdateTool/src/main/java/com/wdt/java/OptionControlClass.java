@@ -43,10 +43,6 @@ public class OptionControlClass {
         .withDescription(  "Name of table containing properties." )
         .create( "propTableName" );
     Options options = new Options();
-
-//    options.addOption("force", false, "force overwrite properties");
-//    options.addOption("check", false, "check diff of properties without update");
-    
     options.addOption("db2file", false, "direction of properties flow");
     options.addOption("file2db", false, "direction of properties flow");
     options.addOption("?", false, "display this help");

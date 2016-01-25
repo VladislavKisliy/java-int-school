@@ -26,12 +26,11 @@ import oracle.jdbc.pool.OracleDataSource;
  * @author Oleg
  */
 public class DataBaseIO {
+    private static final Logger LOG = Logger.getLogger(ParsParams.class.getName());
     private DataSource ds =null;
-
     public DataSource getDs() {
         return ds;
     }
-
     public void setDs(DataSource ds) {
         this.ds = ds;
     }
@@ -41,18 +40,18 @@ public class DataBaseIO {
         try(Connection connection = getDs().getConnection();
             Statement statement = connection.createStatement(); 
             JdbcRowSet jdbcRowSet = new JdbcRowSetImpl(connection);){
-            jdbcRowSet.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
-            String queryString = "SELECT * from "+ tableName;
-            jdbcRowSet.setCommand(queryString);
-            jdbcRowSet.execute();
-            while (jdbcRowSet.next()) {
-                while(jdbcRowSet.next()){
-                    prop.put(jdbcRowSet.getString(1), jdbcRowSet.getString(2));
-                    }
-            }
-            connection.close();
+                jdbcRowSet.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
+                String queryString = "SELECT * from "+ tableName;
+                jdbcRowSet.setCommand(queryString);
+                jdbcRowSet.execute();
+                while (jdbcRowSet.next()) {
+                    while(jdbcRowSet.next()){
+                        prop.put(jdbcRowSet.getString(1), jdbcRowSet.getString(2));
+                        }
+                }
+                connection.close();
         }catch (SQLException e){
-            
+            LOG.log(Level.SEVERE , e.getMessage());
         }
         return prop;
     }
@@ -61,7 +60,7 @@ public class DataBaseIO {
         try (FileInputStream fis =new FileInputStream(parameterFile); ) {
             props.load(fis);
         }catch(IOException e){
-            System.err.println(e.getMessage());
+            LOG.log(Level.SEVERE , e.getMessage());
         }
         return props;
     }
@@ -74,7 +73,7 @@ public class DataBaseIO {
             oracleDS.setUser(props.getProperty("ORACLE_DB_USERNAME"));
             oracleDS.setPassword(props.getProperty("ORACLE_DB_PASSWORD"));
         } catch ( SQLException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE , e.getMessage());
         }
         return oracleDS;
     }
@@ -118,17 +117,17 @@ public class DataBaseIO {
 	}
         connection.close();
         } catch (SQLException ex) {
-            Logger.getLogger(DataBaseIO.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, ex.getMessage());
         }        
     }
     public void deletePropertiesFromDB(String tableOwner, String tableName){
         String sql = "DELETE FROM "+tableOwner+"."+tableName;
         try (Connection connection  = getDs().getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);) {
-        statement.executeUpdate();
-        connection.close();
+            statement.executeUpdate();
+            connection.close();
         } catch (SQLException ex) {
-            Logger.getLogger(DataBaseIO.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, ex.getMessage());
         }        
     }
 }

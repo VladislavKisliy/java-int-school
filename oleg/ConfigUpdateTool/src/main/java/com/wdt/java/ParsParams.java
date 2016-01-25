@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -19,14 +20,12 @@ import java.util.logging.Logger;
  */
 public class ParsParams {
     private static final Logger LOG = Logger.getLogger(ParsParams.class.getName());
-    //use LOG
-    //if use java 7 - then try-close resources
     public Properties getPropertiesFromFile(String file){
         Properties prop = new Properties();
         try (InputStream input = new FileInputStream(file); ){
             prop.load(input);
 	} catch (IOException ex) {
-		ex.printStackTrace();
+		LOG.log(Level.SEVERE, ex.getMessage());
 	} 
         return prop;
     }
@@ -34,7 +33,7 @@ public class ParsParams {
 	try (OutputStream output = new FileOutputStream(filename);){
                 prop.store(output, null);
 	} catch (IOException io) {
-		io.printStackTrace();
+                LOG.log(Level.SEVERE, io.getMessage());
 	}
     }
 }
