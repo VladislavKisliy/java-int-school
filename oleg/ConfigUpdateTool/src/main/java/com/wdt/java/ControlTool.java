@@ -45,7 +45,7 @@ public class ControlTool {
         String tableOwner = new String();
         DataBaseIO dbIO=new DataBaseIO();
         CommandLine line = null;
-	try {          
+	try{          
             CommandLineParser parser = new GnuParser();            
             line = parser.parse( options, args );
             if (line.hasOption("?")) {

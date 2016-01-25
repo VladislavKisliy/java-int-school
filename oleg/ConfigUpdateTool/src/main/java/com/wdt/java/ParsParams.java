@@ -23,33 +23,18 @@ public class ParsParams {
     //if use java 7 - then try-close resources
     public Properties getPropertiesFromFile(String file){
         Properties prop = new Properties();
-        InputStream input = null;
-        try{
-            input = new FileInputStream(file);
+        try (InputStream input = new FileInputStream(file); ){
             prop.load(input);
 	} catch (IOException ex) {
 		ex.printStackTrace();
-	} finally {
-            if (input != null) {
-		try {input.close();} 
-                catch (IOException e) {e.printStackTrace();}
-            }
-	}
+	} 
         return prop;
     }
     public void writePropertiesToFile(String filename, Properties prop){
-	OutputStream output = null;
-	try {
-		output = new FileOutputStream(filename);
+	try (OutputStream output = new FileOutputStream(filename);){
                 prop.store(output, null);
 	} catch (IOException io) {
 		io.printStackTrace();
-	} finally {
-		if (output != null) {
-			try {output.close();} 
-                        catch (IOException e) 
-                            {System.err.println(e.getMessage());}
-		}
 	}
     }
 }
