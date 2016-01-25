@@ -34,25 +34,31 @@ public class ControlTool {
     
     //checked/unchecked exception -hierarhy of exceptions
     //rewrite to process sql exception 
-    public static void main(String[] args) throws Exception {
-        //!!!! move most of settings to separate class
-        Properties dbSettings = new Properties();
+    public static void main(String[] args) {
         Options options = OptionControlClass.OptionControlClass();
+        CommandLineParser parser = new GnuParser(); 
+        CommandLine line =null;
+        try{
+            line = parser.parse( options, args );
+        }catch(ParseException e){
+            
+        }
+        processArgsLogic(line, options);
+ 
+}
+    private static void processArgsLogic(CommandLine line, Options options){
+        Properties dbSettings = new Properties();
         ParsParams pp = new ParsParams();
         Properties mainProperties = new Properties();
         String propFile = new String();
         String tableName = new String();
         String tableOwner = new String();
         DataBaseIO dbIO=new DataBaseIO();
-        CommandLine line = null;
 	try{          
-            CommandLineParser parser = new GnuParser();            
-            line = parser.parse( options, args );
             if (line.hasOption("?")) {
                 usage(options);
                 return;
             }
-            //
             //check if direction defined
             if (! line.hasOption("conffile")){
                 if( ! line.hasOption("url")|| ! line.hasOption("passwd")|| ! line.hasOption("user")){
@@ -90,18 +96,18 @@ public class ControlTool {
                 error(options, "You should define db2file or file2db");
                 return;
             }              
-        }catch( ParseException exp ) {
+        }catch(Exception exp ) {
             //something went wrong
             System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
             usage(options);
-        } 
-}
-      private static void error(Options options, String msg) {
+        }
+    }
+    private static void error(Options options, String msg) {
         System.err.println(msg);
         usage(options);
         System.exit(1);
     }
-      private static void usage(Options options) {
+    private static void usage(Options options) {
        // automatically generate the help statement
        HelpFormatter formatter = new HelpFormatter();
        formatter.printHelp( "ControlTool", options );
