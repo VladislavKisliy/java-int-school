@@ -49,7 +49,7 @@ public class DataBaseIO {
                         prop.put(jdbcRowSet.getString(1), jdbcRowSet.getString(2));
                         }
                 }
-                connection.close();
+//               ?? connection.close();
         }catch (SQLException e){
             LOG.log(Level.SEVERE , e.getMessage());
         }
@@ -115,7 +115,7 @@ public class DataBaseIO {
                 System.err.println("Such option doesn't exsist: "+key);
             }
 	}
-        connection.close();
+//       ??  connection.close();
         } catch (SQLException ex) {
             LOG.log(Level.SEVERE, ex.getMessage());
         }        
