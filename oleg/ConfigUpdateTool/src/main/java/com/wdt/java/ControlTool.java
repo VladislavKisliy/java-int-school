@@ -32,17 +32,18 @@ public class ControlTool {
     //ORACLE_DB_URL=jdbc:oracle:thin:@konzum2.weigandt-consulting.com:1521:mom5t
     //ORACLE_DB_USERNAME=OTOPORKOV
     //ORACLE_DB_PASSWORD=password
+    private static final Logger LOG = Logger.getLogger(ParsParams.class.getName());
     public static void main(String[] args) {
+        
         Options options = OptionControlClass.OptionControlClass();
         CommandLineParser parser = new GnuParser(); 
         CommandLine line =null;
         try{
             line = parser.parse( options, args );
-        }catch(ParseException e){
-            
+        }catch(ParseException e){ 
+            LOG.log(Level.SEVERE , e.getMessage());
         }
         processArgsLogic(line, options);
- 
 }
     private static void processArgsLogic(CommandLine line, Options options){
         Properties dbSettings = new Properties();
@@ -91,7 +92,6 @@ public class ControlTool {
                 dbIO.insertPropertiesInDB(mainProperties,tableOwner, tableName);
             }  else{
                 error(options, "You should define db2file or file2db");
-//                return;
             }              
     }
     private static void error(Options options, String msg) {
