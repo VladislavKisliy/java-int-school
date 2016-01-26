@@ -5,18 +5,11 @@
  */
 package com.wdt.java;
 
-import java.io.InputStream;
-import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sql.DataSource;
-import oracle.jdbc.pool.OracleDataSource;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
@@ -44,67 +37,8 @@ public class ControlTool {
         } catch (ParseException e) {
             LOG.log(Level.SEVERE, e.getMessage());
         }
-        processArgsLogic(line, options);
+        OptionControlClass.processArgsLogic(line, options);
     }
 
-    private static void processArgsLogic(CommandLine line, Options options) {
-        Properties dbSettings = new Properties();
-        ParsParams pp = new ParsParams();
-        Properties mainProperties = new Properties();
-        String propFile = new String();
-        String tableName = new String();
-        String tableOwner = new String();
-        DataBaseIO dbIO = new DataBaseIO();
-        if (line.hasOption("?")) {
-            usage(options);
-            return;
-        }
-        //check if direction defined
-        if (!line.hasOption("conffile")) {
-            if (!line.hasOption("url") || !line.hasOption("passwd") || !line.hasOption("user")) {
-                error(options, "Please define either \"conffile\" or connection properties (url, passwd, user)!");
-                return;
-            } else {
-                dbSettings.setProperty("ORACLE_DB_URL", line.getOptionValue("url"));
-                dbSettings.setProperty("ORACLE_DB_USERNAME", line.getOptionValue("user"));
-                dbSettings.setProperty("ORACLE_DB_PASSWORD", line.getOptionValue("passwd"));
-            }
-        } else {
-            dbSettings = dbIO.getDBproperties(line.getOptionValue("conffile"));
-        }
-        DataSource ods = dbIO.getDS(dbSettings);
-        dbIO.setDs(ods);
-        if ((!line.hasOption("propTableName"))
-                || (!line.hasOption("propTableOwner"))
-                || (!line.hasOption("propertieFile"))) {
-            error(options, "propertieFile, propTableName, propTableOwner are mandatory to define.");
-            return;
-        } else {
-            tableName = line.getOptionValue("propTableName");
-            tableOwner = line.getOptionValue("propTableOwner");
-            propFile = line.getOptionValue("propertieFile");
-        }
-        if (line.hasOption("db2file")) {
-            mainProperties = dbIO.readPropertiesFromDB(tableOwner, tableName);
-            pp.writePropertiesToFile(propFile, mainProperties);
-        } else if (line.hasOption("file2db")) {
-            mainProperties = pp.getPropertiesFromFile(propFile);
-            dbIO.deletePropertiesFromDB(tableOwner, tableName);
-            dbIO.insertPropertiesInDB(mainProperties, tableOwner, tableName);
-        } else {
-            error(options, "You should define db2file or file2db");
-        }
-    }
 
-    private static void error(Options options, String msg) {
-        System.err.println(msg);
-        usage(options);
-        System.exit(1);
-    }
-
-    private static void usage(Options options) {
-        // automatically generate the help statement
-        HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("ControlTool", options);
-    }
 }
