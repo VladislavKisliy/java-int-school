@@ -35,7 +35,7 @@ public class Player extends BaseTicTacToe {
     private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
     private final int[] bestStartSolutions = {0, 2, 6, 8, 4};
     private final Random random = new Random();
-
+    
     public Player(CellState mySymbol) {
         this.playerSymbol = mySymbol;
     }
@@ -51,8 +51,9 @@ public class Player extends BaseTicTacToe {
         } else {
             bestStep = miniMax(gameField, 0);
         }
-
-        return innerGameField.doStep(gameField, playerSymbol, bestStep);
+        lastTurn = innerGameField.doStep(gameField, playerSymbol, bestStep);
+        notifyObservers();
+        return new ArrayList<>(lastTurn);
     }
 
     @Override

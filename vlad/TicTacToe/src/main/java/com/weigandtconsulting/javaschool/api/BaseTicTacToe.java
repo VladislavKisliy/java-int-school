@@ -19,28 +19,43 @@ package com.weigandtconsulting.javaschool.api;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
-import com.weigandtconsulting.javaschool.controllers.FXMLController;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author vlad
  */
 public abstract class BaseTicTacToe implements TicTacToe {
-    
+
+    protected List<CellState> lastTurn;
+    private final List<Observer> observers = new ArrayList<>();
+
     @Override
     public Request getRequest(List<CellState> gameField) {
-        Request request = new Request();
+        Request request = new Request(this);
         request.setRefereeRequest(RefereeRequest.EMPTY);
         request.setGameField(nextStep(gameField));
         return request;
     }
-    
-    public List<CellState> getAStep(List<CellState> gameField) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void unregisterObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            Request request = new Request(this);
+            request.setRefereeRequest(RefereeRequest.EMPTY);
+            request.setGameField(lastTurn);
+            observer.update(request);
+        }
     }
 }

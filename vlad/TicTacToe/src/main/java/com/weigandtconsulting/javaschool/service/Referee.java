@@ -25,8 +25,6 @@ import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 
 /**
@@ -39,7 +37,10 @@ public class Referee implements Observer {
     private final TicTacToe playerTic;
     private final TicTacToe playerTac;
     private final Showable view;
-    
+    private TicTacToe activePlayer;
+    private List<CellState> gameField;
+    private CellState startSign;
+
     private List<TicTacToe> generateTurns;
     private Thread refereeThread;
 
@@ -50,7 +51,7 @@ public class Referee implements Observer {
     }
 
     public void startGame(CellState startSign) {
-        generateTurns = generateTurns(startSign);
+        this.startSign = startSign;
         initNewGame();
     }
 
@@ -105,77 +106,78 @@ public class Referee implements Observer {
     }
 
     private void initNewGame() {
-        final List<CellState> gameField = gameHelper.getNewField();
-        refereeThread = new Thread(new RefereeThread(gameField, generateTurns));
+        generateTurns = generateTurns(startSign);
+        gameField = gameHelper.getNewField();
+        showBattleField(gameField);
+        refereeThread = new Thread(new RefereeThread(generateTurns));
         refereeThread.start();
     }
 
     @Override
-    public void update(RefereeRequest refereeRequest) {
-        if (refereeThread != null) {
-            if (refereeThread.isAlive()) {
-                refereeThread.interrupt();
-                System.out.println("Waiting for interrupt");
-                try {
-                    refereeThread.join(500);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Referee.class.getName()).log(Level.SEVERE, null, ex);
+    public void update(Request request) {
+        System.out.println("isFxApp =" + Platform.isFxApplicationThread());
+        System.out.println("Thread name =" + Thread.currentThread().getName());
+        RefereeRequest refereeRequest = request.getRefereeRequest();
+        System.out.println("UPDATE: get from =" + request);
+        if (refereeRequest == RefereeRequest.EMPTY) {
+            if (request.getPlayer() == activePlayer) {
+                System.out.println("get from =" + activePlayer.getPlayerName());
+                System.out.println("field =" + request.getGameField());
+
+                List<CellState> newStep = request.getGameField();
+                Game game;
+                System.out.println("Pl: " + activePlayer.getPlayerName() + ". Req =" + request.getRefereeRequest());
+                System.out.println("Pl: " + activePlayer.getPlayerName() + ". Turn =" + gameField);
+                if (isCorrectTurn(gameField, newStep)) {
+                    gameField.clear();
+                    gameField.addAll(newStep);
+                    showBattleField(gameField);
+
+                    game = gameHelper.analyzeGame(gameField);
+                    if (game.getState() == Game.State.OVER) {
+                        lockView();
+                        System.out.println("Game is OVER =" + game);
+                        System.out.println("Winner is " + activePlayer.getPlayerName());
+                    } else {
+                        refereeThread = new Thread(new RefereeThread(generateTurns));
+                        refereeThread.start();
+                    }
+
                 }
             }
+
+        } else {
+            switch (refereeRequest) {
+                case SURRENDER:
+                    System.out.println("Dweeb. " + activePlayer.getPlayerName() + " lost the game");
+                    break;
+                case RESTART:
+                    System.out.println("Ok, restart game. Asked " + activePlayer.getPlayerName());
+                    initNewGame();
+                    break;
+            }
         }
-        startGame(CellState.TAC);
     }
 
     private class RefereeThread implements Runnable {
 
-        private final List<CellState> gameField;
         private final List<TicTacToe> generateTurns;
 
-        public RefereeThread(List<CellState> gameField, List<TicTacToe> generateTurns) {
-            this.gameField = gameField;
+        public RefereeThread(List<TicTacToe> generateTurns) {
             this.generateTurns = generateTurns;
         }
 
         @Override
         public void run() {
             System.out.println("New referee was created");
-            showBattleField(gameField);
-            Game game;
-            List<CellState> newStep;
-            for (TicTacToe currentPlayer : generateTurns) {
-                Request request = currentPlayer.getRequest(gameField);
-                newStep = request.getGameField();
-                System.out.println("Pl: " + currentPlayer.getPlayerName() + ". Req =" + request.getRefereeRequest());
-                System.out.println("Pl: " + currentPlayer.getPlayerName() + ". Turn =" + gameField);
-                RefereeRequest refereeRequest = request.getRefereeRequest();
-                if (refereeRequest == RefereeRequest.EMPTY) {
-                    if (isCorrectTurn(gameField, newStep)) {
-                        gameField.clear();
-                        gameField.addAll(newStep);
-                        showBattleField(gameField);
-
-                        game = gameHelper.analyzeGame(gameField);
-                        if (game.getState() == Game.State.OVER) {
-                            lockView();
-                            System.out.println("Game is OVER =" + game);
-                            System.out.println("Winner is " + currentPlayer.getPlayerName());
-                            break;
-                        }
-                    }
-                } else {
-                    switch (refereeRequest) {
-                        case SURRENDER:
-                            System.out.println("Dweeb. " + currentPlayer.getPlayerName() + " lost the game");
-                            break;
-                        case RESTART:
-                            System.out.println("Ok, restart game. Asked " + currentPlayer.getPlayerName());
-                            initNewGame();
-                            break;
-                    }
-                    // break loop
-                    break;
-                }
+            if (generateTurns.isEmpty()) {
+                System.out.println("Turns is EMPTY!");
+            } else {
+                activePlayer = generateTurns.remove(0);
+                System.out.println("Start from =" + activePlayer);
+                activePlayer.getRequest(gameField);
             }
+
             System.out.println("Referee died.");
         }
     }

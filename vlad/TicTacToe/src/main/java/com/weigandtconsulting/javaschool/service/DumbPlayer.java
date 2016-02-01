@@ -18,7 +18,11 @@ package com.weigandtconsulting.javaschool.service;
 
 import com.weigandtconsulting.javaschool.api.BaseTicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
+import com.weigandtconsulting.javaschool.beans.RefereeRequest;
+import com.weigandtconsulting.javaschool.beans.Request;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +34,11 @@ import java.util.logging.Logger;
  */
 public class DumbPlayer extends BaseTicTacToe {
 
-    private final int DELAY = 5;
+    private static final Logger LOG = Logger.getLogger(DumbPlayer.class.getName());
+
+//    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+//    private final ExecutorService executorService = Executors.newCachedThreadPool();
+    private final int DELAY = 4;
     private final CellState playerSymbol;
 
     public DumbPlayer(CellState playerSymbol) {
@@ -39,18 +47,18 @@ public class DumbPlayer extends BaseTicTacToe {
 
     @Override
     public List<CellState> nextStep(List<CellState> gameField) {
-        List<CellState> result = gameField;
+        List<CellState> result = new ArrayList<>(gameField);
+        for (int i = 0; i < result.size(); i++) {
+            CellState cell = result.get(i);
+            if (cell == CellState.TOE) {
+                result.set(i, playerSymbol);
+                break;
+            }
+        }
         try {
             TimeUnit.SECONDS.sleep(DELAY);
-            for (int i = 0; i < gameField.size(); i++) {
-                CellState cell = gameField.get(i);
-                if (cell == CellState.TOE) {
-                    gameField.set(i, playerSymbol);
-                    break;
-                }
-            }
         } catch (InterruptedException ex) {
-            Logger.getLogger(DumbPlayer.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "Interrupted step", ex);
         }
         return result;
     }

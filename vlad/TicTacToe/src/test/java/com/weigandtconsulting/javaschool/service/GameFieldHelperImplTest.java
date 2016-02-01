@@ -178,7 +178,9 @@ public class GameFieldHelperImplTest {
             TOE, TOE, TOE};
         
         GameFieldHelperImpl instance = new GameFieldHelperImpl();
-        List<CellState> result = instance.doStep(Arrays.asList(variant1), CellState.TIC, 4);
+        List<CellState> gameField = Arrays.asList(variant1);
+        List<CellState> result = instance.doStep(gameField, CellState.TIC, 4);
+        assertNotEquals(gameField, result);
         assertEquals("Insertion error", Arrays.asList(expResult), result);
     }
     

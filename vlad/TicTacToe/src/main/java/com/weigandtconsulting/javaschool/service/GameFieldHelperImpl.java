@@ -111,14 +111,13 @@ public class GameFieldHelperImpl implements GameFieldHelper {
 
     @Override
     public List<CellState> doStep(List<CellState> gameField, CellState playerSign, Integer position) {
-        CellState[] result = gameField.toArray(new CellState[CELL_AMOUNT]);
-        if (result[position] == CellState.TOE) {
-            result[position] = playerSign;
+        List<CellState> result = new ArrayList<>(gameField);
+        if (result.get(position) == CellState.TOE) {
+            result.set(position, playerSign);
         } else {
             throw new IllegalArgumentException("We can insert only in empty cells");
         }
-
-        return Arrays.asList(result);
+        return result;
     }
 
     @Override
