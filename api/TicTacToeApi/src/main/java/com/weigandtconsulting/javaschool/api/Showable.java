@@ -28,8 +28,7 @@ public interface Showable {
     void refreshBattleField(List<CellState> battleField);
 
     void lockBattleField();
-
-    void addListener(Observer observer);
-
-    void removeListener(Observer observer);
+    
+    void showWaitingDailog(boolean visibleStatus);
+    
 }

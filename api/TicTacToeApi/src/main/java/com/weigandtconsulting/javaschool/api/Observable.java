@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Weigandt Consulting
+ * Copyright (C) 2016 Weigandt Consulting
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,16 @@
  */
 package com.weigandtconsulting.javaschool.api;
 
-import com.weigandtconsulting.javaschool.beans.Request;
-
 /**
  *
  * @author vlad
  */
-public interface Observer {
+public interface Observable {
+    
+    void registerObserver(Observer observer);
 
-    void update(Request request);
-
+    void unregisterObserver(Observer observer);
+    
+    void notifyObservers();
+    
 }

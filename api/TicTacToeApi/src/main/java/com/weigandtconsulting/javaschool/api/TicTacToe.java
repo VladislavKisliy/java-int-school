@@ -24,13 +24,13 @@ import java.util.List;
  *
  * @author vlad
  */
-public interface TicTacToe {
+public interface TicTacToe extends Observable {
 
     List<CellState> nextStep(List<CellState> gameField);
 
     boolean hasNextStep(List<CellState> gameField);
 
     String getPlayerName();
-    
+
     Request getRequest(List<CellState> gameField);
 }

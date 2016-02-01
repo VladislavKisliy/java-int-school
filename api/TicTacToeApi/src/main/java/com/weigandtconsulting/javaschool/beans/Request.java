@@ -16,6 +16,7 @@
  */
 package com.weigandtconsulting.javaschool.beans;
 
+import com.weigandtconsulting.javaschool.api.TicTacToe;
 import java.util.List;
 
 /**
@@ -24,8 +25,13 @@ import java.util.List;
  */
 public class Request {
     
+    private final TicTacToe player;
     private List<CellState> gameField;
     private RefereeRequest refereeRequest;
+
+    public Request(TicTacToe player) {
+        this.player = player;
+    }
 
     public List<CellState> getGameField() {
         return gameField;
@@ -41,5 +47,14 @@ public class Request {
 
     public void setRefereeRequest(RefereeRequest refereeRequest) {
         this.refereeRequest = refereeRequest;
+    }
+
+    public TicTacToe getPlayer() {
+        return player;
+    }
+
+    @Override
+    public String toString() {
+        return "Request{" + "player=" + player + ", gameField=" + gameField + ", refereeRequest=" + refereeRequest + '}';
     }
 }
