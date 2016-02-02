@@ -16,12 +16,13 @@
  */
 package com.weigandtconsulting.javaschool;
 
+import com.weigandtconsulting.javaschool.api.Referee;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.controllers.FXMLController;
 import com.weigandtconsulting.javaschool.service.DumbPlayer;
 import com.weigandtconsulting.javaschool.service.Player;
-import com.weigandtconsulting.javaschool.service.Referee;
+import com.weigandtconsulting.javaschool.service.RefereeImpl;
 import com.weigandtconsulting.javaschool.service.RefereeAsyncWrapper;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
@@ -33,6 +34,8 @@ import javafx.stage.Stage;
 
 public class GuiApplication extends Application {
 
+    private Referee referee;
+    
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -59,9 +62,9 @@ public class GuiApplication extends Application {
         DumbPlayer playerTic = new DumbPlayer(CellState.TIC);
 //        DumbPlayer playerTac = new DumbPlayer(CellState.TAC);
 //        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
-//        RefereeAsyncWrapper referee = new RefereeAsyncWrapper(playerTic, playerTac, fxmlController);
+//        referee = new RefereeAsyncWrapper(playerTic, playerTac, fxmlController);
 
-        Referee referee = new Referee(playerTac, playerTic, fxmlController);
+       referee = new RefereeImpl(playerTic, playerTac, fxmlController);
         
         playerTic.registerObserver(referee);
         playerTac.registerObserver(referee);
@@ -74,13 +77,13 @@ public class GuiApplication extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
-//        System.out.println("Try to exit");
-//        if (referee != null) {
-//            System.out.println("Try to stop the game");
-//            referee.stopGame();
-//        }
-        Platform.exit();
-        System.exit(0);
+        System.out.println("Try to exit");
+        if (referee != null) {
+            System.out.println("Try to stop the game");
+            referee.stopGame();
+        }
+//        Platform.exit();
+//        System.exit(0);
     }
 
     /**

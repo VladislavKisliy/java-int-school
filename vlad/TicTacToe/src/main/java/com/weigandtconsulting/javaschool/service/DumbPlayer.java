@@ -59,6 +59,8 @@ public class DumbPlayer extends BaseTicTacToe {
             TimeUnit.SECONDS.sleep(DELAY);
         } catch (InterruptedException ex) {
             LOG.log(Level.SEVERE, "Interrupted step", ex);
+            // Rethrow
+            throw new RuntimeException(ex);
         }
         lastTurn = result;
         notifyObservers();

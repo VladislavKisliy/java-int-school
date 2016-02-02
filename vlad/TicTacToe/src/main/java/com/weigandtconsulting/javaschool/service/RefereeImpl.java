@@ -17,12 +17,14 @@
 package com.weigandtconsulting.javaschool.service;
 
 import com.weigandtconsulting.javaschool.api.Observer;
+import com.weigandtconsulting.javaschool.api.Referee;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.api.Showable;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.Game;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
+import com.weigandtconsulting.javaschool.call.RequestCall;
 import com.weigandtconsulting.javaschool.controllers.FXMLController.HumanPlayer;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ import javafx.application.Platform;
  *
  * @author vlad
  */
-public class Referee implements Observer {
+public class RefereeImpl implements Referee {
 
     private final GameFieldHelperImpl gameHelper = new GameFieldHelperImpl();
     private final TicTacToe playerTic;
@@ -45,15 +47,23 @@ public class Referee implements Observer {
     private List<TicTacToe> generateTurns;
     private Thread refereeThread;
 
-    public Referee(TicTacToe playerTic, TicTacToe playerTac, Showable view) {
+    public RefereeImpl(TicTacToe playerTic, TicTacToe playerTac, Showable view) {
         this.playerTic = playerTic;
         this.playerTac = playerTac;
         this.view = view;
     }
 
+    @Override
     public void startGame(CellState startSign) {
         this.startSign = startSign;
         initNewGame();
+    }
+
+    @Override
+    public void stopGame() {
+        if (refereeThread != null) {
+            refereeThread.interrupt();
+        }
     }
 
     boolean isCorrectTurn(List<CellState> gameFieldBefore, List<CellState> gameFieldAfter) {
@@ -110,7 +120,8 @@ public class Referee implements Observer {
         generateTurns = generateTurns(startSign);
         gameField = gameHelper.getNewField();
         showBattleField(gameField);
-        refereeThread = new Thread(new RefereeThread(generateTurns));
+        activePlayer = generateTurns.remove(0);
+        refereeThread = new Thread(new RequestCall(activePlayer, gameField, view));
         refereeThread.start();
     }
 
@@ -140,13 +151,19 @@ public class Referee implements Observer {
                         System.out.println("Game is OVER =" + game);
                         System.out.println("Winner is " + activePlayer.getPlayerName());
                     } else {
-                        refereeThread = new Thread(new RefereeThread(generateTurns));
+                        System.out.println("## refereeThread interrupted=" + refereeThread.isInterrupted());
+                        System.out.println("## refereeThread alive=" + refereeThread.isAlive());
+                        System.out.println("## refereeThread interrupted=" + refereeThread.isDaemon());
+//                        if ((refereeThread != null)&& (refereeThread.isInterrupted())) {
+//                            
+//                        }
+                        activePlayer = generateTurns.remove(0);
+                        refereeThread = new Thread(new RequestCall(activePlayer, gameField, view));
                         refereeThread.start();
                     }
 
                 }
             }
-
         } else {
             switch (refereeRequest) {
                 case SURRENDER:
@@ -157,32 +174,6 @@ public class Referee implements Observer {
                     initNewGame();
                     break;
             }
-        }
-    }
-
-    private class RefereeThread implements Runnable {
-
-        private final List<TicTacToe> generateTurns;
-
-        public RefereeThread(List<TicTacToe> generateTurns) {
-            this.generateTurns = generateTurns;
-        }
-
-        @Override
-        public void run() {
-            System.out.println("New referee was created");
-            if (generateTurns.isEmpty()) {
-                System.out.println("Turns is EMPTY!");
-            } else {
-                activePlayer = generateTurns.remove(0);
-                System.out.println("Start from =" + activePlayer);
-                if (!(activePlayer instanceof HumanPlayer)) {
-                    lockView();
-                } 
-                activePlayer.getRequest(gameField);
-            }
-
-            System.out.println("Referee died.");
         }
     }
 }

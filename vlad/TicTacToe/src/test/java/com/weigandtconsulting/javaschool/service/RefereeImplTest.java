@@ -16,7 +16,6 @@
  */
 package com.weigandtconsulting.javaschool.service;
 
-import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import static com.weigandtconsulting.javaschool.beans.CellState.TAC;
 import static com.weigandtconsulting.javaschool.beans.CellState.TIC;
@@ -34,7 +33,7 @@ import static org.junit.Assert.*;
  *
  * @author vlad
  */
-public class RefereeTest {
+public class RefereeImplTest {
     
     private final CellState[] oneEmptySpace = {
             TIC, TAC, TAC,
@@ -46,7 +45,7 @@ public class RefereeTest {
             TAC, TIC, TIC,
             TAC, TOE, TOE};
     
-    public RefereeTest() {
+    public RefereeImplTest() {
     }
     
     @BeforeClass
@@ -70,7 +69,7 @@ public class RefereeTest {
      */
     @Test
     public void testIsCorrectTurn() {
-        Referee instance = new Referee(null, null, null);
+        RefereeImpl instance = new RefereeImpl(null, null, null);
         List<CellState> gameFieldBefore = Arrays.asList(oneEmptySpace);
         List<CellState> gameFieldAfter = Arrays.asList(oneEmptySpace);
         assertFalse("The same fields", instance.isCorrectTurn(gameFieldBefore, gameFieldAfter));
