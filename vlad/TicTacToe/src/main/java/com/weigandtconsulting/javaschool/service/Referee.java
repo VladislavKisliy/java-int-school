@@ -23,6 +23,7 @@ import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.Game;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
+import com.weigandtconsulting.javaschool.controllers.FXMLController.HumanPlayer;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
@@ -175,6 +176,9 @@ public class Referee implements Observer {
             } else {
                 activePlayer = generateTurns.remove(0);
                 System.out.println("Start from =" + activePlayer);
+                if (!(activePlayer instanceof HumanPlayer)) {
+                    lockView();
+                } 
                 activePlayer.getRequest(gameField);
             }
 

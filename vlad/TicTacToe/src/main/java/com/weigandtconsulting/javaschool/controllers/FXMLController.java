@@ -210,6 +210,7 @@ public class FXMLController implements Initializable, Showable {
     
     public class HumanPlayer extends BaseTicTacToe {
         
+        private static final String PLAYER_NAME = "Human Player";
         private final CellState playerSymbol;
         private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
         
@@ -237,7 +238,12 @@ public class FXMLController implements Initializable, Showable {
         
         @Override
         public String getPlayerName() {
-            return "Human Player";
+            return PLAYER_NAME;
+        }
+
+        @Override
+        public String toString() {
+            return "HumanPlayer{" + "playerSymbol=" + playerSymbol + '}';
         }
         
         private List<CellState> generateGameField() {

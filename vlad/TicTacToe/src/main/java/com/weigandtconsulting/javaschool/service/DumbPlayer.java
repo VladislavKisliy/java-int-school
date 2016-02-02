@@ -60,6 +60,8 @@ public class DumbPlayer extends BaseTicTacToe {
         } catch (InterruptedException ex) {
             LOG.log(Level.SEVERE, "Interrupted step", ex);
         }
+        lastTurn = result;
+        notifyObservers();
         return result;
     }
 

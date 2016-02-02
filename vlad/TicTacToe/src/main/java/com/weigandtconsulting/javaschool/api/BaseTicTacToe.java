@@ -51,11 +51,15 @@ public abstract class BaseTicTacToe implements TicTacToe {
 
     @Override
     public void notifyObservers() {
-        for (Observer observer : observers) {
-            Request request = new Request(this);
-            request.setRefereeRequest(RefereeRequest.EMPTY);
-            request.setGameField(lastTurn);
-            observer.update(request);
+        if (lastTurn != null) {
+            for (Observer observer : observers) {
+                Request request = new Request(this);
+                request.setRefereeRequest(RefereeRequest.EMPTY);
+                request.setGameField(lastTurn);
+                observer.update(request);
+            }
+        } else {
+            throw new IllegalArgumentException("lastTurn is null");
         }
     }
 }

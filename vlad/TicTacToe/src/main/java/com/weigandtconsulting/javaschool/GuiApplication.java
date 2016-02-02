@@ -50,17 +50,19 @@ public class GuiApplication extends Application {
 
         stage.show();
 
-        TicTacToe playerTic = new Player(CellState.TIC);
+//        TicTacToe playerTic = new Player(CellState.TIC);
 //        AsyncTicTacToe playerTac = new DumbPlayer(CellState.TAC);
         TicTacToe playerTac = fxmlController.getPlayer(CellState.TAC);
 //        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
-        Referee referee = new Referee(playerTac, playerTic, fxmlController);
         
-//        DumbPlayer playerTic = new DumbPlayer(CellState.TIC);
+        
+        DumbPlayer playerTic = new DumbPlayer(CellState.TIC);
 //        DumbPlayer playerTac = new DumbPlayer(CellState.TAC);
 //        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
-//        referee = new RefereeAsyncWrapper(playerTac, playerTic, fxmlController);
+//        RefereeAsyncWrapper referee = new RefereeAsyncWrapper(playerTic, playerTac, fxmlController);
 
+        Referee referee = new Referee(playerTac, playerTic, fxmlController);
+        
         playerTic.registerObserver(referee);
         playerTac.registerObserver(referee);
         fxmlController.lockBattleField();

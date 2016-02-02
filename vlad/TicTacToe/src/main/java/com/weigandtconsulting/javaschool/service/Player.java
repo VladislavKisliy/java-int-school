@@ -66,6 +66,18 @@ public class Player extends BaseTicTacToe {
         return "Megamind (V.K) " + playerSymbol;
     }
 
+    @Override
+    public String toString() {
+        return "Computer Player{" + "playerSymbol=" + playerSymbol + '}';
+    }
+
+    /**
+     * default visibility for testing purpose
+     * @param gameField
+     * @param depth
+     * @param playerSign
+     * @return 
+     */
     int score(List<CellState> gameField, int depth, CellState playerSign) {
         int result = 0;
         if (innerGameField.isWinner(gameField, playerSign)) {
@@ -107,6 +119,12 @@ public class Player extends BaseTicTacToe {
         return result;
     }
 
+    /**
+     * default visibility for testing purpose
+     * @param playerSign
+     * @param depth
+     * @return 
+     */
     CellState getSign(CellState playerSign, int depth) {
         CellState result = playerSign;
         if (depth % 2 == 0) {
