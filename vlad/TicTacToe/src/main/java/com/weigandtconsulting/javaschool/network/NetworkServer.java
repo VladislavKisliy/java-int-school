@@ -19,7 +19,11 @@ package com.weigandtconsulting.javaschool.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.weigandtconsulting.javaschool.api.TicTacToe;
+import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.Request;
+import com.weigandtconsulting.javaschool.service.DumbPlayer;
+import com.weigandtconsulting.javaschool.service.Player;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -33,36 +37,45 @@ import java.util.logging.Logger;
  *
  * @author vlad
  */
-public class NetworkServer{
+public class NetworkServer {
+
     private static final Logger LOG = Logger.getLogger(NetworkServer.class.getName());
-    
+
     private final Server server;
+    private final TicTacToe player = new Player();
 
     public NetworkServer() throws IOException {
         server = new Server() {
         };
 
-		// For consistency, the classes to be sent over the network are
-        // registered by the same method for both the client and server.
-        Network.register(server);
-
         server.addListener(new Listener() {
             @Override
             public void received(Connection connection, Object object) {
+                LOG.log(Level.INFO, "New connection to server ={0}, recieved ={1}", new Object[]{connection, object});
                 // We know all connections for this server are actually ChatConnections.
                 if (object instanceof Request) {
-                    Request response = (Request) object;
-                    System.out.println("Answer from server: " + response.getRefereeRequest());
-                    System.out.println("Answer from server: " + response.getGameField());
+                    Request request = (Request) object;
+                    System.out.println("Get from client: " + request.getRefereeRequest());
+                    System.out.println("Get from client: " + request.getGameField());
+                    Request response = player.getRequest(request.getGameField());
+                    System.out.println("Send to client: " + request.getGameField());
+                    connection.sendTCP(response);
                 }
             }
         });
-        server.bind(Network.TCP_PORT, Network.UDP_PORT);
-        server.start();
-
     }
-    
+
+    public void init() throws IOException {
+        server.start();
+        server.bind(Network.TCP_PORT, Network.UDP_PORT);
+
+        // For consistency, the classes to be sent over the network are
+        // registered by the same method for both the client and server.
+        Network.register(server);
+    }
+
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
         NetworkServer networkServer = new NetworkServer();
+        networkServer.init();
     }
 }

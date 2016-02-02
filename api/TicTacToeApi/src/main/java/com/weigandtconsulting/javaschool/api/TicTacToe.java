@@ -33,4 +33,6 @@ public interface TicTacToe extends Observable {
     String getPlayerName();
 
     Request getRequest(List<CellState> gameField);
+
+    CellState getPlayerSign();
 }

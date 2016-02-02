@@ -39,7 +39,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 
 public class FXMLController implements Initializable, Showable {
-    
+
+    private static final Logger LOG = Logger.getLogger(FXMLController.class.getName());
+
     @FXML
     private Button button0;
     @FXML
@@ -58,22 +60,21 @@ public class FXMLController implements Initializable, Showable {
     private Button button7;
     @FXML
     private Button button8;
-    
+
     private Alert alertDialog;
-    
+
     private final Object lockObject = new Object();
     private RefereeRequest refereeRequest = RefereeRequest.EMPTY;
-    private CellState playerSign = CellState.TOE;
     private TicTacToe player;
-    
+
     private final List<Observer> observers = new ArrayList<>();
-    
+
     @FXML
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me! event source" + event.getSource());
         if (event.getSource() instanceof Button) {
             Button button = (Button) event.getSource();
-            applyCellButton(playerSign, button);
+            applyCellButton(player.getPlayerSign(), button);
             refereeRequest = RefereeRequest.EMPTY;
             player.notifyObservers();
             synchronized (lockObject) {
@@ -81,7 +82,7 @@ public class FXMLController implements Initializable, Showable {
             }
         }
     }
-    
+
     @FXML
     private void handleConnectToAction(ActionEvent event) {
         System.out.println("handleConnectToAction = You clicked me! event source" + event.getSource());
@@ -94,25 +95,25 @@ public class FXMLController implements Initializable, Showable {
 //        Optional<String> result = dialog.showAndWait();
 //        result.ifPresent(name -> System.out.println("Your name: " + name));
     }
-    
+
     @FXML
     private void handleCreateServerAction(ActionEvent event) {
         System.out.println("handleCreateServerAction = You clicked me! event source" + event.getSource());
     }
-    
+
     @FXML
     private void handleRestartAction(ActionEvent event) {
         System.out.println("handleRestartAction = You clicked me! event source" + event.getSource());
         refereeRequest = RefereeRequest.RESTART;
         player.notifyObservers();
-        
+
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }
-    
+
     @Override
     public synchronized void refreshBattleField(List<CellState> battleField) {
         int counterCell = 0;
@@ -145,12 +146,12 @@ public class FXMLController implements Initializable, Showable {
                 case 8:
                     applyCellButton(cellState, button8);
                     break;
-                
+
             }
             counterCell++;
         }
     }
-    
+
     private void applyCellButton(CellState cellState, Button button) {
         switch (cellState) {
             case TOE:
@@ -170,7 +171,7 @@ public class FXMLController implements Initializable, Showable {
                 break;
         }
     }
-    
+
     @Override
     public void lockBattleField() {
         button0.setDisable(true);
@@ -183,14 +184,14 @@ public class FXMLController implements Initializable, Showable {
         button7.setDisable(true);
         button8.setDisable(true);
     }
-    
+
     @Override
     public void showWaitingDailog(boolean visibleStatus) {
         if (alertDialog == null) {
             alertDialog = new Alert(AlertType.INFORMATION);
             alertDialog.setTitle("Waiting Dialog");
             alertDialog.setHeaderText(null);
-            alertDialog.setContentText("Your opponent is thinking");
+            alertDialog.setContentText("Please wait. Your opponent is still thinking");
         }
         if (visibleStatus) {
             if (!alertDialog.isShowing()) {
@@ -200,42 +201,44 @@ public class FXMLController implements Initializable, Showable {
             alertDialog.hide();
         }
     }
-    
+
     public TicTacToe getPlayer(CellState mySymbol) {
-        if ((player == null) || ((mySymbol != playerSign))) {
+        if (player == null) {
             player = new HumanPlayer(mySymbol);
         }
         return player;
     }
-    
+
     public class HumanPlayer extends BaseTicTacToe {
-        
+
         private static final String PLAYER_NAME = "Human Player";
-        private final CellState playerSymbol;
         private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
-        
-        public HumanPlayer(CellState mySymbol) {
-            this.playerSymbol = mySymbol;
-            playerSign = playerSymbol;
+
+        public HumanPlayer() {
+            super();
         }
-        
+
+        public HumanPlayer(CellState playerSign) {
+            super(playerSign);
+        }
+
         @Override
         public List<CellState> nextStep(List<CellState> gameField) {
             synchronized (lockObject) {
                 try {
                     lockObject.wait();
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, "Human Player is interrupted", ex);
                 }
             }
             return generateGameField();
         }
-        
+
         @Override
         public boolean hasNextStep(List<CellState> gameField) {
             return !(innerGameField.isGameOver(gameField));
         }
-        
+
         @Override
         public String getPlayerName() {
             return PLAYER_NAME;
@@ -243,9 +246,9 @@ public class FXMLController implements Initializable, Showable {
 
         @Override
         public String toString() {
-            return "HumanPlayer{" + "playerSymbol=" + playerSymbol + '}';
+            return "HumanPlayer{" + "playerSymbol=" + playerSign + '}';
         }
-        
+
         private List<CellState> generateGameField() {
             List<CellState> gameField = innerGameField.getNewField();
             Button[] buttons = new Button[]{button0, button1, button2,
@@ -258,34 +261,34 @@ public class FXMLController implements Initializable, Showable {
             }
             return gameField;
         }
-        
+
         @Override
         public Request getRequest(List<CellState> gameField) {
-            Request request = new Request(this);
+            Request request = new Request(this.getPlayerSign());
             // Reset old value
             if (refereeRequest != RefereeRequest.EMPTY) {
                 refereeRequest = RefereeRequest.EMPTY;
             }
-            
+
             request.setGameField(nextStep(gameField));
             request.setRefereeRequest(refereeRequest);
             return request;
         }
-        
+
         @Override
         public void registerObserver(Observer observer) {
             observers.add(observer);
         }
-        
+
         @Override
         public void unregisterObserver(Observer observer) {
             observers.remove(observer);
         }
-        
+
         @Override
         public void notifyObservers() {
             for (Observer observer : observers) {
-                Request request = new Request(player);
+                Request request = new Request(player.getPlayerSign());
                 request.setRefereeRequest(refereeRequest);
                 request.setGameField(generateGameField());
                 observer.update(request);

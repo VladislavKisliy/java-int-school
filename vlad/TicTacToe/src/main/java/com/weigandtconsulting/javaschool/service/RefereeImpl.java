@@ -27,7 +27,9 @@ import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.call.RequestCall;
 import com.weigandtconsulting.javaschool.controllers.FXMLController.HumanPlayer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javafx.application.Platform;
 
 /**
@@ -40,11 +42,12 @@ public class RefereeImpl implements Referee {
     private final TicTacToe playerTic;
     private final TicTacToe playerTac;
     private final Showable view;
-    private TicTacToe activePlayer;
+    private final Map<CellState, TicTacToe> playersMap = new HashMap<>();
+    private CellState activePlayer;
     private List<CellState> gameField;
     private CellState startSign;
 
-    private List<TicTacToe> generateTurns;
+    private List<CellState> generateTurns;
     private Thread refereeThread;
 
     public RefereeImpl(TicTacToe playerTic, TicTacToe playerTac, Showable view) {
@@ -81,18 +84,18 @@ public class RefereeImpl implements Referee {
         return result;
     }
 
-    private List<TicTacToe> generateTurns(CellState startSign) {
+    private List<CellState> generateTurns(CellState startSign) {
         if (startSign == CellState.TOE) {
             throw new IllegalArgumentException("You should use correct signs");
         }
-        List<TicTacToe> result = new ArrayList<>();
+        List<CellState> result = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             if (startSign == CellState.TIC) {
-                result.add(playerTic);
-                result.add(playerTac);
+                result.add(CellState.TIC);
+                result.add(CellState.TAC);
             } else {
-                result.add(playerTac);
-                result.add(playerTic);
+                result.add(CellState.TAC);
+                result.add(CellState.TIC);
             }
         }
         return result;
@@ -121,7 +124,7 @@ public class RefereeImpl implements Referee {
         gameField = gameHelper.getNewField();
         showBattleField(gameField);
         activePlayer = generateTurns.remove(0);
-        refereeThread = new Thread(new RequestCall(activePlayer, gameField, view));
+        refereeThread = new Thread(new RequestCall(playersMap.get(activePlayer), gameField, view));
         refereeThread.start();
     }
 
@@ -132,14 +135,12 @@ public class RefereeImpl implements Referee {
         RefereeRequest refereeRequest = request.getRefereeRequest();
         System.out.println("UPDATE: get from =" + request);
         if (refereeRequest == RefereeRequest.EMPTY) {
-            if (request.getPlayer() == activePlayer) {
-                System.out.println("get from =" + activePlayer.getPlayerName());
-                System.out.println("field =" + request.getGameField());
+            if (request.getPlayerSign() == activePlayer) {
 
                 List<CellState> newStep = request.getGameField();
                 Game game;
-                System.out.println("Pl: " + activePlayer.getPlayerName() + ". Req =" + request.getRefereeRequest());
-                System.out.println("Pl: " + activePlayer.getPlayerName() + ". Turn =" + gameField);
+                System.out.println("Pl: " + activePlayer+ ". Req =" + request.getRefereeRequest());
+                System.out.println("Pl: " + activePlayer + ". Turn =" + gameField);
                 if (isCorrectTurn(gameField, newStep)) {
                     gameField.clear();
                     gameField.addAll(newStep);
@@ -149,7 +150,7 @@ public class RefereeImpl implements Referee {
                     if (game.getState() == Game.State.OVER) {
                         lockView();
                         System.out.println("Game is OVER =" + game);
-                        System.out.println("Winner is " + activePlayer.getPlayerName());
+                        System.out.println("Winner is " + activePlayer);
                     } else {
                         System.out.println("## refereeThread interrupted=" + refereeThread.isInterrupted());
                         System.out.println("## refereeThread alive=" + refereeThread.isAlive());
@@ -158,7 +159,7 @@ public class RefereeImpl implements Referee {
 //                            
 //                        }
                         activePlayer = generateTurns.remove(0);
-                        refereeThread = new Thread(new RequestCall(activePlayer, gameField, view));
+                        refereeThread = new Thread(new RequestCall(playersMap.get(activePlayer), gameField, view));
                         refereeThread.start();
                     }
 
@@ -167,10 +168,10 @@ public class RefereeImpl implements Referee {
         } else {
             switch (refereeRequest) {
                 case SURRENDER:
-                    System.out.println("Dweeb. " + activePlayer.getPlayerName() + " lost the game");
+                    System.out.println("Dweeb. " + playersMap.get(activePlayer).getPlayerName() + " lost the game");
                     break;
                 case RESTART:
-                    System.out.println("Ok, restart game. Asked " + activePlayer.getPlayerName());
+                    System.out.println("Ok, restart game. Asked " + playersMap.get(activePlayer).getPlayerName());
                     initNewGame();
                     break;
             }

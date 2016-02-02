@@ -28,12 +28,21 @@ import java.util.List;
  */
 public abstract class BaseTicTacToe implements TicTacToe {
 
+    protected CellState playerSign;
     protected List<CellState> lastTurn;
     private final List<Observer> observers = new ArrayList<>();
 
+    public BaseTicTacToe() {
+        this(CellState.TIC);
+    }
+
+    public BaseTicTacToe(CellState playerSign) {
+        this.playerSign = playerSign;
+    }
+
     @Override
     public Request getRequest(List<CellState> gameField) {
-        Request request = new Request(this);
+        Request request = new Request(this.getPlayerSign());
         request.setRefereeRequest(RefereeRequest.EMPTY);
         request.setGameField(nextStep(gameField));
         return request;
@@ -53,7 +62,7 @@ public abstract class BaseTicTacToe implements TicTacToe {
     public void notifyObservers() {
         if (lastTurn != null) {
             for (Observer observer : observers) {
-                Request request = new Request(this);
+                Request request = new Request(this.getPlayerSign());
                 request.setRefereeRequest(RefereeRequest.EMPTY);
                 request.setGameField(lastTurn);
                 observer.update(request);
@@ -61,5 +70,10 @@ public abstract class BaseTicTacToe implements TicTacToe {
         } else {
             throw new IllegalArgumentException("lastTurn is null");
         }
+    }
+
+    @Override
+    public CellState getPlayerSign() {
+        return playerSign;
     }
 }

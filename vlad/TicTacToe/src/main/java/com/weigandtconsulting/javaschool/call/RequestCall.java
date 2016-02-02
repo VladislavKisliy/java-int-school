@@ -21,6 +21,14 @@ import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.controllers.FXMLController;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 
 /**
@@ -29,6 +37,10 @@ import javafx.application.Platform;
  */
 public class RequestCall implements Runnable {
 
+    private static final Logger LOG = Logger.getLogger(RequestCall.class.getName());
+    private static final int DELAY = 3;
+
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final TicTacToe activePlayer;
     private final List<CellState> gameField;
     private final Showable view;
@@ -42,16 +54,69 @@ public class RequestCall implements Runnable {
     @Override
     public void run() {
         System.out.println("Start from =" + activePlayer);
+        Future<?> futureRequest = executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                activePlayer.getRequest(gameField);
+            }
+        });
         if (!(activePlayer instanceof FXMLController.HumanPlayer)) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    view.lockBattleField();
-                }
-            });
+            computerPlayer(futureRequest);
+        } else {
+            try {
+                humanPlayer(futureRequest);
+            } catch (InterruptedException | ExecutionException ex) {
+                LOG.log(Level.SEVERE, "Human player was interrupted", ex);
+                stopWork();
+            }
         }
-        activePlayer.getRequest(gameField);
         System.out.println("Referee died.");
     }
 
+    private void humanPlayer(Future<?> futureRequest) throws InterruptedException, ExecutionException {
+        futureRequest.get();
+        stopWork();
+    }
+
+    private void computerPlayer(Future<?> futureRequest) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                view.lockBattleField();
+            }
+        });
+        // try to get results earlier
+        try {
+            futureRequest.get(DELAY, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException ex) {
+//            LOG.log(Level.INFO, null, ex);
+        }
+        if (!futureRequest.isDone()) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    view.showWaitingDailog(true);
+                }
+            });
+            try {
+                futureRequest.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                LOG.log(Level.SEVERE, "Computer player was interrupted", ex);
+                stopWork();
+            } finally {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.showWaitingDailog(false);
+                    }
+                });
+                stopWork();
+            }
+        }
+    }
+
+    private void stopWork() {
+        executorService.shutdownNow();
+        Thread.currentThread().interrupt();
+    }
 }

@@ -18,10 +18,13 @@ package com.weigandtconsulting.javaschool.network;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
+import com.weigandtconsulting.javaschool.api.GameFieldHelper;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
+import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
+import com.weigandtconsulting.javaschool.service.Player;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 /**
@@ -47,5 +50,12 @@ public class Network {
         kryo.register(List.class);
         kryo.register(Request.class);
         kryo.register(TicTacToe.class);
+        kryo.register(Player.class);
+        kryo.register(int[].class);
+        kryo.register(GameFieldHelperImpl.class);
+        kryo.register(java.util.ArrayList.class);
+        kryo.register(java.util.Random.class);
+        kryo.register(java.util.concurrent.atomic.AtomicLong.class);
+        
     }
 }

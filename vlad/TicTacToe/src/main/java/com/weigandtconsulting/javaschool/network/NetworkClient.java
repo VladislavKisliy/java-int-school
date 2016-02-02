@@ -20,9 +20,11 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.weigandtconsulting.javaschool.api.GameFieldHelper;
+import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
+import com.weigandtconsulting.javaschool.service.Player;
 import java.io.IOException;
 
 /**
@@ -62,11 +64,11 @@ public class NetworkClient {
             }
         });
         GameFieldHelper gameFieldHelper = new GameFieldHelperImpl();
-//        Request request = new Request();
-//        request.setGameField(gameFieldHelper.getNewField());
-//        request.setRefereeRequest(RefereeRequest.EMPTY);
-//        System.out.println("-- request 1");
-//        client.sendTCP(request);
+        Request request = new Request(CellState.TIC);
+        request.setGameField(gameFieldHelper.getNewField());
+        request.setRefereeRequest(RefereeRequest.EMPTY);
+        System.out.println("-- request 1");
+        client.sendTCP(request);
 //        TimeUnit.SECONDS.sleep(1);
         if (client.isConnected()) {
             System.out.println("I am connected");

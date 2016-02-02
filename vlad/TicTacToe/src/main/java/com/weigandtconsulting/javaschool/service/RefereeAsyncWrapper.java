@@ -16,25 +16,22 @@
  */
 package com.weigandtconsulting.javaschool.service;
 
-import com.weigandtconsulting.javaschool.api.Observer;
+import com.weigandtconsulting.javaschool.api.Referee;
 import com.weigandtconsulting.javaschool.api.Showable;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.Game;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
+import com.weigandtconsulting.javaschool.call.RequestCall;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -43,77 +40,66 @@ import javafx.application.Platform;
  *
  * @author vlad
  */
-public class RefereeAsyncWrapper implements Observer {
+public class RefereeAsyncWrapper implements Referee {
 
     private static final Logger LOG = Logger.getLogger(RefereeAsyncWrapper.class.getName());
 
 //    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private ExecutorService executorService;
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
+//    private ExecutorService executorService;
     private final GameFieldHelperImpl gameHelper = new GameFieldHelperImpl();
     private final TicTacToe playerTic;
     private final TicTacToe playerTac;
     private final Showable view;
-    private  TicTacToe activePlayer;
+    private final Map<CellState, TicTacToe> playersMap = new HashMap<>();
+    private CellState activePlayer;
+    private List<CellState> gameField;
+    private CellState startSign;
 
-    private List<TicTacToe> generateTurns;
+    private List<CellState> generateTurns;
 
     public RefereeAsyncWrapper(TicTacToe playerTic, TicTacToe playerTac, Showable view) {
         this.playerTic = playerTic;
         this.playerTac = playerTac;
         this.view = view;
+        playersMap.put(CellState.TIC, playerTic);
+        playersMap.put(CellState.TAC, playerTac);
     }
 
-    public void startGame(final CellState startSign) {
-        if (executorService != null) {
-            stopGame();
-        }
-        executorService = Executors.newCachedThreadPool();
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                generateTurns = generateTurns(startSign);
-                initNewGame();
-            }
-        });
+    @Override
+    public void startGame(CellState startSign) {
+        this.startSign = startSign;
+        initNewGame();
     }
 
+    @Override
     public void stopGame() {
+        LOG.log(Level.INFO, "Stop threads");
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
         System.out.println("-- after end, after shut down. threads =" + threadSet.size());
         for (Thread thread : threadSet) {
             System.out.println("threads after =" + thread);
         }
+        executorService.shutdown();
         try {
-            executorService.shutdown();
             LOG.log(Level.INFO, "awaitTermination 2 sec");
             if (!executorService.awaitTermination(2, TimeUnit.SECONDS)) {
                 LOG.log(Level.WARNING, "shutdown processes now");
                 executorService.shutdownNow();
             }
         } catch (InterruptedException ex) {
-            Logger.getLogger(RefereeAsyncWrapper.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
-
         threadSet = Thread.getAllStackTraces().keySet();
         System.out.println("-- after end, after shut down. threads =" + threadSet.size());
         for (Thread thread : threadSet) {
             System.out.println("threads after =" + thread);
         }
-//        Thread.currentThread().interrupt();
     }
 
-    /**
-     * Check correctness input data
-     *
-     * @param gameFieldBefore
-     * @param gameFieldAfter
-     * @return
-     */
-    private boolean isCorrectTurn(List<CellState> gameFieldBefore, List<CellState> gameFieldAfter) {
+    boolean isCorrectTurn(List<CellState> gameFieldBefore, List<CellState> gameFieldAfter) {
         int changeCounter = 0;
         boolean result = false;
-        System.out.println("Check before =" + gameFieldBefore);
-        System.out.println("Check after =" + gameFieldAfter);
         List<Integer> availableMoves = gameHelper.getAvailableMoves(gameFieldBefore);
         for (Integer index : availableMoves) {
             if (gameFieldAfter.get(index) != CellState.TOE) {
@@ -126,18 +112,18 @@ public class RefereeAsyncWrapper implements Observer {
         return result;
     }
 
-    private List<TicTacToe> generateTurns(CellState startSign) {
+    private List<CellState> generateTurns(CellState startSign) {
         if (startSign == CellState.TOE) {
             throw new IllegalArgumentException("You should use correct signs");
         }
-        List<TicTacToe> result = new ArrayList<>();
+        List<CellState> result = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             if (startSign == CellState.TIC) {
-                result.add(playerTic);
-                result.add(playerTac);
+                result.add(CellState.TIC);
+                result.add(CellState.TAC);
             } else {
-                result.add(playerTac);
-                result.add(playerTic);
+                result.add(CellState.TAC);
+                result.add(CellState.TIC);
             }
         }
         return result;
@@ -162,137 +148,56 @@ public class RefereeAsyncWrapper implements Observer {
     }
 
     private void initNewGame() {
-        System.out.println("New referee was created");
-        final List<CellState> gameField = gameHelper.getNewField();
+        generateTurns = generateTurns(startSign);
+        gameField = gameHelper.getNewField();
         showBattleField(gameField);
-        List<CellState> newStep;
-        Request request;
-        Game game;
-        for (final TicTacToe currentPlayer : generateTurns) {
-            request = getAsyncRequest(currentPlayer, gameField);
-            if (executorService.isShutdown()) {
-                System.out.println("Go away!");
-                break;
-            }
-            newStep = request.getGameField();
-            System.out.println("Pl: " + currentPlayer.getPlayerName() + ". Req =" + request.getRefereeRequest());
-            System.out.println("Pl: " + currentPlayer.getPlayerName() + ". Turn =" + gameField);
-            RefereeRequest refereeRequest = request.getRefereeRequest();
-            if (refereeRequest == RefereeRequest.EMPTY) {
+        activePlayer = generateTurns.remove(0);
+        executorService.execute(new Thread(new RequestCall(playersMap.get(activePlayer), gameField, view)));
+    }
+
+    @Override
+    public void update(Request request) {
+        LOG.log(Level.INFO, "isFxApp ={0}", Platform.isFxApplicationThread());
+        LOG.log(Level.INFO, "Thread name ={0}", Thread.currentThread().getName());
+        RefereeRequest refereeRequest = request.getRefereeRequest();
+        System.out.println("UPDATE: get from =" + request);
+        if (refereeRequest == RefereeRequest.EMPTY) {
+            if (request.getPlayerSign() == activePlayer) {
+                LOG.log(Level.INFO, "get from ={0}", activePlayer);
+                LOG.log(Level.INFO, "field ={0}", request.getGameField());
+
+                List<CellState> newStep = request.getGameField();
+                Game game;
+                LOG.log(Level.INFO, "Pl: {0}. Req ={1}", new Object[]{activePlayer, request.getRefereeRequest()});
+                LOG.log(Level.INFO, "Pl: {0}. Turn ={1}", new Object[]{activePlayer, gameField});
                 if (isCorrectTurn(gameField, newStep)) {
                     gameField.clear();
                     gameField.addAll(newStep);
                     showBattleField(gameField);
+
                     game = gameHelper.analyzeGame(gameField);
                     if (game.getState() == Game.State.OVER) {
                         lockView();
                         System.out.println("Game is OVER =" + game);
-                        System.out.println("Winner is " + currentPlayer.getPlayerName());
-                        break;
+                        System.out.println("Winner is " + activePlayer);
+                    } else {
+                        activePlayer = generateTurns.remove(0);
+                        executorService.execute(new Thread(new RequestCall(playersMap.get(activePlayer), gameField, view)));
                     }
-                } else {
-                    LOG.log(Level.SEVERE, "Incorrect turn!");
-                }
-            } else {
-                switch (refereeRequest) {
-                    case SURRENDER:
-                        System.out.println("Dweeb. " + currentPlayer.getPlayerName() + " lost the game");
-                        break;
-                    case RESTART:
-                        System.out.println("Ok, restart game. Asked " + currentPlayer.getPlayerName());
-                        initNewGame();
-                        break;
-                }
-                // break loop
-                break;
-            }
-        }
-        System.out.println("Referee died.");
-    }
 
-    private Request getAsyncRequest(final TicTacToe currentPlayer, final List<CellState> gameField) {
-        Request result = null;
-        System.out.println("~~ future");
-        Future<Request> nextFutureStep = executorService.submit(wrapStepToCallable(currentPlayer, gameField));
-        Request request = null;
-        // Quick try to get result
-        try {
-            request = nextFutureStep.get(100, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException | ExecutionException | TimeoutException ex) {
-            // Just ignore this exception
-//                Logger.getLogger(RefereeAsyncWrapper.class.getName()).log(Level.SEVERE, null, ex);
-
-        }
-        if (request == null) {
-            try {
-                while (!nextFutureStep.isDone()) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-//                                view.showWaitingDailog(true);
-                        }
-                    });
-                    System.out.println("wait. nextFutureStep. isCancelled =" + nextFutureStep.isCancelled() + ", isDone=" + nextFutureStep.isDone());
-                    TimeUnit.MILLISECONDS.sleep(500);
                 }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(RefereeAsyncWrapper.class.getName()).log(Level.SEVERE, null, ex);
-                // Re-assert the thread's interrupted status
-                Thread.currentThread().interrupt();
-                // We don't need the result, so cancel the task too
-                nextFutureStep.cancel(true);
-            } finally {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-//                            view.showWaitingDailog(false);
-                    }
-                });
             }
-        }
-        if (request == null) {
-            try {
-                request = nextFutureStep.get(100, TimeUnit.MILLISECONDS);
-                System.out.println("## --" + request);
-                result = request;
-            } catch (InterruptedException | ExecutionException | TimeoutException ex) {
-                Logger.getLogger(RefereeAsyncWrapper.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
         } else {
-            result = request;
-        }
-        return result;
-    }
-
-    private Callable wrapStepToCallable(final TicTacToe player, final List<CellState> gameField) {
-        return new Callable<Request>() {
-            @Override
-            public Request call() throws Exception {
-                Request result = new Request(player);
-                result.setRefereeRequest(RefereeRequest.EMPTY);
-                result.setGameField(player.nextStep(gameField));
-                return result;
+            switch (refereeRequest) {
+                case SURRENDER:
+                    LOG.log(Level.INFO, "Dweeb. {0} lost the game", playersMap.get(activePlayer).getPlayerName());
+                    break;
+                case RESTART:
+                    LOG.log(Level.INFO, "Ok, restart game. Asked {0}", playersMap.get(activePlayer).getPlayerName());
+                    initNewGame();
+                    break;
             }
-        };
-    }
-
-//    @Override
-//    public void update(RefereeRequest refereeRequest) {
-//        switch (refereeRequest) {
-//            case SURRENDER:
-//                System.out.println("Dweeb. lost the game");
-//                break;
-//            case RESTART:
-//                System.out.println("Ok, restart game. Asked ");
-//                startGame(CellState.TIC);
-//                break;
-//        }
-//        // break loop
-////        stopGame();
-//    }
-
-    @Override
-    public void update(Request request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
 }

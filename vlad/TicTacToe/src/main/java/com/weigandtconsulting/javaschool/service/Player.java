@@ -31,13 +31,16 @@ import java.util.Random;
 public class Player extends BaseTicTacToe {
 
     private static final int WIN_SCORE = 10;
-    private final CellState playerSymbol;
     private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
     private final int[] bestStartSolutions = {0, 2, 6, 8, 4};
     private final Random random = new Random();
-    
-    public Player(CellState mySymbol) {
-        this.playerSymbol = mySymbol;
+
+    public Player() {
+        super();
+    }
+
+    public Player(CellState playerSign) {
+        super(playerSign);
     }
 
     @Override
@@ -51,7 +54,7 @@ public class Player extends BaseTicTacToe {
         } else {
             bestStep = miniMax(gameField, 0);
         }
-        lastTurn = innerGameField.doStep(gameField, playerSymbol, bestStep);
+        lastTurn = innerGameField.doStep(gameField, playerSign, bestStep);
         notifyObservers();
         return new ArrayList<>(lastTurn);
     }
@@ -63,20 +66,21 @@ public class Player extends BaseTicTacToe {
 
     @Override
     public String getPlayerName() {
-        return "Megamind (V.K) " + playerSymbol;
+        return "Megamind (V.K) " + playerSign;
     }
 
     @Override
     public String toString() {
-        return "Computer Player{" + "playerSymbol=" + playerSymbol + '}';
+        return "Computer Player{" + "playerSymbol=" + playerSign + '}';
     }
 
     /**
      * default visibility for testing purpose
+     *
      * @param gameField
      * @param depth
      * @param playerSign
-     * @return 
+     * @return
      */
     int score(List<CellState> gameField, int depth, CellState playerSign) {
         int result = 0;
@@ -91,12 +95,12 @@ public class Player extends BaseTicTacToe {
     Integer miniMax(List<CellState> gameField, int depth) {
         Integer result;
         if (innerGameField.isGameOver(gameField)) {
-            result = score(gameField, depth, playerSymbol);
+            result = score(gameField, depth, playerSign);
         } else {
             List<Integer> scores = new ArrayList<>();
             List<Integer> moves = new ArrayList<>();
             depth++;
-            CellState activeSign = getSign(playerSymbol, depth);
+            CellState activeSign = getSign(playerSign, depth);
 
             List<Integer> availableMoves = innerGameField.getAvailableMoves(gameField);
             for (Integer newMove : availableMoves) {
@@ -105,7 +109,7 @@ public class Player extends BaseTicTacToe {
                 moves.add(newMove);
             }
             int scoreIndex;
-            if (activeSign == playerSymbol) {
+            if (activeSign == playerSign) {
                 scoreIndex = scores.indexOf(Collections.max(scores));
             } else {
                 scoreIndex = scores.indexOf(Collections.min(scores));
@@ -121,9 +125,10 @@ public class Player extends BaseTicTacToe {
 
     /**
      * default visibility for testing purpose
+     *
      * @param playerSign
      * @param depth
-     * @return 
+     * @return
      */
     CellState getSign(CellState playerSign, int depth) {
         CellState result = playerSign;
