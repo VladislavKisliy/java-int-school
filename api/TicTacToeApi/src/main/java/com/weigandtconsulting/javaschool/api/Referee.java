@@ -24,6 +24,8 @@ import com.weigandtconsulting.javaschool.beans.CellState;
  */
 public interface Referee extends Observer {
     
+    void startNewGame(CellState startSign, TicTacToe playerTic, TicTacToe playerTac);
+            
     void startGame(CellState startSign);
     
     void stopGame();

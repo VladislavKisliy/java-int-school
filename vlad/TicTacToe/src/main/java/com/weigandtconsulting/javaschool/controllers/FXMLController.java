@@ -18,20 +18,19 @@ package com.weigandtconsulting.javaschool.controllers;
 
 import com.weigandtconsulting.javaschool.api.BaseTicTacToe;
 import com.weigandtconsulting.javaschool.api.GameFieldHelper;
-import com.weigandtconsulting.javaschool.api.Observer;
+import com.weigandtconsulting.javaschool.api.Referee;
 import com.weigandtconsulting.javaschool.api.Showable;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
+import com.weigandtconsulting.javaschool.service.ClientPlayer;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
+import com.weigandtconsulting.javaschool.service.RefereeAsyncWrapper;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,8 +40,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextInputDialog;
 
 public class FXMLController implements Initializable, Showable {
-
-    private static final Logger LOG = Logger.getLogger(FXMLController.class.getName());
 
     @FXML
     private Button button0;
@@ -65,23 +62,21 @@ public class FXMLController implements Initializable, Showable {
 
     private Alert alertDialog;
 
-    private final Object lockObject = new Object();
     private RefereeRequest refereeRequest = RefereeRequest.EMPTY;
-    private TicTacToe player;
+    private HumanPlayer player;
+    private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
 
-    private final List<Observer> observers = new ArrayList<>();
-
+//    private final List<Observer> observers = new ArrayList<>();
     @FXML
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me! event source" + event.getSource());
         if (event.getSource() instanceof Button) {
             Button button = (Button) event.getSource();
             applyCellButton(player.getPlayerSign(), button);
+            player.setLastTurn(generateGameField());
             refereeRequest = RefereeRequest.EMPTY;
             player.notifyObservers();
-            synchronized (lockObject) {
-                lockObject.notifyAll();
-            }
+
         }
     }
 
@@ -103,7 +98,26 @@ public class FXMLController implements Initializable, Showable {
 
     @FXML
     private void handleCreateServerAction(ActionEvent event) {
-        System.out.println("handleCreateServerAction = You clicked me! event source" + event.getSource());
+        System.out.println(" ! handleCreateServer Action = You clicked me! event source" + event.getSource());
+        // Game settings
+//        TicTacToe playerTic = new Player(CellState.TIC);
+//        AsyncTicTacToe playerTac = new DumbPlayer(CellState.TAC);
+        TicTacToe playerTac = getPlayer(CellState.TAC);
+//        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
+
+//        TicTacToe playerTic = new DumbPlayer(CellState.TIC);
+        ClientPlayer playerTic = new ClientPlayer();
+//        playerTic.init();
+//        DumbPlayer playerTac = new DumbPlayer(CellState.TAC);
+//        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
+        Referee referee = new RefereeAsyncWrapper(playerTic, playerTac, this);
+
+//       Referee referee = new RefereeImpl(playerTic, playerTac, fxmlController);
+        playerTic.registerObserver(referee);
+        playerTac.registerObserver(referee);
+        lockBattleField();
+        referee.startGame(CellState.TIC);
+//        Referee referee = new Referee(playerTic, playerTac, fxmlController);
     }
 
     @FXML
@@ -214,10 +228,22 @@ public class FXMLController implements Initializable, Showable {
         return player;
     }
 
+    private List<CellState> generateGameField() {
+        List<CellState> gameField = innerGameField.getNewField();
+        Button[] buttons = new Button[]{button0, button1, button2,
+            button3, button4, button5,
+            button6, button7, button8};
+        for (int i = 0; i < buttons.length; i++) {
+            Button button = buttons[i];
+            CellState cellState = CellState.getCellState(button.getText());
+            gameField.set(i, cellState);
+        }
+        return gameField;
+    }
+
     public class HumanPlayer extends BaseTicTacToe {
 
         private static final String PLAYER_NAME = "Human Player";
-        private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
 
         public HumanPlayer() {
             super();
@@ -229,19 +255,7 @@ public class FXMLController implements Initializable, Showable {
 
         @Override
         public List<CellState> nextStep(List<CellState> gameField) {
-            synchronized (lockObject) {
-                try {
-                    lockObject.wait();
-                } catch (InterruptedException ex) {
-                    LOG.log(Level.SEVERE, "Human Player is interrupted", ex);
-                }
-            }
-            return generateGameField();
-        }
-
-        @Override
-        public boolean hasNextStep(List<CellState> gameField) {
-            return !(innerGameField.isGameOver(gameField));
+            return null;
         }
 
         @Override
@@ -254,50 +268,18 @@ public class FXMLController implements Initializable, Showable {
             return "HumanPlayer{" + "playerSymbol=" + playerSign + '}';
         }
 
-        private List<CellState> generateGameField() {
-            List<CellState> gameField = innerGameField.getNewField();
-            Button[] buttons = new Button[]{button0, button1, button2,
-                button3, button4, button5,
-                button6, button7, button8};
-            for (int i = 0; i < buttons.length; i++) {
-                Button button = buttons[i];
-                CellState cellState = CellState.getCellState(button.getText());
-                gameField.set(i, cellState);
-            }
-            return gameField;
+        public void setLastTurn(List<CellState> lastTurn) {
+            this.lastTurn = lastTurn;
         }
 
         @Override
         public Request getRequest(List<CellState> gameField) {
             Request request = new Request(this.getPlayerSign());
             // Reset old value
-            if (refereeRequest != RefereeRequest.EMPTY) {
-                refereeRequest = RefereeRequest.EMPTY;
-            }
-
+            refereeRequest = RefereeRequest.EMPTY;
             request.setGameField(nextStep(gameField));
             request.setRefereeRequest(refereeRequest);
             return request;
-        }
-
-        @Override
-        public void registerObserver(Observer observer) {
-            observers.add(observer);
-        }
-
-        @Override
-        public void unregisterObserver(Observer observer) {
-            observers.remove(observer);
-        }
-
-        @Override
-        public void notifyObservers() {
-            for (Observer observer : observers) {
-                Request request = new Request(player.getPlayerSign());
-                request.setRefereeRequest(refereeRequest);
-                request.setGameField(generateGameField());
-                observer.update(request);
-            }
         }
     }
 }

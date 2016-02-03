@@ -35,8 +35,6 @@ import javafx.stage.Stage;
 
 public class GuiApplication extends Application {
 
-    private Referee referee;
-    
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -53,40 +51,18 @@ public class GuiApplication extends Application {
         stage.setResizable(false);
 
         stage.show();
-
-//        TicTacToe playerTic = new Player(CellState.TIC);
-//        AsyncTicTacToe playerTac = new DumbPlayer(CellState.TAC);
-        TicTacToe playerTac = fxmlController.getPlayer(CellState.TAC);
-//        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
-        
-        
-//        TicTacToe playerTic = new DumbPlayer(CellState.TIC);
-        ClientPlayer playerTic = new ClientPlayer();
-//        playerTic.init();
-//        DumbPlayer playerTac = new DumbPlayer(CellState.TAC);
-//        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
-        referee = new RefereeAsyncWrapper(playerTic, playerTac, fxmlController);
-
-//       referee = new RefereeImpl(playerTic, playerTac, fxmlController);
-        
-        playerTic.registerObserver(referee);
-        playerTac.registerObserver(referee);
-        fxmlController.lockBattleField();
-        referee.startGame(CellState.TIC);
-//        Referee referee = new Referee(playerTic, playerTac, fxmlController);
-//        
     }
 //
     @Override
     public void stop() throws Exception {
         super.stop();
         System.out.println("Try to exit");
-        if (referee != null) {
-            System.out.println("Try to stop the game");
-            referee.stopGame();
-        }
-//        Platform.exit();
-//        System.exit(0);
+//        if (referee != null) {
+//            System.out.println("Try to stop the game");
+//            referee.stopGame();
+//        }
+        Platform.exit();
+        System.exit(0);
     }
 
     /**

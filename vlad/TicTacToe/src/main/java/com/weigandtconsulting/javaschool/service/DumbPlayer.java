@@ -18,11 +18,8 @@ package com.weigandtconsulting.javaschool.service;
 
 import com.weigandtconsulting.javaschool.api.BaseTicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
-import com.weigandtconsulting.javaschool.beans.RefereeRequest;
-import com.weigandtconsulting.javaschool.beans.Request;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,11 +62,6 @@ public class DumbPlayer extends BaseTicTacToe {
         lastTurn = result;
         notifyObservers();
         return result;
-    }
-
-    @Override
-    public boolean hasNextStep(List<CellState> gameField) {
-        return true;
     }
 
     @Override

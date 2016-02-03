@@ -144,7 +144,7 @@ public class RefereeAsyncWrapper implements Referee {
         playersMap.put(CellState.TAC, playerTac);
         startGame(startSign);
     }
-
+    
     private void lockView() {
         Platform.runLater(new Runnable() {
             @Override

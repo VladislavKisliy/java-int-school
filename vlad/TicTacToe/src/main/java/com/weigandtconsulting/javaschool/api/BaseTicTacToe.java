@@ -49,6 +49,11 @@ public abstract class BaseTicTacToe implements TicTacToe {
     }
 
     @Override
+    public boolean hasNextStep(List<CellState> gameField) {
+        return true;
+    }
+
+    @Override
     public void registerObserver(Observer observer) {
         observers.add(observer);
     }

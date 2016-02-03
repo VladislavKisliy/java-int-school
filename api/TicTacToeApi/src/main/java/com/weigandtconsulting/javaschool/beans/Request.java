@@ -58,4 +58,9 @@ public class Request {
     public void setPlayerSign(CellState playerSign) {
         this.playerSign = playerSign;
     }
+
+    @Override
+    public String toString() {
+        return "Request{" + "playerSign=" + playerSign + ", gameField=" + gameField + ", refereeRequest=" + refereeRequest + '}';
+    }
 }
