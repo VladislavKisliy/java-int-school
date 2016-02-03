@@ -132,6 +132,10 @@ public class RefereeAsyncWrapper implements Referee {
                     LOG.log(Level.INFO, "Ok, restart game. Asked {0}", playersMap.get(activePlayer).getPlayerName());
                     initNewGame();
                     break;
+                case ERROR:
+                    LOG.log(Level.INFO, "Error {0}", request.getMessage());
+                    showError(request.getMessage());
+                    break;
             }
         }
     }
@@ -149,6 +153,15 @@ public class RefereeAsyncWrapper implements Referee {
             @Override
             public void run() {
                 view.lockBattleField();
+            }
+        });
+    }
+
+    private void showError(final String message) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                view.showErrorDialog(message);
             }
         });
     }

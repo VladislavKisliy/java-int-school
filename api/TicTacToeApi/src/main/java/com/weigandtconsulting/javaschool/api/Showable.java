@@ -29,6 +29,8 @@ public interface Showable {
 
     void lockBattleField();
     
-    void showWaitingDailog(boolean visibleStatus);
+    void showWaitingDialog(boolean visibleStatus);
+    
+    void showErrorDialog(String message);
     
 }

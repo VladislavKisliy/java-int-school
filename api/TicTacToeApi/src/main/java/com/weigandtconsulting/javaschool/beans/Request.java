@@ -24,6 +24,7 @@ import java.util.List;
  */
 public class Request {
 
+    private String message;
     private CellState playerSign;
     private List<CellState> gameField;
     private RefereeRequest refereeRequest;
@@ -35,6 +36,10 @@ public class Request {
         this.playerSign = playerSign;
     }
 
+    public Request(RefereeRequest refereeRequest) {
+        this.refereeRequest = refereeRequest;
+    }
+    
     public List<CellState> getGameField() {
         return gameField;
     }
@@ -59,8 +64,16 @@ public class Request {
         this.playerSign = playerSign;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Override
     public String toString() {
-        return "Request{" + "playerSign=" + playerSign + ", gameField=" + gameField + ", refereeRequest=" + refereeRequest + '}';
+        return "Request{" + "message=" + message + ", playerSign=" + playerSign + ", gameField=" + gameField + ", refereeRequest=" + refereeRequest + '}';
     }
 }

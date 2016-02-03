@@ -22,6 +22,7 @@ import com.weigandtconsulting.javaschool.api.Showable;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
+import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.players.ClientPlayer;
 import com.weigandtconsulting.javaschool.players.HumanPlayer;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
@@ -60,11 +61,9 @@ public class FXMLController implements Initializable, Showable {
     private Button button8;
 
     private Alert alertDialog;
-
     private HumanPlayer player;
     private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
 
-//    private final List<Observer> observers = new ArrayList<>();
     @FXML
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me! event source" + event.getSource());
@@ -89,6 +88,24 @@ public class FXMLController implements Initializable, Showable {
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
             System.out.println("dialog get =" + result.get());
+            // Game settings
+//        TicTacToe playerTic = new Player(CellState.TIC);
+//        AsyncTicTacToe playerTac = new DumbPlayer(CellState.TAC);
+            TicTacToe playerTac = getPlayer(CellState.TAC);
+//        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
+
+//        TicTacToe playerTic = new DumbPlayer(CellState.TIC);
+            ClientPlayer playerTic = new ClientPlayer(result.get());
+//        playerTic.init();
+//        DumbPlayer playerTac = new DumbPlayer(CellState.TAC);
+//        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
+            Referee referee = new RefereeAsyncWrapper(playerTic, playerTac, this);
+
+//       Referee referee = new RefereeImpl(playerTic, playerTac, fxmlController);
+            playerTic.registerObserver(referee);
+            playerTac.registerObserver(referee);
+            lockBattleField();
+            referee.startGame(CellState.TIC);
         }
 //        result.ifPresent(name -> System.out.println("Your name: " + name));
     }
@@ -120,7 +137,7 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private void handleRestartAction(ActionEvent event) {
         System.out.println("handleRestartAction = You clicked me! event source" + event.getSource());
-        player.notifyObservers(RefereeRequest.RESTART);
+        player.notifyObservers(new Request(RefereeRequest.RESTART));
 
     }
 
@@ -201,7 +218,7 @@ public class FXMLController implements Initializable, Showable {
     }
 
     @Override
-    public void showWaitingDailog(boolean visibleStatus) {
+    public void showWaitingDialog(boolean visibleStatus) {
         if (alertDialog == null) {
             alertDialog = new Alert(AlertType.INFORMATION);
             alertDialog.setTitle("Waiting Dialog");
@@ -235,5 +252,15 @@ public class FXMLController implements Initializable, Showable {
             gameField.set(i, cellState);
         }
         return gameField;
+    }
+
+    @Override
+    public void showErrorDialog(String message) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Error Dialog");
+        alert.setHeaderText("Something wrong!");
+        alert.setContentText(message);
+
+        alert.showAndWait();
     }
 }

@@ -19,7 +19,6 @@ package com.weigandtconsulting.javaschool.players;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.weigandtconsulting.javaschool.players.BaseTicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
@@ -40,8 +39,9 @@ public class ClientPlayer extends BaseTicTacToe {
     private final String hostname;
     private final Client client = new Client();
 
-    public ClientPlayer() {
-        this.hostname = "127.0.0.1";
+    public ClientPlayer(String hostname, CellState playerSign) {
+        super(playerSign);
+        this.hostname = hostname;
         client.addListener(new Listener() {
             @Override
             public void received(Connection connection, Object object) {
@@ -54,13 +54,13 @@ public class ClientPlayer extends BaseTicTacToe {
         });
     }
 
-    public ClientPlayer(String hostname) {
-        this.hostname = hostname;
+    public ClientPlayer() {
+        this("127.0.0.1");
+
     }
 
-    public ClientPlayer(String hostname, CellState playerSign) {
-        super(playerSign);
-        this.hostname = hostname;
+    public ClientPlayer(String hostname) {
+        this(hostname, CellState.TIC);
     }
 
     @Override
@@ -76,20 +76,27 @@ public class ClientPlayer extends BaseTicTacToe {
     @Override
     public Request getRequest(List<CellState> gameField) {
         LOG.log(Level.INFO, "Send request to server");
+        Request request = new Request(CellState.TIC);
+        request.setGameField(gameField);
+        request.setRefereeRequest(RefereeRequest.EMPTY);
         if (!client.isConnected()) {
             client.start();
             try {
                 // timeout, ip, tcpPort, udpPort
                 client.connect(TIMEOUT, hostname, Network.TCP_PORT, Network.UDP_PORT);
+                Network.register(client);
+                client.sendTCP(request);
             } catch (IOException ex) {
-                LOG.log(Level.SEVERE, "", ex);
+                LOG.log(Level.SEVERE, "Connection problem", ex);
+                request.setRefereeRequest(RefereeRequest.ERROR);
+                request.setMessage(ex.getLocalizedMessage());
+                notifyObservers(request);
             }
-            Network.register(client);
+
+        } else {
+            client.sendTCP(request);
         }
-        Request request = new Request(CellState.TIC);
-        request.setGameField(gameField);
-        request.setRefereeRequest(RefereeRequest.EMPTY);
-        client.sendTCP(request);
+        System.out.println("Request =" + request);
         return request;
     }
 

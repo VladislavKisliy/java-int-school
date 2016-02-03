@@ -17,6 +17,7 @@
 package com.weigandtconsulting.javaschool.api;
 
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
+import com.weigandtconsulting.javaschool.beans.Request;
 
 /**
  *
@@ -30,5 +31,5 @@ public interface Observable {
     
     void notifyObservers();
     
-    void notifyObservers(RefereeRequest refereeRequest);
+    void notifyObservers(Request request);
 }

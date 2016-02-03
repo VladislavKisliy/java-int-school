@@ -22,6 +22,6 @@ package com.weigandtconsulting.javaschool.beans;
  */
 public enum RefereeRequest {
     
-    SURRENDER, RESTART, EMPTY
+    SURRENDER, RESTART, EMPTY, ERROR
     
 }

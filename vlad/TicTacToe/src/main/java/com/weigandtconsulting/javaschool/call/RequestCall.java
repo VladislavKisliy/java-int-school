@@ -96,7 +96,7 @@ public class RequestCall implements Runnable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    view.showWaitingDailog(true);
+                    view.showWaitingDialog(true);
                 }
             });
             try {
@@ -108,7 +108,7 @@ public class RequestCall implements Runnable {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        view.showWaitingDailog(false);
+                        view.showWaitingDialog(false);
                     }
                 });
                 stopWork();

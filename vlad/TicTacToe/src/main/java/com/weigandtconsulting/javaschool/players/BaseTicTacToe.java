@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Base class for player implementations
  * @author vlad
  */
 public abstract class BaseTicTacToe implements TicTacToe {
@@ -66,16 +66,14 @@ public abstract class BaseTicTacToe implements TicTacToe {
     }
 
     @Override
+    /**
+     * Suppose to set variable lastTurn in inherited classes
+     */
     public void notifyObservers() {
-        notifyObservers(RefereeRequest.EMPTY);
-    }
-
-    @Override
-    public void notifyObservers(RefereeRequest refereeRequest) {
         if (lastTurn != null) {
             for (Observer observer : observers) {
                 Request request = new Request(this.getPlayerSign());
-                request.setRefereeRequest(refereeRequest);
+                request.setRefereeRequest(RefereeRequest.EMPTY);
                 request.setGameField(lastTurn);
                 observer.update(request);
             }
@@ -85,7 +83,23 @@ public abstract class BaseTicTacToe implements TicTacToe {
     }
 
     @Override
+    public void notifyObservers(Request request) {
+        if (request != null) {
+            for (Observer observer : observers) {
+                observer.update(request);
+            }
+        } else {
+            throw new IllegalArgumentException("request is null");
+        }
+    }
+
+    @Override
     public CellState getPlayerSign() {
         return playerSign;
+    }
+
+    @Override
+    public String toString() {
+        return getPlayerName();
     }
 }
