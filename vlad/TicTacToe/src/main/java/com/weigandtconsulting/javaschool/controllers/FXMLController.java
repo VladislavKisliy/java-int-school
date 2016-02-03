@@ -16,15 +16,14 @@
  */
 package com.weigandtconsulting.javaschool.controllers;
 
-import com.weigandtconsulting.javaschool.players.BaseTicTacToe;
 import com.weigandtconsulting.javaschool.api.GameFieldHelper;
 import com.weigandtconsulting.javaschool.api.Referee;
 import com.weigandtconsulting.javaschool.api.Showable;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
-import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.players.ClientPlayer;
+import com.weigandtconsulting.javaschool.players.HumanPlayer;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
 import com.weigandtconsulting.javaschool.service.RefereeAsyncWrapper;
 import java.net.URL;
@@ -62,7 +61,6 @@ public class FXMLController implements Initializable, Showable {
 
     private Alert alertDialog;
 
-    private RefereeRequest refereeRequest = RefereeRequest.EMPTY;
     private HumanPlayer player;
     private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
 
@@ -74,7 +72,6 @@ public class FXMLController implements Initializable, Showable {
             Button button = (Button) event.getSource();
             applyCellButton(player.getPlayerSign(), button);
             player.setLastTurn(generateGameField());
-            refereeRequest = RefereeRequest.EMPTY;
             player.notifyObservers();
 
         }
@@ -238,46 +235,5 @@ public class FXMLController implements Initializable, Showable {
             gameField.set(i, cellState);
         }
         return gameField;
-    }
-
-    public class HumanPlayer extends BaseTicTacToe {
-
-        private static final String PLAYER_NAME = "Human Player";
-
-        public HumanPlayer() {
-            super();
-        }
-
-        public HumanPlayer(CellState playerSign) {
-            super(playerSign);
-        }
-
-        @Override
-        public List<CellState> nextStep(List<CellState> gameField) {
-            return null;
-        }
-
-        @Override
-        public String getPlayerName() {
-            return PLAYER_NAME;
-        }
-
-        @Override
-        public String toString() {
-            return "HumanPlayer{" + "playerSymbol=" + playerSign + '}';
-        }
-
-        public void setLastTurn(List<CellState> lastTurn) {
-            this.lastTurn = lastTurn;
-        }
-        
-        @Override
-        public Request getRequest(List<CellState> gameField) {
-            Request request = new Request(this.getPlayerSign());
-            refereeRequest = RefereeRequest.EMPTY;
-            request.setGameField(nextStep(gameField));
-            request.setRefereeRequest(refereeRequest);
-            return request;
-        }
     }
 }

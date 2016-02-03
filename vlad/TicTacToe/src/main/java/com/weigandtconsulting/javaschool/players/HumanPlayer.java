@@ -18,6 +18,8 @@ package com.weigandtconsulting.javaschool.players;
 
 import com.weigandtconsulting.javaschool.api.GameFieldHelper;
 import com.weigandtconsulting.javaschool.beans.CellState;
+import com.weigandtconsulting.javaschool.beans.RefereeRequest;
+import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +34,6 @@ import javafx.scene.control.Button;
 public class HumanPlayer extends BaseTicTacToe {
 
     private static final String PLAYER_NAME = "Human Player";
-    private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
-    private Button[] buttons = new Button[9];
 
     public HumanPlayer() {
         super();
@@ -45,9 +45,7 @@ public class HumanPlayer extends BaseTicTacToe {
 
     @Override
     public List<CellState> nextStep(List<CellState> gameField) {
-        lastTurn = generateGameField();
-//        notifyObservers();
-        return lastTurn;
+        return null;
     }
 
     @Override
@@ -60,18 +58,16 @@ public class HumanPlayer extends BaseTicTacToe {
         return "HumanPlayer{" + "playerSymbol=" + playerSign + '}';
     }
 
-    public void setButtons(Button[] buttons) {
-        this.buttons = buttons;
+    public void setLastTurn(List<CellState> lastTurn) {
+        this.lastTurn = lastTurn;
     }
-    
-    private List<CellState> generateGameField() {
-        List<CellState> gameField = innerGameField.getNewField();
-        for (int i = 0; i < buttons.length; i++) {
-            Button button = buttons[i];
-            CellState cellState = CellState.getCellState(button.getText());
-            gameField.set(i, cellState);
-        }
-        return gameField;
+
+    @Override
+    public Request getRequest(List<CellState> gameField) {
+        Request request = new Request(this.getPlayerSign());
+        request.setGameField(nextStep(gameField));
+        request.setRefereeRequest(RefereeRequest.EMPTY);
+        return request;
     }
 
 }

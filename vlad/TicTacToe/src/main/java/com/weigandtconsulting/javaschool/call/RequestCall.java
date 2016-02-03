@@ -20,6 +20,7 @@ import com.weigandtconsulting.javaschool.api.Showable;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.controllers.FXMLController;
+import com.weigandtconsulting.javaschool.players.HumanPlayer;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -60,7 +61,7 @@ public class RequestCall implements Runnable {
                 activePlayer.getRequest(gameField);
             }
         });
-        if (!(activePlayer instanceof FXMLController.HumanPlayer)) {
+        if (!(activePlayer instanceof HumanPlayer)) {
             computerPlayer(futureRequest);
         } else {
             try {

@@ -44,7 +44,6 @@ public class RefereeAsyncWrapper implements Referee {
 
     private static final Logger LOG = Logger.getLogger(RefereeAsyncWrapper.class.getName());
 
-//    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final ExecutorService executorService = Executors.newCachedThreadPool();
     private final GameFieldHelper gameHelper = new GameFieldHelperImpl();
     private final Showable view;
@@ -144,7 +143,7 @@ public class RefereeAsyncWrapper implements Referee {
         playersMap.put(CellState.TAC, playerTac);
         startGame(startSign);
     }
-    
+
     private void lockView() {
         Platform.runLater(new Runnable() {
             @Override
@@ -176,7 +175,7 @@ public class RefereeAsyncWrapper implements Referee {
             throw new IllegalArgumentException("You should use correct signs");
         }
         List<CellState> result = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             if (startSign == CellState.TIC) {
                 result.add(CellState.TIC);
                 result.add(CellState.TAC);
