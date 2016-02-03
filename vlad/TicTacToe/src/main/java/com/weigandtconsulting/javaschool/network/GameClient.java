@@ -28,21 +28,21 @@ import com.weigandtconsulting.javaschool.service.Player;
 import java.io.IOException;
 
 /**
- *
+ * Send responses from Player class. Created for test purpose
  * @author vlad
  */
-public class NetworkClient {
+public class GameClient {
 
     private final String serverHost;
     private final Client client;
     private int timeout = 5000;
 
-    public NetworkClient(String host) {
+    public GameClient(String host) {
         this.serverHost = host;
         client = new Client();
     }
 
-    public NetworkClient(String host, int timeout) {
+    public GameClient(String host, int timeout) {
         this(host);
         this.timeout = timeout;
     }
@@ -78,11 +78,11 @@ public class NetworkClient {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
-        NetworkClient networkClient = new NetworkClient("127.0.0.1");
+        GameClient networkClient = new GameClient("127.0.0.1");
         networkClient.connectToServer();
-        NetworkClient networkClient1 = new NetworkClient("127.0.0.1");
+        GameClient networkClient1 = new GameClient("127.0.0.1");
         networkClient1.connectToServer();
-        NetworkClient networkClient2 = new NetworkClient("127.0.0.1");
+        GameClient networkClient2 = new GameClient("127.0.0.1");
         networkClient2.connectToServer();
     }
 }

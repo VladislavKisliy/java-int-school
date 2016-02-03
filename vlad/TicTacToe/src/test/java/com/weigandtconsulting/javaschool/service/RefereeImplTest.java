@@ -63,23 +63,4 @@ public class RefereeImplTest {
     @After
     public void tearDown() {
     }
-
-    /**
-     * Test of isCorrectTurn method, of class Referee.
-     */
-    @Test
-    public void testIsCorrectTurn() {
-        RefereeImpl instance = new RefereeImpl(null, null, null);
-        List<CellState> gameFieldBefore = Arrays.asList(oneEmptySpace);
-        List<CellState> gameFieldAfter = Arrays.asList(oneEmptySpace);
-        assertFalse("The same fields", instance.isCorrectTurn(gameFieldBefore, gameFieldAfter));
-        
-        gameFieldBefore = Arrays.asList(oneEmptySpace);
-        gameFieldAfter = Arrays.asList(twoEmptySpace);
-        assertFalse("Reverse", instance.isCorrectTurn(gameFieldBefore, gameFieldAfter));
-        
-        gameFieldBefore = Arrays.asList(twoEmptySpace);
-        gameFieldAfter = Arrays.asList(oneEmptySpace);
-        assertTrue("Right turn", instance.isCorrectTurn(gameFieldBefore, gameFieldAfter));
-    }
 }

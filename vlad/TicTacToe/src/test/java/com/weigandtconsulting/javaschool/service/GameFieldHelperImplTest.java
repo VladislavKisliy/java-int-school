@@ -67,6 +67,16 @@ public class GameFieldHelperImplTest {
             TAC, TIC, TIC,
             TAC, TIC, TAC};
     
+    private final CellState[] oneEmptySpace = {
+            TIC, TAC, TAC,
+            TAC, TIC, TIC,
+            TAC, TOE, TAC};
+    
+    private final CellState[] twoEmptySpace = {
+            TIC, TAC, TAC,
+            TAC, TIC, TIC,
+            TAC, TOE, TOE};
+    
     public GameFieldHelperImplTest() {
     }
 
@@ -232,5 +242,24 @@ public class GameFieldHelperImplTest {
         assertEquals("variant5. game over", Game.State.CONTINUE, result.getState());
         assertEquals("variant5. win", Game.Result.UKNOWN, result.getResult());
         assertEquals("variant5. winner", CellState.TOE, result.getWinnerSign());
+    }
+    
+    /**
+     * Test of isCorrectTurn method, of class Referee.
+     */
+    @Test
+    public void testIsCorrectTurn() {
+        GameFieldHelperImpl instance = new GameFieldHelperImpl();
+        List<CellState> gameFieldBefore = Arrays.asList(oneEmptySpace);
+        List<CellState> gameFieldAfter = Arrays.asList(oneEmptySpace);
+        assertFalse("The same fields", instance.isCorrectTurn(gameFieldBefore, gameFieldAfter));
+        
+        gameFieldBefore = Arrays.asList(oneEmptySpace);
+        gameFieldAfter = Arrays.asList(twoEmptySpace);
+        assertFalse("Reverse", instance.isCorrectTurn(gameFieldBefore, gameFieldAfter));
+        
+        gameFieldBefore = Arrays.asList(twoEmptySpace);
+        gameFieldAfter = Arrays.asList(oneEmptySpace);
+        assertTrue("Right turn", instance.isCorrectTurn(gameFieldBefore, gameFieldAfter));
     }
 }

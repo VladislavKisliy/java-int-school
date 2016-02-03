@@ -16,6 +16,7 @@
  */
 package com.weigandtconsulting.javaschool.service;
 
+import com.weigandtconsulting.javaschool.api.GameFieldHelper;
 import com.weigandtconsulting.javaschool.api.Referee;
 import com.weigandtconsulting.javaschool.api.Showable;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
@@ -28,7 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -46,10 +46,7 @@ public class RefereeAsyncWrapper implements Referee {
 
 //    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final ExecutorService executorService = Executors.newCachedThreadPool();
-//    private ExecutorService executorService;
-    private final GameFieldHelperImpl gameHelper = new GameFieldHelperImpl();
-    private final TicTacToe playerTic;
-    private final TicTacToe playerTac;
+    private final GameFieldHelper gameHelper = new GameFieldHelperImpl();
     private final Showable view;
     private final Map<CellState, TicTacToe> playersMap = new HashMap<>();
     private CellState activePlayer;
@@ -59,8 +56,6 @@ public class RefereeAsyncWrapper implements Referee {
     private List<CellState> generateTurns;
 
     public RefereeAsyncWrapper(TicTacToe playerTic, TicTacToe playerTac, Showable view) {
-        this.playerTic = playerTic;
-        this.playerTac = playerTac;
         this.view = view;
         playersMap.put(CellState.TIC, playerTic);
         playersMap.put(CellState.TAC, playerTac);
@@ -75,11 +70,11 @@ public class RefereeAsyncWrapper implements Referee {
     @Override
     public void stopGame() {
         LOG.log(Level.INFO, "Stop threads");
-        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        System.out.println("-- after end, after shut down. threads =" + threadSet.size());
-        for (Thread thread : threadSet) {
-            System.out.println("threads after =" + thread);
-        }
+//        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+//        System.out.println("-- after end, after shut down. threads =" + threadSet.size());
+//        for (Thread thread : threadSet) {
+//            System.out.println("threads after =" + thread);
+//        }
         executorService.shutdown();
         try {
             LOG.log(Level.INFO, "awaitTermination 2 sec");
@@ -88,45 +83,66 @@ public class RefereeAsyncWrapper implements Referee {
                 executorService.shutdownNow();
             }
         } catch (InterruptedException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "awaitTermination problem", ex);
         }
-        threadSet = Thread.getAllStackTraces().keySet();
-        System.out.println("-- after end, after shut down. threads =" + threadSet.size());
-        for (Thread thread : threadSet) {
-            System.out.println("threads after =" + thread);
+//        threadSet = Thread.getAllStackTraces().keySet();
+//        System.out.println("-- after end, after shut down. threads =" + threadSet.size());
+//        for (Thread thread : threadSet) {
+//            System.out.println("threads after =" + thread);
+//        }
+    }
+
+    @Override
+    public void update(Request request) {
+        LOG.log(Level.INFO, "isFxApp ={0}", Platform.isFxApplicationThread());
+        LOG.log(Level.INFO, "Thread name ={0}", Thread.currentThread().getName());
+        RefereeRequest refereeRequest = request.getRefereeRequest();
+        System.out.println("UPDATE: get from =" + request);
+        if (refereeRequest == RefereeRequest.EMPTY) {
+            if (request.getPlayerSign() == activePlayer) {
+                LOG.log(Level.INFO, "get from ={0}", activePlayer);
+                LOG.log(Level.INFO, "field ={0}", request.getGameField());
+
+                List<CellState> newStep = request.getGameField();
+                Game game;
+                LOG.log(Level.INFO, "Pl: {0}. Req ={1}", new Object[]{activePlayer, request.getRefereeRequest()});
+                LOG.log(Level.INFO, "Pl: {0}. Turn ={1}", new Object[]{activePlayer, gameField});
+                if (gameHelper.isCorrectTurn(gameField, newStep)) {
+                    gameField.clear();
+                    gameField.addAll(newStep);
+                    showBattleField(gameField);
+
+                    game = gameHelper.analyzeGame(gameField);
+                    if (game.getState() == Game.State.OVER) {
+                        lockView();
+                        System.out.println("Game is OVER =" + game);
+                        System.out.println("Winner is " + activePlayer);
+                    } else {
+                        activePlayer = generateTurns.remove(0);
+                        executorService.execute(new Thread(new RequestCall(playersMap.get(activePlayer), gameField, view)));
+                    }
+
+                }
+            }
+        } else {
+            switch (refereeRequest) {
+                case SURRENDER:
+                    LOG.log(Level.INFO, "Dweeb. {0} lost the game", playersMap.get(activePlayer).getPlayerName());
+                    break;
+                case RESTART:
+                    LOG.log(Level.INFO, "Ok, restart game. Asked {0}", playersMap.get(activePlayer).getPlayerName());
+                    initNewGame();
+                    break;
+            }
         }
     }
 
-    boolean isCorrectTurn(List<CellState> gameFieldBefore, List<CellState> gameFieldAfter) {
-        int changeCounter = 0;
-        boolean result = false;
-        List<Integer> availableMoves = gameHelper.getAvailableMoves(gameFieldBefore);
-        for (Integer index : availableMoves) {
-            if (gameFieldAfter.get(index) != CellState.TOE) {
-                changeCounter++;
-            }
-        }
-        if (changeCounter == 1) {
-            result = true;
-        }
-        return result;
-    }
-
-    private List<CellState> generateTurns(CellState startSign) {
-        if (startSign == CellState.TOE) {
-            throw new IllegalArgumentException("You should use correct signs");
-        }
-        List<CellState> result = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            if (startSign == CellState.TIC) {
-                result.add(CellState.TIC);
-                result.add(CellState.TAC);
-            } else {
-                result.add(CellState.TAC);
-                result.add(CellState.TIC);
-            }
-        }
-        return result;
+    @Override
+    public void startNewGame(CellState startSign, TicTacToe playerTic, TicTacToe playerTac) {
+        playersMap.clear();
+        playersMap.put(CellState.TIC, playerTic);
+        playersMap.put(CellState.TAC, playerTac);
+        startGame(startSign);
     }
 
     private void lockView() {
@@ -155,49 +171,20 @@ public class RefereeAsyncWrapper implements Referee {
         executorService.execute(new Thread(new RequestCall(playersMap.get(activePlayer), gameField, view)));
     }
 
-    @Override
-    public void update(Request request) {
-        LOG.log(Level.INFO, "isFxApp ={0}", Platform.isFxApplicationThread());
-        LOG.log(Level.INFO, "Thread name ={0}", Thread.currentThread().getName());
-        RefereeRequest refereeRequest = request.getRefereeRequest();
-        System.out.println("UPDATE: get from =" + request);
-        if (refereeRequest == RefereeRequest.EMPTY) {
-            if (request.getPlayerSign() == activePlayer) {
-                LOG.log(Level.INFO, "get from ={0}", activePlayer);
-                LOG.log(Level.INFO, "field ={0}", request.getGameField());
-
-                List<CellState> newStep = request.getGameField();
-                Game game;
-                LOG.log(Level.INFO, "Pl: {0}. Req ={1}", new Object[]{activePlayer, request.getRefereeRequest()});
-                LOG.log(Level.INFO, "Pl: {0}. Turn ={1}", new Object[]{activePlayer, gameField});
-                if (isCorrectTurn(gameField, newStep)) {
-                    gameField.clear();
-                    gameField.addAll(newStep);
-                    showBattleField(gameField);
-
-                    game = gameHelper.analyzeGame(gameField);
-                    if (game.getState() == Game.State.OVER) {
-                        lockView();
-                        System.out.println("Game is OVER =" + game);
-                        System.out.println("Winner is " + activePlayer);
-                    } else {
-                        activePlayer = generateTurns.remove(0);
-                        executorService.execute(new Thread(new RequestCall(playersMap.get(activePlayer), gameField, view)));
-                    }
-
-                }
-            }
-
-        } else {
-            switch (refereeRequest) {
-                case SURRENDER:
-                    LOG.log(Level.INFO, "Dweeb. {0} lost the game", playersMap.get(activePlayer).getPlayerName());
-                    break;
-                case RESTART:
-                    LOG.log(Level.INFO, "Ok, restart game. Asked {0}", playersMap.get(activePlayer).getPlayerName());
-                    initNewGame();
-                    break;
+    private List<CellState> generateTurns(CellState startSign) {
+        if (startSign == CellState.TOE) {
+            throw new IllegalArgumentException("You should use correct signs");
+        }
+        List<CellState> result = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            if (startSign == CellState.TIC) {
+                result.add(CellState.TIC);
+                result.add(CellState.TAC);
+            } else {
+                result.add(CellState.TAC);
+                result.add(CellState.TIC);
             }
         }
+        return result;
     }
 }

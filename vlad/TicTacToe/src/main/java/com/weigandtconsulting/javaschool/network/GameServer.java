@@ -20,31 +20,24 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
-import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.Request;
-import com.weigandtconsulting.javaschool.service.DumbPlayer;
 import com.weigandtconsulting.javaschool.service.Player;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Send responses from Player class. Created for test purpose
  * @author vlad
  */
-public class NetworkServer {
+public class GameServer {
 
-    private static final Logger LOG = Logger.getLogger(NetworkServer.class.getName());
+    private static final Logger LOG = Logger.getLogger(GameServer.class.getName());
 
     private final Server server;
     private final TicTacToe player = new Player();
 
-    public NetworkServer() throws IOException {
+    public GameServer() throws IOException {
         server = new Server() {
         };
 
@@ -55,10 +48,9 @@ public class NetworkServer {
                 // We know all connections for this server are actually ChatConnections.
                 if (object instanceof Request) {
                     Request request = (Request) object;
-                    System.out.println("Get from client: " + request.getRefereeRequest());
-                    System.out.println("Get from client: " + request.getGameField());
+                    System.out.println("Get from client: " + request);
                     Request response = player.getRequest(request.getGameField());
-                    System.out.println("Send to client: " + request.getGameField());
+                    System.out.println("Send to client: " + response);
                     connection.sendTCP(response);
                 }
             }
@@ -75,7 +67,7 @@ public class NetworkServer {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
-        NetworkServer networkServer = new NetworkServer();
+        GameServer networkServer = new GameServer();
         networkServer.init();
     }
 }

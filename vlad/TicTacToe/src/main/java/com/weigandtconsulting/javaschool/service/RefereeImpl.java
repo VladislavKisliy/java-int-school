@@ -16,7 +16,6 @@
  */
 package com.weigandtconsulting.javaschool.service;
 
-import com.weigandtconsulting.javaschool.api.Observer;
 import com.weigandtconsulting.javaschool.api.Referee;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.api.Showable;
@@ -25,7 +24,6 @@ import com.weigandtconsulting.javaschool.beans.Game;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.call.RequestCall;
-import com.weigandtconsulting.javaschool.controllers.FXMLController.HumanPlayer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,21 +65,6 @@ public class RefereeImpl implements Referee {
         if (refereeThread != null) {
             refereeThread.interrupt();
         }
-    }
-
-    boolean isCorrectTurn(List<CellState> gameFieldBefore, List<CellState> gameFieldAfter) {
-        int changeCounter = 0;
-        boolean result = false;
-        List<Integer> availableMoves = gameHelper.getAvailableMoves(gameFieldBefore);
-        for (Integer index : availableMoves) {
-            if (gameFieldAfter.get(index) != CellState.TOE) {
-                changeCounter++;
-            }
-        }
-        if (changeCounter == 1) {
-            result = true;
-        }
-        return result;
     }
 
     private List<CellState> generateTurns(CellState startSign) {
@@ -141,7 +124,7 @@ public class RefereeImpl implements Referee {
                 Game game;
                 System.out.println("Pl: " + activePlayer+ ". Req =" + request.getRefereeRequest());
                 System.out.println("Pl: " + activePlayer + ". Turn =" + gameField);
-                if (isCorrectTurn(gameField, newStep)) {
+                if (gameHelper.isCorrectTurn(gameField, newStep)) {
                     gameField.clear();
                     gameField.addAll(newStep);
                     showBattleField(gameField);
@@ -176,5 +159,10 @@ public class RefereeImpl implements Referee {
                     break;
             }
         }
+    }
+
+    @Override
+    public void startNewGame(CellState startSign, TicTacToe playerTic, TicTacToe playerTac) {
+        
     }
 }

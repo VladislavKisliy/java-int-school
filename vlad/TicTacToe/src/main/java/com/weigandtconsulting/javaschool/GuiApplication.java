@@ -21,7 +21,7 @@ import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.controllers.FXMLController;
 import com.weigandtconsulting.javaschool.service.DumbPlayer;
-import com.weigandtconsulting.javaschool.service.NetworkPlayerWrapper;
+import com.weigandtconsulting.javaschool.service.ClientPlayer;
 import com.weigandtconsulting.javaschool.service.Player;
 import com.weigandtconsulting.javaschool.service.RefereeImpl;
 import com.weigandtconsulting.javaschool.service.RefereeAsyncWrapper;
@@ -60,8 +60,8 @@ public class GuiApplication extends Application {
 //        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
         
         
-        TicTacToe playerTic = new DumbPlayer(CellState.TIC);
-//        NetworkPlayerWrapper playerTic = new NetworkPlayerWrapper();
+//        TicTacToe playerTic = new DumbPlayer(CellState.TIC);
+        ClientPlayer playerTic = new ClientPlayer();
 //        playerTic.init();
 //        DumbPlayer playerTac = new DumbPlayer(CellState.TAC);
 //        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);

@@ -39,4 +39,6 @@ public interface GameFieldHelper {
     List<CellState> doStep(List<CellState> gameField, CellState playerSign, Integer position);
     
     Boolean isFieldEmpty(List<CellState> gameField);
+    
+    boolean isCorrectTurn(List<CellState> gameFieldBefore, List<CellState> gameFieldAfter);
 }

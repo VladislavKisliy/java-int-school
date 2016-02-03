@@ -20,7 +20,6 @@ import com.weigandtconsulting.javaschool.api.GameFieldHelper;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.Game;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -140,6 +139,21 @@ public class GameFieldHelperImpl implements GameFieldHelper {
             game.setState(Game.State.CONTINUE);
         }
         return game;
+    }
+    
+    public boolean isCorrectTurn(List<CellState> gameFieldBefore, List<CellState> gameFieldAfter) {
+        int changeCounter = 0;
+        boolean result = false;
+        List<Integer> availableMoves = getAvailableMoves(gameFieldBefore);
+        for (Integer index : availableMoves) {
+            if (gameFieldAfter.get(index) != CellState.TOE) {
+                changeCounter++;
+            }
+        }
+        if (changeCounter == 1) {
+            result = true;
+        }
+        return result;
     }
 
     private boolean isFieldFull(List<CellState> gameField) {
