@@ -21,7 +21,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.Request;
-import com.weigandtconsulting.javaschool.service.Player;
+import com.weigandtconsulting.javaschool.players.Player;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

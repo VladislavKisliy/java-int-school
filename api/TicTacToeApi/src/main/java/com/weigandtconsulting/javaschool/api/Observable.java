@@ -16,6 +16,8 @@
  */
 package com.weigandtconsulting.javaschool.api;
 
+import com.weigandtconsulting.javaschool.beans.RefereeRequest;
+
 /**
  *
  * @author vlad
@@ -28,4 +30,5 @@ public interface Observable {
     
     void notifyObservers();
     
+    void notifyObservers(RefereeRequest refereeRequest);
 }

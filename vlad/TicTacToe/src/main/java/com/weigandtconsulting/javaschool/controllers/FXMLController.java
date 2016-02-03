@@ -16,7 +16,7 @@
  */
 package com.weigandtconsulting.javaschool.controllers;
 
-import com.weigandtconsulting.javaschool.api.BaseTicTacToe;
+import com.weigandtconsulting.javaschool.players.BaseTicTacToe;
 import com.weigandtconsulting.javaschool.api.GameFieldHelper;
 import com.weigandtconsulting.javaschool.api.Referee;
 import com.weigandtconsulting.javaschool.api.Showable;
@@ -24,7 +24,7 @@ import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
-import com.weigandtconsulting.javaschool.service.ClientPlayer;
+import com.weigandtconsulting.javaschool.players.ClientPlayer;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
 import com.weigandtconsulting.javaschool.service.RefereeAsyncWrapper;
 import java.net.URL;
@@ -123,8 +123,7 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private void handleRestartAction(ActionEvent event) {
         System.out.println("handleRestartAction = You clicked me! event source" + event.getSource());
-        refereeRequest = RefereeRequest.RESTART;
-        player.notifyObservers();
+        player.notifyObservers(RefereeRequest.RESTART);
 
     }
 
@@ -271,11 +270,10 @@ public class FXMLController implements Initializable, Showable {
         public void setLastTurn(List<CellState> lastTurn) {
             this.lastTurn = lastTurn;
         }
-
+        
         @Override
         public Request getRequest(List<CellState> gameField) {
             Request request = new Request(this.getPlayerSign());
-            // Reset old value
             refereeRequest = RefereeRequest.EMPTY;
             request.setGameField(nextStep(gameField));
             request.setRefereeRequest(refereeRequest);

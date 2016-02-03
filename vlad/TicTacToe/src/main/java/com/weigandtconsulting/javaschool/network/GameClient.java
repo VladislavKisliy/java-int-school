@@ -24,7 +24,7 @@ import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
-import com.weigandtconsulting.javaschool.service.Player;
+import com.weigandtconsulting.javaschool.players.Player;
 import java.io.IOException;
 
 /**

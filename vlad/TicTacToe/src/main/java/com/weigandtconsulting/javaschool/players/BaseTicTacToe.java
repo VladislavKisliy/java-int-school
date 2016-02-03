@@ -14,8 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.weigandtconsulting.javaschool.api;
+package com.weigandtconsulting.javaschool.players;
 
+import com.weigandtconsulting.javaschool.api.Observer;
+import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
@@ -65,10 +67,15 @@ public abstract class BaseTicTacToe implements TicTacToe {
 
     @Override
     public void notifyObservers() {
+        notifyObservers(RefereeRequest.EMPTY);
+    }
+
+    @Override
+    public void notifyObservers(RefereeRequest refereeRequest) {
         if (lastTurn != null) {
             for (Observer observer : observers) {
                 Request request = new Request(this.getPlayerSign());
-                request.setRefereeRequest(RefereeRequest.EMPTY);
+                request.setRefereeRequest(refereeRequest);
                 request.setGameField(lastTurn);
                 observer.update(request);
             }
