@@ -69,12 +69,6 @@ public class GameClient {
         request.setRefereeRequest(RefereeRequest.EMPTY);
         System.out.println("-- request 1");
         client.sendTCP(request);
-//        TimeUnit.SECONDS.sleep(1);
-        if (client.isConnected()) {
-            System.out.println("I am connected");
-        } else {
-            System.out.println("I was disconnected");
-        }
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {

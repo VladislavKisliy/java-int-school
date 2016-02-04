@@ -18,15 +18,12 @@ package com.weigandtconsulting.javaschool.network;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
-import com.weigandtconsulting.javaschool.api.GameFieldHelper;
-import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
-import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
-import com.weigandtconsulting.javaschool.players.Player;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 /**
  *
  * @author vlad
@@ -37,7 +34,7 @@ public class Network {
 
         SERVER, CLIENT
     };
-    
+
     public static final int TCP_PORT = 54555;
     public static final int UDP_PORT = 54777;
 
@@ -49,13 +46,6 @@ public class Network {
         kryo.register(RefereeRequest.class);
         kryo.register(List.class);
         kryo.register(Request.class);
-        kryo.register(TicTacToe.class);
-        kryo.register(Player.class);
-        kryo.register(int[].class);
-        kryo.register(GameFieldHelperImpl.class);
         kryo.register(java.util.ArrayList.class);
-        kryo.register(java.util.Random.class);
-        kryo.register(java.util.concurrent.atomic.AtomicLong.class);
-        
     }
 }

@@ -20,7 +20,9 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.weigandtconsulting.javaschool.api.TicTacToe;
+import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.Request;
+import com.weigandtconsulting.javaschool.players.DumbPlayer;
 import com.weigandtconsulting.javaschool.players.Player;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -35,7 +37,8 @@ public class GameServer {
     private static final Logger LOG = Logger.getLogger(GameServer.class.getName());
 
     private final Server server;
-    private final TicTacToe player = new Player();
+//    private final TicTacToe player = new Player();
+    private final TicTacToe player = new DumbPlayer(CellState.TIC);
 
     public GameServer() throws IOException {
         server = new Server() {
