@@ -16,7 +16,6 @@
  */
 package com.weigandtconsulting.javaschool.players;
 
-import com.weigandtconsulting.javaschool.players.Player;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import static com.weigandtconsulting.javaschool.beans.CellState.TAC;
 import static com.weigandtconsulting.javaschool.beans.CellState.TIC;

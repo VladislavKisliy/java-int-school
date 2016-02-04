@@ -20,12 +20,14 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.weigandtconsulting.javaschool.api.GameFieldHelper;
+import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
 import com.weigandtconsulting.javaschool.players.Player;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Send responses from Player class. Created for test purpose
@@ -35,6 +37,7 @@ public class GameClient {
 
     private final String serverHost;
     private final Client client;
+    private final TicTacToe player = new Player(CellState.TAC);
     private int timeout = 5000;
 
     public GameClient(String host) {
@@ -60,23 +63,27 @@ public class GameClient {
                     Request response = (Request) object;
                     System.out.println("Answer from server: " + response.getRefereeRequest());
                     System.out.println("Answer from server: " + response.getGameField());
+                    Request request = player.getRequest(response.getGameField());
+                    System.out.println("Send to server: " + request);
+                    connection.sendTCP(request);
                 }
             }
         });
         GameFieldHelper gameFieldHelper = new GameFieldHelperImpl();
-        Request request = new Request(CellState.TIC);
+        Request request = new Request(CellState.TAC);
         request.setGameField(gameFieldHelper.getNewField());
         request.setRefereeRequest(RefereeRequest.EMPTY);
-        System.out.println("-- request 1");
+        System.out.println("-- request 1 ="+request);
         client.sendTCP(request);
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
         GameClient networkClient = new GameClient("127.0.0.1");
         networkClient.connectToServer();
-        GameClient networkClient1 = new GameClient("127.0.0.1");
-        networkClient1.connectToServer();
-        GameClient networkClient2 = new GameClient("127.0.0.1");
-        networkClient2.connectToServer();
+        TimeUnit.SECONDS.sleep(17);
+//        GameClient networkClient1 = new GameClient("127.0.0.1");
+//        networkClient1.connectToServer();
+//        GameClient networkClient2 = new GameClient("127.0.0.1");
+//        networkClient2.connectToServer();
     }
 }

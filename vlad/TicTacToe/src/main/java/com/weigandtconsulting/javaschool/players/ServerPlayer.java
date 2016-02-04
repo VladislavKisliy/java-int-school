@@ -25,6 +25,7 @@ import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.network.Network;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,22 +36,46 @@ import java.util.logging.Logger;
 public class ServerPlayer extends BaseTicTacToe {
 
     private static final Logger LOG = Logger.getLogger(ServerPlayer.class.getName());
-
-    private static final int TIMEOUT = 5000;
+    CountDownLatch startSignal = new CountDownLatch(1);
     private final Server server = new Server();
+    private Request userResponse;
 
-    public ServerPlayer(CellState playerSign) {
+    public ServerPlayer(CellState playerSign) throws IOException {
         super(playerSign);
+        server.start();
+        server.bind(Network.TCP_PORT, Network.UDP_PORT);
+
+        Network.register(server);
         server.addListener(new Listener() {
             @Override
             public void received(Connection connection, Object object) {
+                super.received(connection, object);
+                LOG.log(Level.INFO, "Recieved from client ={0}, recieved ={1}", new Object[]{connection, object});
                 if (object instanceof Request) {
-                    Request response = (Request) object;
-                    lastTurn = response.getGameField();
-                    notifyObservers();
+                    Request request = (Request) object;
+                    System.out.println("Get from client: " + request);
+                    if (userResponse != null) {
+                        LOG.log(Level.INFO, "Send to client: {0}", userResponse);
+                        connection.sendTCP(userResponse);
+                        lastTurn = request.getGameField();
+                        notifyObservers();
+                        userResponse = null;
+                    }
                 }
             }
+
+//            @Override
+//            public void connected(Connection connection) {
+//                super.connected(connection);
+//                LOG.log(Level.INFO, "New connection to server ={0}", new Object[]{connection});
+//                startSignal.countDown();
+//                if (userResponse != null) {
+//                    LOG.log(Level.INFO, "Send to client: {0}", userResponse);
+//                    connection.sendTCP(userResponse);
+//                }
+//            }
         });
+
     }
 
     @Override
@@ -65,27 +90,29 @@ public class ServerPlayer extends BaseTicTacToe {
 
     @Override
     public Request getRequest(List<CellState> gameField) {
-        LOG.log(Level.INFO, "Send request to server");
+        LOG.log(Level.INFO, "Send request to client");
         Request request = new Request(CellState.TIC);
         request.setGameField(gameField);
         request.setRefereeRequest(RefereeRequest.EMPTY);
-
+        userResponse = request;
         if (server.getConnections().length > 0) {
             server.sendToAllTCP(request);
         } else {
-            server.start();
-            try {
-                server.bind(Network.TCP_PORT, Network.UDP_PORT);
-                Network.register(server);
-                server.sendToAllTCP(request);
-            } catch (IOException ex) {
-                LOG.log(Level.SEVERE, "Connection problem", ex);
-                request.setRefereeRequest(RefereeRequest.ERROR);
-                request.setMessage(ex.getLocalizedMessage());
-                notifyObservers(request);
-            }
+//            server.start();
+//            try {
+//                server.bind(Network.TCP_PORT, Network.UDP_PORT);
+//                Network.register(server);
+//                startSignal.await();
+////                server.sendToAllTCP(request);
+//            } catch (IOException | InterruptedException ex) {
+//                LOG.log(Level.SEVERE, "Connection problem", ex);
+//                request.setRefereeRequest(RefereeRequest.ERROR);
+//                request.setMessage(ex.getLocalizedMessage());
+//                notifyObservers(request);
+//            }
+
         }
-        System.out.println("Request =" + request);
+        LOG.log(Level.INFO, "Request ={0}", request);
         return request;
     }
 

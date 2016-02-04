@@ -29,6 +29,7 @@ import com.weigandtconsulting.javaschool.players.Player;
 import com.weigandtconsulting.javaschool.players.ServerPlayer;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
 import com.weigandtconsulting.javaschool.service.RefereeAsyncWrapper;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -140,9 +141,32 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private void handleCreateServerAction(ActionEvent event) {
         LOG.log(Level.INFO, " ! handleCreateServer Action = You clicked me! event source{0}", event.getSource());
-        TicTacToe playerTac = getPlayer(CellState.TAC);
-        TicTacToe playerTic = new ServerPlayer(CellState.TIC);
-        setupNewGame(playerTic, playerTac);
+        String firstPlayerTic = "First player - X(Server)";
+
+        List<String> choices = new ArrayList<>();
+        choices.add(firstPlayerTic);
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(firstPlayerTic, choices);
+        dialog.setTitle("Choice Dialog");
+        dialog.setHeaderText("Look, a Choice Dialog");
+        dialog.setContentText("Choose your player:");
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            System.out.println("Your choice: " + result.get());
+            if (referee != null) {
+                shutdownGame();
+            }
+            TicTacToe playerTic = getPlayer(CellState.TIC);
+            TicTacToe playerTac;
+            try {
+                playerTac = new ServerPlayer(CellState.TAC);
+                setupNewGame(playerTic, playerTac);
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, "Server binding problem", ex);
+                showErrorDialog(ex.getLocalizedMessage());
+            }
+        }
     }
 
     @FXML
@@ -158,7 +182,7 @@ public class FXMLController implements Initializable, Showable {
     }
 
     @Override
-    public synchronized void refreshBattleField(List<CellState> battleField) {
+    public void refreshBattleField(List<CellState> battleField) {
         int counterCell = 0;
         for (CellState cellState : battleField) {
             switch (counterCell) {

@@ -54,8 +54,11 @@ public class Player extends BaseTicTacToe {
         } else {
             bestStep = miniMax(gameField, 0);
         }
-        lastTurn = innerGameField.doStep(gameField, playerSign, bestStep);
-        notifyObservers();
+        if (bestStep < gameField.size()) {
+            lastTurn = innerGameField.doStep(gameField, playerSign, bestStep);
+            notifyObservers();
+        }
+
         return new ArrayList<>(lastTurn);
     }
 
