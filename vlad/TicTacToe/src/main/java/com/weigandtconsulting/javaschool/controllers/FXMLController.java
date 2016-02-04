@@ -25,9 +25,11 @@ import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.players.ClientPlayer;
 import com.weigandtconsulting.javaschool.players.HumanPlayer;
+import com.weigandtconsulting.javaschool.players.Player;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
 import com.weigandtconsulting.javaschool.service.RefereeAsyncWrapper;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -37,6 +39,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
 
 public class FXMLController implements Initializable, Showable {
@@ -60,20 +63,70 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private Button button8;
 
+    private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
     private Alert alertDialog;
     private HumanPlayer player;
-    private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
+    private Referee referee;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me! event source" + event.getSource());
         if (event.getSource() instanceof Button) {
             Button button = (Button) event.getSource();
-            applyCellButton(player.getPlayerSign(), button);
-            player.setLastTurn(generateGameField());
-            player.notifyObservers();
-
+            if (player != null) {
+                applyCellButton(player.getPlayerSign(), button);
+                player.setLastTurn(generateGameField());
+                player.notifyObservers();
+            }
         }
+    }
+
+    @FXML
+    private void handleLocalGameAction(ActionEvent event) {
+        System.out.println("You clicked handleLocalGameAction! event source" + event.getSource());
+        String firstPlayerTic = "First player - X";
+        String secondPlayerTac = "Second player - 0";
+        List<String> choices = new ArrayList<>();
+        choices.add(firstPlayerTic);
+        choices.add(secondPlayerTac);
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(firstPlayerTic, choices);
+        dialog.setTitle("Choice Dialog");
+        dialog.setHeaderText("Look, a Choice Dialog");
+        dialog.setContentText("Choose your player:");
+
+// Traditional way to get the response value.
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            TicTacToe playerTac;
+            TicTacToe playerTic;
+            System.out.println("Your choice: " + result.get());
+            if (firstPlayerTic.equals(result.get())) {
+                playerTic = getPlayer(CellState.TIC);
+                playerTac = new Player(CellState.TAC);
+
+            } else {
+                playerTic = new Player(CellState.TIC);
+                playerTac = getPlayer(CellState.TAC);
+            }
+            if (referee != null) {
+                referee.stopGame();
+            }
+
+            referee = new RefereeAsyncWrapper(playerTic, playerTac, this);
+            playerTic.registerObserver(referee);
+            playerTac.registerObserver(referee);
+            lockBattleField();
+            referee.startGame(CellState.TIC);
+        }
+
+//        if (event.getSource() instanceof Button) {
+//            Button button = (Button) event.getSource();
+//            applyCellButton(player.getPlayerSign(), button);
+//            player.setLastTurn(generateGameField());
+//            player.notifyObservers();
+//
+//        }
     }
 
     @FXML
@@ -235,9 +288,7 @@ public class FXMLController implements Initializable, Showable {
     }
 
     public TicTacToe getPlayer(CellState mySymbol) {
-        if (player == null) {
-            player = new HumanPlayer(mySymbol);
-        }
+        player = new HumanPlayer(mySymbol);
         return player;
     }
 

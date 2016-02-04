@@ -49,18 +49,13 @@ public class GuiApplication extends Application {
         stage.setTitle("TicTacToe GUI(JavaFX)");
         stage.setScene(scene);
         stage.setResizable(false);
-
         stage.show();
+        fxmlController.lockBattleField();
     }
 //
     @Override
     public void stop() throws Exception {
         super.stop();
-        System.out.println("Try to exit");
-//        if (referee != null) {
-//            System.out.println("Try to stop the game");
-//            referee.stopGame();
-//        }
         Platform.exit();
         System.exit(0);
     }
