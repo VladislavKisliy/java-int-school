@@ -16,7 +16,6 @@
  */
 package com.weigandtconsulting.javaschool.players;
 
-import com.weigandtconsulting.javaschool.players.BaseTicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import java.util.ArrayList;
 import java.util.List;

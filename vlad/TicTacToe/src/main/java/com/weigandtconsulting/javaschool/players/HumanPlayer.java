@@ -16,16 +16,10 @@
  */
 package com.weigandtconsulting.javaschool.players;
 
-import com.weigandtconsulting.javaschool.api.GameFieldHelper;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
-import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import javafx.scene.control.Button;
 
 /**
  *

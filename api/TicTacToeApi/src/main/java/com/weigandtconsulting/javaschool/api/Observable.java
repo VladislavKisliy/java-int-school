@@ -16,7 +16,6 @@
  */
 package com.weigandtconsulting.javaschool.api;
 
-import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
 
 /**
@@ -28,6 +27,8 @@ public interface Observable {
     void registerObserver(Observer observer);
 
     void unregisterObserver(Observer observer);
+    
+    void unregisterAllObservers();
     
     void notifyObservers();
     

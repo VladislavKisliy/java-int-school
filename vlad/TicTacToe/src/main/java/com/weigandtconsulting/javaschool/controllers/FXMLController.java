@@ -26,6 +26,7 @@ import com.weigandtconsulting.javaschool.beans.Request;
 import com.weigandtconsulting.javaschool.players.ClientPlayer;
 import com.weigandtconsulting.javaschool.players.HumanPlayer;
 import com.weigandtconsulting.javaschool.players.Player;
+import com.weigandtconsulting.javaschool.players.ServerPlayer;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
 import com.weigandtconsulting.javaschool.service.RefereeAsyncWrapper;
 import java.net.URL;
@@ -33,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -63,14 +66,16 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private Button button8;
 
+    private static final Logger LOG = Logger.getLogger(FXMLController.class.getName());
     private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
+    private final TicTacToe[] players = new TicTacToe[2];
     private Alert alertDialog;
     private HumanPlayer player;
     private Referee referee;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me! event source" + event.getSource());
+        LOG.log(Level.INFO, "You clicked me! event source{0}", event.getSource());
         if (event.getSource() instanceof Button) {
             Button button = (Button) event.getSource();
             if (player != null) {
@@ -83,7 +88,7 @@ public class FXMLController implements Initializable, Showable {
 
     @FXML
     private void handleLocalGameAction(ActionEvent event) {
-        System.out.println("You clicked handleLocalGameAction! event source" + event.getSource());
+        LOG.log(Level.INFO, "You clicked handleLocalGameAction! event source{0}", event.getSource());
         String firstPlayerTic = "First player - X";
         String secondPlayerTac = "Second player - 0";
         List<String> choices = new ArrayList<>();
@@ -95,7 +100,6 @@ public class FXMLController implements Initializable, Showable {
         dialog.setHeaderText("Look, a Choice Dialog");
         dialog.setContentText("Choose your player:");
 
-// Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
             TicTacToe playerTac;
@@ -110,86 +114,40 @@ public class FXMLController implements Initializable, Showable {
                 playerTac = getPlayer(CellState.TAC);
             }
             if (referee != null) {
-                referee.stopGame();
+                shutdownGame();
             }
-
-            referee = new RefereeAsyncWrapper(playerTic, playerTac, this);
-            playerTic.registerObserver(referee);
-            playerTac.registerObserver(referee);
-            lockBattleField();
-            referee.startGame(CellState.TIC);
+            setupNewGame(playerTic, playerTac);
         }
-
-//        if (event.getSource() instanceof Button) {
-//            Button button = (Button) event.getSource();
-//            applyCellButton(player.getPlayerSign(), button);
-//            player.setLastTurn(generateGameField());
-//            player.notifyObservers();
-//
-//        }
     }
 
     @FXML
     private void handleConnectToAction(ActionEvent event) {
-        System.out.println("handleConnectToServer = You clicked me! event source" + event.getSource());
+        LOG.log(Level.INFO, "handleConnectToServer = You clicked me! event source{0}", event.getSource());
         TextInputDialog dialog = new TextInputDialog("localhost");
         dialog.setTitle("Connect to");
         dialog.setHeaderText("Network information");
         dialog.setContentText("Please enter server ");
 
-        // The Java 8 way to get the response value (with lambda expression).
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
-            System.out.println("dialog get =" + result.get());
-            // Game settings
-//        TicTacToe playerTic = new Player(CellState.TIC);
-//        AsyncTicTacToe playerTac = new DumbPlayer(CellState.TAC);
+            LOG.log(Level.INFO, "dialog get ={0}", result.get());
             TicTacToe playerTac = getPlayer(CellState.TAC);
-//        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
-
-//        TicTacToe playerTic = new DumbPlayer(CellState.TIC);
-            ClientPlayer playerTic = new ClientPlayer(result.get());
-//        playerTic.init();
-//        DumbPlayer playerTac = new DumbPlayer(CellState.TAC);
-//        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
-            Referee referee = new RefereeAsyncWrapper(playerTic, playerTac, this);
-
-//       Referee referee = new RefereeImpl(playerTic, playerTac, fxmlController);
-            playerTic.registerObserver(referee);
-            playerTac.registerObserver(referee);
-            lockBattleField();
-            referee.startGame(CellState.TIC);
+            TicTacToe playerTic = new ClientPlayer(result.get());
+            setupNewGame(playerTic, playerTac);
         }
-//        result.ifPresent(name -> System.out.println("Your name: " + name));
     }
 
     @FXML
     private void handleCreateServerAction(ActionEvent event) {
-        System.out.println(" ! handleCreateServer Action = You clicked me! event source" + event.getSource());
-        // Game settings
-//        TicTacToe playerTic = new Player(CellState.TIC);
-//        AsyncTicTacToe playerTac = new DumbPlayer(CellState.TAC);
+        LOG.log(Level.INFO, " ! handleCreateServer Action = You clicked me! event source{0}", event.getSource());
         TicTacToe playerTac = getPlayer(CellState.TAC);
-//        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
-
-//        TicTacToe playerTic = new DumbPlayer(CellState.TIC);
-        ClientPlayer playerTic = new ClientPlayer();
-//        playerTic.init();
-//        DumbPlayer playerTac = new DumbPlayer(CellState.TAC);
-//        TicTacToe playerTac = fxmlController.new HumanPlayer(CellState.TAC);
-        Referee referee = new RefereeAsyncWrapper(playerTic, playerTac, this);
-
-//       Referee referee = new RefereeImpl(playerTic, playerTac, fxmlController);
-        playerTic.registerObserver(referee);
-        playerTac.registerObserver(referee);
-        lockBattleField();
-        referee.startGame(CellState.TIC);
-//        Referee referee = new Referee(playerTic, playerTac, fxmlController);
+        TicTacToe playerTic = new ServerPlayer(CellState.TIC);
+        setupNewGame(playerTic, playerTac);
     }
 
     @FXML
     private void handleRestartAction(ActionEvent event) {
-        System.out.println("handleRestartAction = You clicked me! event source" + event.getSource());
+        LOG.log(Level.INFO, "handleRestartAction = You clicked me! event source{0}", event.getSource());
         player.notifyObservers(new Request(RefereeRequest.RESTART));
 
     }
@@ -311,7 +269,23 @@ public class FXMLController implements Initializable, Showable {
         alert.setTitle("Error Dialog");
         alert.setHeaderText("Something wrong!");
         alert.setContentText(message);
-
         alert.showAndWait();
+    }
+
+    private void setupNewGame(TicTacToe playerTic, TicTacToe playerTac) {
+        referee = new RefereeAsyncWrapper(playerTic, playerTac, this);
+        players[0] = playerTac;
+        players[1] = playerTic;
+        playerTic.registerObserver(referee);
+        playerTac.registerObserver(referee);
+        lockBattleField();
+        referee.startGame(CellState.TIC);
+    }
+
+    private void shutdownGame() {
+        for (TicTacToe localPlayer : players) {
+            localPlayer.unregisterAllObservers();
+        }
+        referee.stopGame();
     }
 }

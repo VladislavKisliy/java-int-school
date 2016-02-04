@@ -26,6 +26,7 @@ import java.util.List;
 
 /**
  * Base class for player implementations
+ *
  * @author vlad
  */
 public abstract class BaseTicTacToe implements TicTacToe {
@@ -63,6 +64,11 @@ public abstract class BaseTicTacToe implements TicTacToe {
     @Override
     public void unregisterObserver(Observer observer) {
         observers.remove(observer);
+    }
+
+    @Override
+    public void unregisterAllObservers() {
+        observers.clear();
     }
 
     @Override

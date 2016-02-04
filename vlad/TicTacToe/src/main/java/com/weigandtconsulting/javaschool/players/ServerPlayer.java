@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Weigandt Consulting
+ * Copyright (C) 2016 Weigandt Consulting
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,9 @@
  */
 package com.weigandtconsulting.javaschool.players;
 
-import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.esotericsoftware.kryonet.Server;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
@@ -32,17 +32,16 @@ import java.util.logging.Logger;
  *
  * @author vlad
  */
-public class ClientPlayer extends BaseTicTacToe {
+public class ServerPlayer extends BaseTicTacToe {
 
-    private static final Logger LOG = Logger.getLogger(ClientPlayer.class.getName());
+    private static final Logger LOG = Logger.getLogger(ServerPlayer.class.getName());
+
     private static final int TIMEOUT = 5000;
-    private final String hostname;
-    private final Client client = new Client();
+    private final Server server = new Server();
 
-    public ClientPlayer(String hostname, CellState playerSign) {
+    public ServerPlayer(CellState playerSign) {
         super(playerSign);
-        this.hostname = hostname;
-        client.addListener(new Listener() {
+        server.addListener(new Listener() {
             @Override
             public void received(Connection connection, Object object) {
                 if (object instanceof Request) {
@@ -54,15 +53,6 @@ public class ClientPlayer extends BaseTicTacToe {
         });
     }
 
-    public ClientPlayer() {
-        this("127.0.0.1");
-
-    }
-
-    public ClientPlayer(String hostname) {
-        this(hostname, CellState.TIC);
-    }
-
     @Override
     public boolean hasNextStep(List<CellState> gameField) {
         return false;
@@ -70,7 +60,7 @@ public class ClientPlayer extends BaseTicTacToe {
 
     @Override
     public String getPlayerName() {
-        return "Network client player";
+        return "Network server player";
     }
 
     @Override
@@ -79,23 +69,23 @@ public class ClientPlayer extends BaseTicTacToe {
         Request request = new Request(CellState.TIC);
         request.setGameField(gameField);
         request.setRefereeRequest(RefereeRequest.EMPTY);
-        if (!client.isConnected()) {
-            client.start();
+
+        if (server.getConnections().length > 0) {
+            server.sendToAllTCP(request);
+        } else {
+            server.start();
             try {
-                // timeout, ip, tcpPort, udpPort
-                client.connect(TIMEOUT, hostname, Network.TCP_PORT, Network.UDP_PORT);
-                Network.register(client);
-                client.sendTCP(request);
+                server.bind(Network.TCP_PORT, Network.UDP_PORT);
+                Network.register(server);
+                server.sendToAllTCP(request);
             } catch (IOException ex) {
                 LOG.log(Level.SEVERE, "Connection problem", ex);
                 request.setRefereeRequest(RefereeRequest.ERROR);
                 request.setMessage(ex.getLocalizedMessage());
                 notifyObservers(request);
             }
-
-        } else {
-            client.sendTCP(request);
         }
+        System.out.println("Request =" + request);
         return request;
     }
 
@@ -104,4 +94,5 @@ public class ClientPlayer extends BaseTicTacToe {
         Request request = getRequest(gameField);
         return request.getGameField();
     }
+
 }
