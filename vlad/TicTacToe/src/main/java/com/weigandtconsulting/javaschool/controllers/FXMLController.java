@@ -29,7 +29,7 @@ import com.weigandtconsulting.javaschool.players.HumanPlayer;
 import com.weigandtconsulting.javaschool.players.Player;
 import com.weigandtconsulting.javaschool.players.ServerPlayer;
 import com.weigandtconsulting.javaschool.service.GameFieldHelperImpl;
-import com.weigandtconsulting.javaschool.service.RefereeAsyncWrapper;
+import com.weigandtconsulting.javaschool.service.RefereeImpl;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -267,7 +267,7 @@ public class FXMLController implements Initializable, Showable {
     }
 
     private void setupNewGame(TicTacToe playerTic, TicTacToe playerTac) {
-        referee = new RefereeAsyncWrapper(playerTic, playerTac, this);
+        referee = new RefereeImpl(playerTic, playerTac, this);
         players[0] = playerTac;
         players[1] = playerTic;
         playerTic.registerObserver(referee);

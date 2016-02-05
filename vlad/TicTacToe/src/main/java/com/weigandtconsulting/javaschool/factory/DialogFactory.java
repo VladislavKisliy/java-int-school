@@ -80,7 +80,6 @@ public class DialogFactory {
                 serverName.setText(DEFAULT_HOSTNAME);
                 TextField playerName = new TextField();
                 playerName.setText(SECOND_PLAYER_TAC);
-//                playerName.setEditable(false);
                 playerName.setDisable(true);
 
                 grid.add(new Label("Server name:"), 0, 0);

@@ -16,15 +16,7 @@
  */
 package com.weigandtconsulting.javaschool;
 
-import com.weigandtconsulting.javaschool.api.Referee;
-import com.weigandtconsulting.javaschool.api.TicTacToe;
-import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.controllers.FXMLController;
-import com.weigandtconsulting.javaschool.players.DumbPlayer;
-import com.weigandtconsulting.javaschool.players.ClientPlayer;
-import com.weigandtconsulting.javaschool.players.Player;
-import com.weigandtconsulting.javaschool.service.RefereeImpl;
-import com.weigandtconsulting.javaschool.service.RefereeAsyncWrapper;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.application.Platform;
