@@ -23,6 +23,7 @@ import com.weigandtconsulting.javaschool.api.TicTacToe;
 import com.weigandtconsulting.javaschool.beans.CellState;
 import com.weigandtconsulting.javaschool.beans.RefereeRequest;
 import com.weigandtconsulting.javaschool.beans.Request;
+import com.weigandtconsulting.javaschool.factory.DialogFactory;
 import com.weigandtconsulting.javaschool.players.ClientPlayer;
 import com.weigandtconsulting.javaschool.players.HumanPlayer;
 import com.weigandtconsulting.javaschool.players.Player;
@@ -44,7 +45,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Dialog;
 
 public class FXMLController implements Initializable, Showable {
 
@@ -70,7 +71,7 @@ public class FXMLController implements Initializable, Showable {
     private static final Logger LOG = Logger.getLogger(FXMLController.class.getName());
     private final GameFieldHelper innerGameField = new GameFieldHelperImpl();
     private final TicTacToe[] players = new TicTacToe[2];
-    private Alert alertDialog;
+    private Dialog alertDialog;
     private HumanPlayer player;
     private Referee referee;
 
@@ -90,23 +91,12 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private void handleLocalGameAction(ActionEvent event) {
         LOG.log(Level.INFO, "You clicked handleLocalGameAction! event source{0}", event.getSource());
-        String firstPlayerTic = "First player - X";
-        String secondPlayerTac = "Second player - 0";
-        List<String> choices = new ArrayList<>();
-        choices.add(firstPlayerTic);
-        choices.add(secondPlayerTac);
-
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(firstPlayerTic, choices);
-        dialog.setTitle("Choice Dialog");
-        dialog.setHeaderText("Look, a Choice Dialog");
-        dialog.setContentText("Choose your player:");
-
+        Dialog dialog = DialogFactory.getDialog(DialogFactory.DialogType.CHOOSE_PLAYER);
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
             TicTacToe playerTac;
             TicTacToe playerTic;
-            System.out.println("Your choice: " + result.get());
-            if (firstPlayerTic.equals(result.get())) {
+            if (DialogFactory.FIRST_PLAYER_TIC.equals(result.get())) {
                 playerTic = getPlayer(CellState.TIC);
                 playerTac = new Player(CellState.TAC);
 
@@ -124,11 +114,7 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private void handleConnectToAction(ActionEvent event) {
         LOG.log(Level.INFO, "handleConnectToServer = You clicked me! event source{0}", event.getSource());
-        TextInputDialog dialog = new TextInputDialog("localhost");
-        dialog.setTitle("Connect to");
-        dialog.setHeaderText("Network information");
-        dialog.setContentText("Please enter server ");
-
+        Dialog dialog = DialogFactory.getDialog(DialogFactory.DialogType.CONNECT_TO);
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
             LOG.log(Level.INFO, "dialog get ={0}", result.get());
@@ -141,16 +127,7 @@ public class FXMLController implements Initializable, Showable {
     @FXML
     private void handleCreateServerAction(ActionEvent event) {
         LOG.log(Level.INFO, " ! handleCreateServer Action = You clicked me! event source{0}", event.getSource());
-        String firstPlayerTic = "First player - X(Server)";
-
-        List<String> choices = new ArrayList<>();
-        choices.add(firstPlayerTic);
-
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(firstPlayerTic, choices);
-        dialog.setTitle("Choice Dialog");
-        dialog.setHeaderText("Look, a Choice Dialog");
-        dialog.setContentText("Choose your player:");
-
+        Dialog dialog = DialogFactory.getDialog(DialogFactory.DialogType.SERVER);
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
             System.out.println("Your choice: " + result.get());
@@ -173,7 +150,6 @@ public class FXMLController implements Initializable, Showable {
     private void handleRestartAction(ActionEvent event) {
         LOG.log(Level.INFO, "handleRestartAction = You clicked me! event source{0}", event.getSource());
         player.notifyObservers(new Request(RefereeRequest.RESTART));
-
     }
 
     @Override
@@ -255,10 +231,7 @@ public class FXMLController implements Initializable, Showable {
     @Override
     public void showWaitingDialog(boolean visibleStatus) {
         if (alertDialog == null) {
-            alertDialog = new Alert(AlertType.INFORMATION);
-            alertDialog.setTitle("Waiting Dialog");
-            alertDialog.setHeaderText(null);
-            alertDialog.setContentText("Please wait. Your opponent is still thinking");
+            alertDialog = DialogFactory.getDialog(DialogFactory.DialogType.WAIT);
         }
         if (visibleStatus) {
             if (!alertDialog.isShowing()) {
@@ -289,10 +262,7 @@ public class FXMLController implements Initializable, Showable {
 
     @Override
     public void showErrorDialog(String message) {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("Error Dialog");
-        alert.setHeaderText("Something wrong!");
-        alert.setContentText(message);
+        Dialog alert = DialogFactory.getDialog(DialogFactory.DialogType.ERROR, message);
         alert.showAndWait();
     }
 
