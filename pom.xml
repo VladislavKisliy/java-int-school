@@ -20,7 +20,7 @@
     </properties>
 
     <modules>
-	<module>api</module>
+        <module>api</module>
         <module>oleg</module>
         <module>ilya</module>
         <module>escender</module>
@@ -52,6 +52,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <verbose>true</verbose>
+                    <fork>true</fork>
+                    <executable>/usr/java/jdk1.8.0_45_x64/bin/javac</executable>
+                    <compilerVersion>1.8</compilerVersion>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -118,7 +126,7 @@
         </pluginManagement>
     </build>
 
-<!--    <repositories>
+    <!--    <repositories>
         <repository>
             <id>basedir</id>
             <layout>default</layout>
