@@ -116,6 +116,8 @@ public class RefereeImpl implements Referee {
 
                     game = gameHelper.analyzeGame(gameField);
                     if (game.getState() == Game.State.OVER) {
+                        activePlayer = generateTurns.remove(0);
+                        executorService.execute(new Thread(new RequestCall(playersMap.get(activePlayer), gameField, view)));
                         lockView();
                         LOG.log(Level.INFO, "Game is OVER. Result ={0}", game);
                         Platform.runLater(() -> {
