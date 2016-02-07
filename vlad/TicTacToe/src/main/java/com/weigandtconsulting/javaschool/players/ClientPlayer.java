@@ -100,6 +100,12 @@ public class ClientPlayer extends BaseTicTacToe {
     }
 
     @Override
+    public void stopGame() {
+        client.close();
+        client.stop();
+    }
+    
+    @Override
     public List<CellState> nextStep(List<CellState> gameField) {
         Request request = getRequest(gameField);
         return request.getGameField();

@@ -18,8 +18,10 @@ package com.weigandtconsulting.javaschool.factory;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -87,7 +89,20 @@ public class DialogFactory {
                 grid.add(new Label("Player:"), 0, 1);
                 grid.add(playerName, 1, 1);
                 result.getDialogPane().setContent(grid);
-//                result.setContentText("Please enter server ");
+
+                // Request focus on the username field by default.
+                Platform.runLater(() -> serverName.requestFocus());
+
+// Convert the result to a username-password-pair when the login button is clicked.
+                result.setResultConverter(dialogButton -> {
+                    ButtonType buttonType = (ButtonType) dialogButton;
+                    if (buttonType == ButtonType.OK) {
+                        System.out.println("~~ CLOSE OK");
+                        return serverName.getText();
+                    }
+                    System.out.println("~~ dialogButton =" + dialogButton);
+                    return null;
+                });
                 break;
             case WAIT:
                 result = new Alert(Alert.AlertType.INFORMATION);

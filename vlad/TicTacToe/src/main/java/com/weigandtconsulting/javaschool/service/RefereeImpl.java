@@ -74,6 +74,9 @@ public class RefereeImpl implements Referee {
 //        for (Thread thread : threadSet) {
 //            System.out.println("threads after =" + thread);
 //        }
+        for (Map.Entry<CellState, TicTacToe> entrySet : playersMap.entrySet()) {
+            entrySet.getValue().stopGame();
+        }
         executorService.shutdown();
         try {
             LOG.log(Level.INFO, "awaitTermination 2 sec");

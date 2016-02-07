@@ -105,6 +105,11 @@ public abstract class BaseTicTacToe implements TicTacToe {
     }
 
     @Override
+    public void stopGame() {
+
+    }
+
+    @Override
     public String toString() {
         return getPlayerName();
     }

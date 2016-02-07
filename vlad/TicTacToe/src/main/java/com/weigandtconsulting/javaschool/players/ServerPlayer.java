@@ -36,7 +36,6 @@ import java.util.logging.Logger;
 public class ServerPlayer extends BaseTicTacToe {
 
     private static final Logger LOG = Logger.getLogger(ServerPlayer.class.getName());
-    CountDownLatch startSignal = new CountDownLatch(1);
     private final Server server = new Server();
     private Request userResponse;
 
@@ -53,29 +52,16 @@ public class ServerPlayer extends BaseTicTacToe {
                 LOG.log(Level.INFO, "Recieved from client ={0}, recieved ={1}", new Object[]{connection, object});
                 if (object instanceof Request) {
                     Request request = (Request) object;
-                    System.out.println("Get from client: " + request);
                     if (userResponse != null) {
                         LOG.log(Level.INFO, "Send to client: {0}", userResponse);
                         connection.sendTCP(userResponse);
-                        lastTurn = request.getGameField();
-                        notifyObservers();
                         userResponse = null;
                     }
+                    lastTurn = request.getGameField();
+                    notifyObservers();
                 }
             }
-
-//            @Override
-//            public void connected(Connection connection) {
-//                super.connected(connection);
-//                LOG.log(Level.INFO, "New connection to server ={0}", new Object[]{connection});
-//                startSignal.countDown();
-//                if (userResponse != null) {
-//                    LOG.log(Level.INFO, "Send to client: {0}", userResponse);
-//                    connection.sendTCP(userResponse);
-//                }
-//            }
         });
-
     }
 
     @Override
@@ -97,20 +83,6 @@ public class ServerPlayer extends BaseTicTacToe {
         userResponse = request;
         if (server.getConnections().length > 0) {
             server.sendToAllTCP(request);
-        } else {
-//            server.start();
-//            try {
-//                server.bind(Network.TCP_PORT, Network.UDP_PORT);
-//                Network.register(server);
-//                startSignal.await();
-////                server.sendToAllTCP(request);
-//            } catch (IOException | InterruptedException ex) {
-//                LOG.log(Level.SEVERE, "Connection problem", ex);
-//                request.setRefereeRequest(RefereeRequest.ERROR);
-//                request.setMessage(ex.getLocalizedMessage());
-//                notifyObservers(request);
-//            }
-
         }
         LOG.log(Level.INFO, "Request ={0}", request);
         return request;
@@ -122,4 +94,9 @@ public class ServerPlayer extends BaseTicTacToe {
         return request.getGameField();
     }
 
+    @Override
+    public void stopGame() {
+        server.close();
+        server.stop();
+    }
 }
