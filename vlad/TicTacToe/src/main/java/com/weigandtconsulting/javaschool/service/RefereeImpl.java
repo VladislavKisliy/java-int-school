@@ -117,8 +117,12 @@ public class RefereeImpl implements Referee {
                     game = gameHelper.analyzeGame(gameField);
                     if (game.getState() == Game.State.OVER) {
                         lockView();
-                        System.out.println("Game is OVER =" + game);
-                        System.out.println("Winner is " + activePlayer);
+                        LOG.log(Level.INFO, "Game is OVER. Result ={0}", game);
+                        Platform.runLater(() -> {
+                            view.showGameResult("Game is OVER."
+                                    + " Winner is =" + game.getWinnerSign()
+                                    + ",\r\n" + playersMap.get(game.getWinnerSign()));
+                        });
                     } else {
                         activePlayer = generateTurns.remove(0);
                         executorService.execute(new Thread(new RequestCall(playersMap.get(activePlayer), gameField, view)));
@@ -152,29 +156,20 @@ public class RefereeImpl implements Referee {
     }
 
     private void lockView() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                view.lockBattleField();
-            }
+        Platform.runLater(() -> {
+            view.lockBattleField();
         });
     }
 
     private void showError(final String message) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                view.showErrorDialog(message);
-            }
+        Platform.runLater(() -> {
+            view.showErrorDialog(message);
         });
     }
 
     private void showBattleField(final List<CellState> gameField) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                view.refreshBattleField(gameField);
-            }
+        Platform.runLater(() -> {
+            view.refreshBattleField(gameField);
         });
     }
 

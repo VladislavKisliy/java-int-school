@@ -28,9 +28,11 @@ public interface Showable {
     void refreshBattleField(List<CellState> battleField);
 
     void lockBattleField();
-    
+
     void showWaitingDialog(boolean visibleStatus);
-    
+
     void showErrorDialog(String message);
-    
+
+    void showGameResult(String message);
+
 }

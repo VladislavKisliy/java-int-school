@@ -46,7 +46,7 @@ public class DialogFactory {
 
     public enum DialogType {
 
-        WARN, ERROR, WAIT, CHOOSE_PLAYER, CONNECT_TO, SERVER
+        WARN, ERROR, WAIT, CHOOSE_PLAYER, CONNECT_TO, SERVER, RESULT
     }
 
     public static Dialog getDialog(DialogType dialogType, String message) {
@@ -93,14 +93,12 @@ public class DialogFactory {
                 // Request focus on the username field by default.
                 Platform.runLater(() -> serverName.requestFocus());
 
-// Convert the result to a username-password-pair when the login button is clicked.
+                // Convert the result to a username-password-pair when the login button is clicked.
                 result.setResultConverter(dialogButton -> {
                     ButtonType buttonType = (ButtonType) dialogButton;
                     if (buttonType == ButtonType.OK) {
-                        System.out.println("~~ CLOSE OK");
                         return serverName.getText();
                     }
-                    System.out.println("~~ dialogButton =" + dialogButton);
                     return null;
                 });
                 break;
@@ -109,6 +107,12 @@ public class DialogFactory {
                 result.setTitle("Waiting Dialog");
                 result.setHeaderText(null);
                 result.setContentText("Please wait. Your opponent is still thinking");
+                break;
+            case RESULT:
+                result = new Alert(Alert.AlertType.INFORMATION);
+                result.setTitle("Info Dialog");
+                result.setHeaderText("Game results: ");
+                result.setContentText(message);
                 break;
             case SERVER:
                 choices.add(FIRST_PLAYER_TIC);

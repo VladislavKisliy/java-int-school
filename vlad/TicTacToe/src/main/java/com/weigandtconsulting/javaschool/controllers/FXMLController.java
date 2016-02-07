@@ -262,6 +262,11 @@ public class FXMLController implements Initializable, Showable {
         alert.showAndWait();
     }
 
+    @Override
+    public void showGameResult(String message) {
+        Dialog alert = DialogFactory.getDialog(DialogFactory.DialogType.RESULT, message);
+        alert.showAndWait();
+    }
     private void setupNewGame(TicTacToe playerTic, TicTacToe playerTac) {
         referee = new RefereeImpl(playerTic, playerTac, this);
         players[0] = playerTac;
